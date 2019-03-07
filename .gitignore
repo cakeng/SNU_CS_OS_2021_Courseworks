@@ -96,3 +96,4 @@ x509.genkey
 boot.img
 modules.img
 !tizen-unified_20181024.1_iot-headless-2parts-armv7l-rpi3.tar.gz
+!/rpi3/boot/*
