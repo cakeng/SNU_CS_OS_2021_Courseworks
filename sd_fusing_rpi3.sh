@@ -164,7 +164,7 @@ function mkpart_3 () {
 
 	local -r EFFECTIVE_DISK=$DISK
 
-	if [[ "$DISK" ~= [0-9]$ ]]
+	if [[ "$DISK" =~ [0-9]$ ]]
 	then
 		EFFECTIVE_DISK+="p"
 	fi
