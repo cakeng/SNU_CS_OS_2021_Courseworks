@@ -56,9 +56,15 @@ function fusing_image () {
 	# get binary info using basename
 	get_index_use_name $(basename $fusing_img)
 	local -r -i part_idx=$?
+	local EFFECTIVE_DEVICE=$DEVICE
+
+	if [[ "$DEVICE" =~ [0-9]$ ]]
+	then
+		EFFECTIVE_DEVICE+="p"
+	fi
 
 	if [ $part_idx -ne $PART_TABLE_COL ];then
-		local -r device=$DEVICE${PART_TABLE[${part_idx} * ${PART_TABLE_ROW} + 1]}
+		local -r device=$EFFECTIVE_DEVICE${PART_TABLE[${part_idx} * ${PART_TABLE_ROW} + 1]}
 		local -r bs=${PART_TABLE[${part_idx} * ${PART_TABLE_ROW} + 2]}
 	else
 		echo "Not supported binary: $fusing_img"
@@ -162,7 +168,7 @@ function mkpart_3 () {
 	local -r RAMDISK_RECOVERY=ramdisk-recovery
 	local -r INFORM=inform
 
-	local -r EFFECTIVE_DISK=$DISK
+	local EFFECTIVE_DISK=$DISK
 
 	if [[ "$DISK" =~ [0-9]$ ]]
 	then
@@ -178,7 +184,7 @@ function mkpart_3 () {
 	echo "========================================"
 	echo "Label          dev           size"
 	echo "========================================"
-	echo $BOOT"		" $EFFECITVE_DISK"1	" $BOOT_SZ "MB"
+	echo $BOOT"		" $EFFECTIVE_DISK"1	" $BOOT_SZ "MB"
 	echo $ROOTFS"		" $EFFECTIVE_DISK"2	" $ROOTFS_SZ "MB"
 	echo $SYSTEMDATA"	" $EFFECTIVE_DISK"3	" $DATA_SZ "MB"
 	echo "[Extend]""	" $EFFECTIVE_DISK"4"
