@@ -818,6 +818,9 @@ __SYSCALL(__NR_pkey_free, sys_pkey_free)
 #define __NR_statx 397
 __SYSCALL(__NR_statx, sys_statx)
 
+#define __NR_ptree 398
+__SYSCALL(__NR_ptree, sys_ptree)
+
 /*
  * Please add new compat syscalls above this comment and update
  * __NR_compat_syscalls in asm/unistd.h.
