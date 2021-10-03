@@ -1,0 +1,8 @@
+[Unit]
+Description=Update helper service for update-agent
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+SmackProcessLabel=System::Privileged
+ExecStart=/usr/bin/update-helper

@@ -1,0 +1,35 @@
+<CertificateSet>
+    <CertificateDomain name="tizen-developer"><!-- used to verify tizen widgets -->
+        <FingerprintSHA1>D4:C0:91:D8:DE:C4:16:D2:44:0E:AA:B6:E4:CD:F8:AD:6A:F4:36:4C</FingerprintSHA1><!-- tizen-developers-root.pem -->
+        <FingerprintSHA1>2B:A0:20:7D:40:90:1D:00:04:89:60:00:3B:DE:34:89:21:BE:D4:4F</FingerprintSHA1><!-- tizen-developer-root-ca.pem -->
+        <FingerprintSHA1>31:5C:5F:76:6C:2E:A4:4E:EF:3A:C1:76:9D:8D:58:57:E7:DA:60:0E</FingerprintSHA1><!-- Tizen_Developers_Root_Class.pem -->
+    </CertificateDomain>
+    <CertificateDomain name="tizen-public">
+        <FingerprintSHA1>42:E0:51:10:AC:72:E5:7F:BB:7D:20:26:D3:EB:EC:A6:73:2D:76:CD</FingerprintSHA1><!-- tizen_store_test_public.pem -->
+        <FingerprintSHA1>CE:47:ED:BF:C4:08:C2:B5:1F:92:F7:DB:10:1D:45:37:E1:E0:52:03</FingerprintSHA1><!-- tizen_store_public.pem -->
+        <FingerprintSHA1>3D:E1:74:38:61:02:51:0A:F6:DD:E1:D0:65:04:48:5B:CA:6B:81:76</FingerprintSHA1><!-- tizen_association_dev_public.pem -->
+        <FingerprintSHA1>5A:C1:18:AC:6E:C7:EA:27:59:7D:5F:5A:1D:19:85:3D:A2:95:D5:18</FingerprintSHA1><!-- tizen-public-class-developer-root.pem -->
+        <FingerprintSHA1>04:C5:A6:1D:75:BB:F5:5C:0F:A2:66:F6:09:4D:9B:2B:5F:3B:44:AE</FingerprintSHA1><!-- tizen-distributor-root-ca-public.pem -->
+    </CertificateDomain>
+    <CertificateDomain name="tizen-partner">
+        <FingerprintSHA1>EA:CD:9D:63:FC:70:0E:EA:E2:76:60:65:29:09:62:0A:70:14:5D:3E</FingerprintSHA1><!-- tizen_store_test_partner.pem -->
+        <FingerprintSHA1>F7:7F:01:18:FE:88:AA:B2:B8:EF:80:CD:CB:54:81:39:B4:76:6A:28</FingerprintSHA1><!-- tizen_store_partner.pem -->
+        <FingerprintSHA1>5D:ED:DA:03:A7:36:51:70:19:2A:70:98:07:4D:65:2C:1C:39:ED:58</FingerprintSHA1><!-- tizen_association_dev_partner.pem -->
+        <FingerprintSHA1>DE:F9:4F:17:12:3A:CD:0D:42:7B:A2:C8:95:42:67:2B:50:8F:B6:FF</FingerprintSHA1><!-- tizen-partner-class-developer-root.pem -->
+        <FingerprintSHA1>67:37:DE:B7:B9:9D:D2:DB:A5:2C:42:DE:CB:2F:2C:3E:33:97:E1:85</FingerprintSHA1><!-- tizen-distributor-root-ca-partner.pem -->
+    </CertificateDomain>
+    <CertificateDomain name="tizen-platform">
+        <FingerprintSHA1>38:28:11:36:61:0E:8C:1C:94:A7:CE:9B:32:AC:B3:DB:A1:4F:75:59</FingerprintSHA1><!-- tizen_store_test_platform.pem -->
+        <FingerprintSHA1>C1:D3:A8:73:BD:1C:03:9B:F1:45:3C:0A:6C:63:F1:14:4A:2C:B9:7E</FingerprintSHA1><!-- tizen_store_platform.pem -->
+        <FingerprintSHA1>4C:5B:B3:20:DF:8C:8C:6F:81:57:90:F4:2C:15:E2:DF:DA:23:A1:66</FingerprintSHA1><!-- tizen_association_dev_platform.pem -->
+        <FingerprintSHA1>76:9F:5B:68:84:D0:21:92:5D:0C:1E:94:40:EC:D5:4E:21:2F:5A:43</FingerprintSHA1><!-- tizen-platform-class-developer-root.pem -->
+        <FingerprintSHA1>B0:5F:40:43:71:1F:11:BC:9A:6A:62:FA:DA:92:54:79:92:16:11:DF</FingerprintSHA1><!-- tizen-distributor-root-ca-partner-operator.pem -->
+        <FingerprintSHA1>2A:74:E8:CF:9E:0F:C3:D9:80:48:8B:E7:86:F7:83:49:91:11:E1:E0</FingerprintSHA1><!-- tizen-distributor-root-ca-partner-manufacturer.pem -->
+    </CertificateDomain>
+    <CertificateDomain name="tizen-test">
+    </CertificateDomain>
+    <CertificateDomain name="tizen-verify">
+    </CertificateDomain>
+    <CertificateDomain name="tizen-store">
+    </CertificateDomain>
+</CertificateSet>

@@ -1,0 +1,10 @@
+[Unit]
+Description=System update script service
+DefaultDependencies=no
+Requires=sysinit.target
+After=sysinit.target
+
+[Service]
+Type=oneshot
+SmackProcessLabel=System::Privileged
+ExecStart=/usr/share/upgrade/update-init.sh

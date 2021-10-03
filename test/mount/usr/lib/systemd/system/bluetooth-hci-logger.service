@@ -1,0 +1,15 @@
+[Unit]
+Description=Service to run BT HCI logger normally
+
+[Service]
+User=network_fw
+Group=network_fw
+Type=oneshot
+SmackProcessLabel=System
+ExecStartPre=/usr/bin/rm -f /run/.hci_logger_start
+ExecStart=/usr/etc/bluetooth/bt-run-hci-logger.sh normal start btmon
+RemainAfterExit=no
+StandardOutput=journal+console
+SuccessExitStatus=1
+StartLimitInterval=1
+StartLimitBurst=10

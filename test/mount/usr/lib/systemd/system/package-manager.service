@@ -1,0 +1,10 @@
+[Unit]
+Description=Tizen Package Manager
+
+[Service]
+User=app_fw
+Group=app_fw
+SmackProcessLabel=System
+Capabilities=cap_chown,cap_dac_override,cap_dac_read_search,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_fowner=i
+SecureBits=keep-caps
+ExecStart=/usr/bin/pkgmgr-server

@@ -1,0 +1,6 @@
+[Unit]
+Description=Bluetooth hci down
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/hciconfig hci0 down

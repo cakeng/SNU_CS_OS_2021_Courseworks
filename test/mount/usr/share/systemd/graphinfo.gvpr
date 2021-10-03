@@ -1,0 +1,85 @@
+BEGIN {
+        string node_to_print = "";
+        string pid_to_print = "";
+        int edge_count[];
+        string result[string];
+        string e;
+        int interface = 0;
+        string exclude_node[string];
+
+        int not_excluded_node(edge_t edg) {
+                if(!strcmp(exclude_node[edg.tail.name], edg.tail.name) || !strcmp(exclude_node[edg.head.name], edg.head.name))
+                        return 0;
+                return 1;
+        }
+
+        void print_interface(edge_t edg) {
+                string attribute[int];
+                count = split(edg.label , attribute);
+                if (!strcmp(attribute[0], "signal")) {
+                        attribute[0] = sprintf("%s \\n %s", attribute[0], attribute[2]);
+                }
+                e = edg.tail.name + edg.head.name + attribute[0];
+                edge_count[e] = edge_count[e] + 1;
+                result[e] = sprintf("\t\"%s\" -> \"%s\" [ label = \" %s \\n %d\" ];\n", edg.tail.name, edg.head.name, attribute[0], edge_count[e]);
+        }
+
+        void print_basic(edge_t edg) {
+                e  = edg.name + edg.label;
+                edge_count[e] = edge_count[e] + 1;
+                result[e] = sprintf("\t\"%s\" -> \"%s\" [ label = \"%s \\n %d\" ];\n", edg.tail.name, edg.head.name, edg.label, edge_count[e]);
+        }
+
+}
+
+BEG_G {
+        printf("digraph {\n\trankdir=LR\n");
+        int arg;
+        for (arg = 0; arg < ARGC; arg++) {
+                if (!strcmp(ARGV[arg], "interface")) {
+                        interface = 1;
+                }
+                if (!strcmp(ARGV[arg], "node")) {
+                        arg++;
+                        if (arg < ARGC)
+                                node_to_print = ARGV[arg];
+                }
+                if (!strcmp(ARGV[arg], "-node")) {
+                        arg++;
+                        if (arg < ARGC)
+                                exclude_node[ARGV[arg]] = ARGV[arg];
+                }
+        }
+}
+
+E {
+        if (ARGC > 0) {
+                if (not_excluded_node($)) {
+                        if (strcmp("", node_to_print)) {
+                                if (!strcmp(node_to_print, $.tail.name) || !strcmp(node_to_print, $.head.name)) {
+                                        if (interface)
+                                                print_interface($);
+                                        else
+                                                print_basic($);
+                                }
+                        }
+                        else {
+                                if (interface)
+                                        print_interface($);
+                                else
+                                print_basic($);
+                        }
+                }
+        }
+        else
+                print_basic($);
+}
+
+
+END_G {
+        string var;
+        for(result[var]) {
+                printf("%s", result[var]);
+        }
+        printf("}\n");
+}

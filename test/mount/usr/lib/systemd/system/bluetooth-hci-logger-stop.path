@@ -1,0 +1,5 @@
+[Unit]
+Description=Path activation for the "bluetooth-hci-logger-stop"
+
+[Path]
+PathExists=/run/.hci_logger_stop

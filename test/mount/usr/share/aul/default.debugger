@@ -1,0 +1,30 @@
+[DEBUGGER]
+NAME	VALGRIND
+EXE	/opt/usr/home/owner/share/tmp/sdk_tools/valgrind/usr/bin/valgrind
+APP_TYPE	capp|c++app
+EXTRA_KEY	__DLP_VALGRIND_ARG__
+UNLINK	/tmp/valgrind_result.txt
+UNLINK	/tmp/valgrind_result.xml
+
+[DEBUGGER]
+NAME	DEBUG
+EXE	/opt/usr/home/owner/share/tmp/sdk_tools/gdbserver/gdbserver
+APP_TYPE	capp|c++app
+EXTRA_KEY	__DLP_DEBUG_ARG__
+DEFAULT_OPT	--wrapper
+DEFAULT_OPT	env
+DEFAULT_OPT	OPENSSL_armcap=0
+DEFAULT_OPT	--
+
+[DEBUGGER]
+NAME	ATTACH
+EXE	/opt/usr/home/owner/share/tmp/sdk_tools/gdbserver/gdbserver
+APP_TYPE	capp|c++app
+EXTRA_KEY	__DLP_ATTACH_ARG__
+ATTACH	true
+
+[DEBUGGER]
+NAME	UNIT_TEST
+APP_TYPE	capp|c++app
+LAST_EXTRA_KEY	__DLP_UNIT_TEST_ARG__
+

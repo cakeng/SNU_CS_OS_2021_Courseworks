@@ -1,0 +1,191 @@
+{
+	"latencies":[
+		{
+			"type":"low",
+			"fragsize-ms":25,
+			"minreq-ms":-1,
+			"tlength-ms":100,
+			"prebuf-ms":0,
+			"maxlength":-1
+		},
+		{
+			"type":"mid",
+			"fragsize-ms":50,
+			"minreq-ms":-1,
+			"tlength-ms":200,
+			"prebuf-ms":0,
+			"maxlength":-1
+		},
+		{
+			"type":"high",
+			"fragsize-ms":75,
+			"minreq-ms":-1,
+			"tlength-ms":400,
+			"prebuf-ms":0,
+			"maxlength":-1
+		},
+		{
+			"type":"voip",
+			"fragsize-ms":20,
+			"minreq-ms":20,
+			"tlength-ms":100,
+			"prebuf-ms":0,
+			"maxlength":-1
+		},
+		{
+			"type":"default",
+			"fragsize-ms":50,
+			"minreq-ms":-1,
+			"tlength-ms":200,
+			"prebuf-ms":-1,
+			"maxlength":-1
+		},
+		{
+			"type":"default-async",
+			"fragsize-ms":50,
+			"minreq-ms":20,
+			"tlength-ms":200,
+			"prebuf-ms":0,
+			"maxlength":-1
+		},
+	],
+	"volumes":[
+		{
+			"type":"master",
+			"is-hal-volume":1
+		},
+		{
+			"type":"media",
+			"is-hal-volume":0
+		},
+		{
+			"type":"system",
+			"is-hal-volume":0
+		},
+		{
+			"type":"alarm",
+			"is-hal-volume":0
+		},
+		{
+			"type":"notification",
+			"is-hal-volume":0
+		},
+		{
+			"type":"voice",
+			"is-hal-volume":0
+		},
+		{
+			"type":"ringtone",
+			"is-hal-volume":0
+		},
+		{
+			"type":"voip",
+			"is-hal-volume":0
+		},
+		{
+			"type":"call",
+			"is-hal-volume":1
+		}
+	],
+	"streams":[
+		{
+			"role":"media",
+			"priority" : 3,
+			"route-type" : "auto",
+			"volume-types":{"in":"none","out":"media"},
+			"avail-in-devices":["usb-audio"],
+			"avail-out-devices":["bt-a2dp","usb-audio","builtin-speaker"],
+			"avail-frameworks":["player","wav-player","tone-player","audio-io","recorder"]
+		},
+		{
+			"role":"system",
+			"priority" : 2,
+			"route-type" : "auto",
+			"volume-types":{"in":"none","out":"system"},
+			"avail-in-devices":["none"],
+			"avail-out-devices":["bt-a2dp","usb-audio","builtin-speaker"],
+			"avail-frameworks":["player","wav-player","tone-player","audio-io"]
+		},
+		{
+			"role":"alarm",
+			"priority" : 4,
+			"route-type" : "auto-all",
+			"volume-types":{"in":"none","out":"alarm"},
+			"avail-in-devices":["none"],
+			"avail-out-devices":["builtin-speaker","bt-a2dp","usb-audio"],
+			"avail-frameworks":["player","wav-player","tone-player","audio-io"]
+		},
+		{
+			"role":"notification",
+			"priority" : 4,
+			"route-type" : "auto-all",
+			"volume-types":{"in":"none","out":"notification"},
+			"avail-in-devices":["none"],
+			"avail-out-devices":["builtin-speaker","bt-a2dp","usb-audio"],
+			"avail-frameworks":["player","wav-player","tone-player","audio-io"]
+		},
+		{
+			"role":"emergency",
+			"priority" : 4,
+			"route-type" : "auto",
+			"volume-types":{"in":"none","out":"none"},
+			"avail-in-devices":["none"],
+			"avail-out-devices":["builtin-speaker"],
+			"avail-frameworks":["player","wav-player","tone-player","audio-io"]
+		},
+		{
+			"role":"voice-information",
+			"priority" : 3,
+			"route-type" : "auto",
+			"volume-types":{"in":"none","out":"voice"},
+			"avail-in-devices":["none"],
+			"avail-out-devices":["bt-a2dp","usb-audio","builtin-speaker"],
+			"avail-frameworks":["player","wav-player","tone-player","audio-io"]
+		},
+		{
+			"role":"voice-recognition",
+			"priority" : 3,
+			"route-type" : "auto",
+			"volume-types":{"in":"none","out":"none"},
+			"avail-in-devices":["usb-audio"],
+			"avail-out-devices":["none"],
+			"avail-frameworks":["audio-io"]
+		},
+		{
+			"role":"voice-recognition-service",
+			"priority" : 3,
+			"route-type" : "auto",
+			"volume-types":{"in":"none","out":"none"},
+			"avail-in-devices":["usb-audio"],
+			"avail-out-devices":["none"],
+			"avail-frameworks":["audio-io"]
+		},
+		{
+			"role":"ringtone-voip",
+			"priority" : 5,
+			"route-type" : "auto-all",
+			"volume-types":{"in":"none","out":"ringtone"},
+			"avail-in-devices":["none"],
+			"avail-out-devices":["bt-a2dp","builtin-speaker","usb-audio"],
+			"avail-frameworks":["player","wav-player","tone-player","audio-io","sound-manager"]
+		},
+		{
+			"role":"voip",
+			"priority" : 5,
+			"route-type" : "manual",
+			"volume-types":{"in":"none","out":"voip"},
+			"avail-in-devices":["usb-audio"],
+			"avail-out-devices":["builtin-speaker","usb-audio"],
+			"avail-frameworks":["audio-io","tone-player","sound-manager"]
+		},
+		{
+			"role":"ext-media",
+			"priority" : 3,
+			"route-type" : "manual-ext",
+			"volume-types":{"in":"none","out":"media"},
+			"avail-in-devices":["usb-audio"],
+			"avail-out-devices":["bt-a2dp","usb-audio"],
+			"avail-frameworks":["player","wav-player","tone-player","audio-io","recorder"]
+		},
+	]
+}

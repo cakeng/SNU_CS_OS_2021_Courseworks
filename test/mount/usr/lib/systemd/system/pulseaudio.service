@@ -1,0 +1,15 @@
+[Unit]
+Description=pulseaudio service
+After=syslog.target systemd-tmpfiles-setup.service
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/pulseaudio
+Restart=always
+KillSignal=SIGKILL
+MemoryLimit=50M
+PIDFile=/var/run/pulse/pid
+SmackProcessLabel=System
+
+[Install]
+WantedBy=multi-user.target

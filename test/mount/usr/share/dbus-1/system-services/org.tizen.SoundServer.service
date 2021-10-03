@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.tizen.SoundServer
+Exec=/bin/false
+SystemdService=sound-server.service

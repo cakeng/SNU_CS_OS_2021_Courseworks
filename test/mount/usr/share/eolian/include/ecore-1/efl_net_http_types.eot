@@ -1,0 +1,179 @@
+import eina_types;
+
+enum Efl.Net.Http.Version {
+    [[HTTP protocol versions]]
+
+    v1_0 = 100, [[HTTP version 1.0]]
+    v1_1 = 101, [[HTTP version 1.1]]
+    v2_0 = 200, [[HTTP version 2.0]]
+}
+
+enum Efl.Net.Http.Authentication_Method {
+    [[HTTP authentication methods]]
+
+    none = 0, [[HTTP authentication method none]]
+    basic = (1 << 0), [[HTTP authentication method basic]]
+    digest = (1 << 1), [[HTTP authentication method digest]]
+    negotiate = (1 << 2), [[HTTP authentication method negotiate]]
+    ntlm = (1 << 3), [[HTTP authentication method ntlm]]
+    ntlm_winbind = (1 << 4), [[HTTP authentication method ntlm winbind]]
+    any_safe = Efl.Net.Http.Authentication_Method.digest | Efl.Net.Http.Authentication_Method.negotiate | Efl.Net.Http.Authentication_Method.ntlm | Efl.Net.Http.Authentication_Method.ntlm_winbind, [[HTTP authentication method any safe]]
+    any = Efl.Net.Http.Authentication_Method.any_safe | Efl.Net.Http.Authentication_Method.basic, [[HTTP authentication method any]]
+}
+
+enum Efl.Net.Http.Status {
+    [[Common HTTP status codes. A more detailed description on the various HTTPS status codes can be
+    found one Wikipedia: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes]]
+
+    unknown = 0, [[HTTP status code: Unknown, likely not connected]]
+
+    /* Informational: 1xx */
+    continue = 100, [[HTTP status code: continue]]
+    switching_protocols = 101, [[HTTP status code: switching protocols]]
+    checkpoint = 103, [[HTTP status code: checkpoint (unofficial extension)]]
+    processing = 102, [[HTTP status code: processing]]
+
+    /* success: 2xx */
+    ok = 200, [[HTTP status code: OK]]
+    created = 201, [[HTTP status code: created]]
+    accepted = 202, [[HTTP status code: accepted]]
+    non_authoritative_information = 203, [[HTTP status code: non authoritative information]]
+    no_content = 204, [[HTTP status code: no content]]
+    reset_content = 205, [[HTTP status code: reset content]]
+    partial_content = 206, [[HTTP status code: partial content]]
+    multi_status = 207, [[HTTP status code: multi status]]
+    already_reported = 208, [[HTTP status code: already reported]]
+    im_used = 226, [[HTTP status code: IM used]]
+
+    /* redirection: 3xx */
+    multiple_choices = 300, [[HTTP status code: multiple choices]]
+    moved_permanently = 301, [[HTTP status code: moved permanently]]
+    found = 302, [[HTTP status code: found]]
+    see_other = 303, [[HTTP status code: see other]]
+    not_modified = 304, [[HTTP status code: not modified]]
+    use_proxy = 305, [[HTTP status code: use proxy]]
+    switch_proxy = 306, [[HTTP status code: switch proxy]]
+    temporary_redirect = 307, [[HTTP status code: temporary redirect]]
+    permanent_redirect = 308, [[HTTP status code: permanent redirect]]
+
+    /* client error: 4xx */
+    bad_request = 400, [[HTTP status code: bad request]]
+    unauthorized = 401, [[HTTP status code: unauthorized]]
+    payment_required = 402, [[HTTP status code: payment required]]
+    forbidden = 403, [[HTTP status code: forbidden]]
+    not_found = 404, [[HTTP status code: not found]]
+    method_not_allowed = 405, [[HTTP status code: method not allowed]]
+    not_acceptable = 406, [[HTTP status code: not acceptable]]
+    proxy_authentication_required = 407, [[HTTP status code: proxy authentication required]]
+    request_timeout = 408, [[HTTP status code: request timeout]]
+    conflict = 409, [[HTTP status code: conflict]]
+    gone = 410, [[HTTP status code: gone]]
+    length_required = 411, [[HTTP status code: length required]]
+    precondition_failed = 412, [[HTTP status code: precondition failed]]
+    payload_too_large = 413, [[HTTP status code: payload too large]]
+    uri_too_long = 414, [[HTTP status code: URI too long]]
+    unsupported_media_type = 415, [[HTTP status code: unsupported media type]]
+    range_not_satisfiable = 416, [[HTTP status code: range not satisfied]]
+    expectation_failed = 417, [[HTTP status code: expectation failed]]
+    misdirected_request = 421, [[HTTP status code: misdirected request]]
+    unprocessable_entity = 422, [[HTTP status code: unprocessable entity]]
+    locked = 423, [[HTTP status code: locked]]
+    failed_dependency = 424, [[HTTP status code: failed dependency]]
+    upgrade_required = 426, [[HTTP status code: upgrade required]]
+    precondition_required = 428, [[HTTP status code: precondition required]]
+    too_many_requests = 429, [[HTTP status code: too many requests]]
+    request_header_fields_too_large = 431, [[HTTP status code: request header fields too large]]
+    login_timeout = 440, [[HTTP status code: login timeout (unofficial extension)]]
+    no_response = 444, [[HTTP status code: no response (unofficial extension)]]
+    retry_with = 449, [[HTTP status code: retry with (unofficial extension)]]
+    blocked_by_windows_parental_controls = 450, [[HTTP status code: blocked by windows parental controls (unofficial extension)]]
+    unavailable_for_legal_reasons = 451, [[HTTP status code: unavailable for legal reasons]]
+    ssl_certificate_error = 495, [[HTTP status code: SSL certificate error (unofficial extension)]]
+    ssl_certificate_required = 496, [[HTTP status code: SSL certificate required (unofficial extension)]]
+    http_request_sent_to_https_port = 497, [[HTTP status code: HTTP request sent to HTTPS port (unofficial extension)]]
+    request_has_been_forbidden_by_antivirus = 499, [[HTTP status code: request has been forbidden by
+    anti virus]]
+
+    /* server error: 5xx */
+    internal_server_error = 500, [[HTTP status code: internal server error]]
+    not_implemented = 501, [[HTTP status code: not implemented]]
+    bad_gateway = 502, [[HTTP status code: bad gateway]]
+    service_unavailable = 503, [[HTTP status code: service unavailable]]
+    gateway_timeout = 504, [[HTTP status code: gateway timeout]]
+    http_version_not_supported = 505, [[HTTP status code: HTTP version not supported]]
+    variant_also_negotiates = 506, [[HTTP status code: variant also negotiates]]
+    insufficient_storage = 507, [[HTTP status code: insufficient storage]]
+    loop_detected = 508, [[HTTP status code: loop detected]]
+    bandwidth_limit_exceeded = 509, [[HTTP status code: bandwidth limit exceeded (unofficial extension)]]
+    not_extended = 510, [[HTTP status code: not extended]]
+    network_authentication_required = 511, [[HTTP status code: network authentication required]]
+}
+
+struct Efl.Net.Http.Header {
+    [[An HTTP Header.
+
+      Do not assume strings are Eina_Stringshare and they may be
+      NULL. The key and value should not include any trailing
+      whitespace.
+
+      There is a special case for response headers when
+      "allow_redirects" is enabled, in that case
+      efl_net_dialer_http_response_headers_all_get() will return some
+      items with key being NULL, that notifies of a new request as
+      described in the value "HTTP/1.1 200 Ok".
+    ]]
+    key: string; [[for response headers this may be null to indicate a new request response, then the value will be a line such as 'HTTP/1.1 200 Ok']]
+    value: string; [[Header value]]
+}
+
+var Efl.Net.Http.Error.BAD_CONTENT_ENCODING: Eina.Error; [[HTTP error: bad content encoding]]
+var Efl.Net.Http.Error.BAD_DOWNLOAD_RESUME: Eina.Error; [[HTTP error: bad download resume]]
+var Efl.Net.Http.Error.BAD_FUNCTION_ARGUMENT: Eina.Error; [[HTTP error: bad function argument]]
+var Efl.Net.Http.Error.CHUNK_FAILED: Eina.Error; [[HTTP error: chunk failed]]
+var Efl.Net.Http.Error.CONV_FAILED: Eina.Error; [[HTTP error: conv failed]]
+var Efl.Net.Http.Error.CONV_REQD: Eina.Error; [[HTTP error: conv reqd]]
+var Efl.Net.Http.Error.FAILED_INIT: Eina.Error; [[HTTP error: failed init]]
+var Efl.Net.Http.Error.FILE_COULDNT_READ_FILE: Eina.Error; [[HTTP error: could not read file]]
+var Efl.Net.Http.Error.FILESIZE_EXCEEDED: Eina.Error; [[HTTP error: filesize exceeded]]
+var Efl.Net.Http.Error.FUNCTION_NOT_FOUND: Eina.Error; [[HTTP error: function not found]]
+var Efl.Net.Http.Error.GOT_NOTHING: Eina.Error; [[HTTP error: got nothing]]
+var Efl.Net.Http.Error.HTTP2: Eina.Error; [[HTTP error: http2]]
+var Efl.Net.Http.Error.HTTP2_STREAM: Eina.Error; [[HTTP error: http2 stream]]
+var Efl.Net.Http.Error.HTTP_POST_ERROR: Eina.Error; [[HTTP error: http post error]]
+var Efl.Net.Http.Error.HTTP_RETURNED_ERROR: Eina.Error; [[HTTP error: http returned error]]
+var Efl.Net.Http.Error.INTERFACE_FAILED: Eina.Error; [[HTTP error: interface failed]]
+var Efl.Net.Http.Error.LOGIN_DENIED: Eina.Error; [[HTTP error: login denied]]
+var Efl.Net.Http.Error.NO_CONNECTION_AVAILABLE: Eina.Error; [[HTTP error: no connection available]]
+var Efl.Net.Http.Error.NOT_BUILT_IN: Eina.Error; [[HTTP error: not built in]]
+var Efl.Net.Http.Error.OPERATION_TIMEDOUT: Eina.Error; [[HTTP error: operation timeout]]
+var Efl.Net.Http.Error.PARTIAL_FILE: Eina.Error; [[HTTP error: partial file]]
+var Efl.Net.Http.Error.PEER_FAILED_VERIFICATION: Eina.Error; [[HTTP error: peer failed verification]]
+var Efl.Net.Http.Error.RANGE_ERROR: Eina.Error; [[HTTP error: range error]]
+var Efl.Net.Http.Error.READ_ERROR: Eina.Error; [[HTTP error: read error]]
+var Efl.Net.Http.Error.RECV_ERROR: Eina.Error; [[HTTP error: receive error]]
+var Efl.Net.Http.Error.REMOTE_ACCESS_DENIED: Eina.Error; [[HTTP error: remote access denied]]
+var Efl.Net.Http.Error.REMOTE_DISK_FULL: Eina.Error; [[HTTP error: remote disk full]]
+var Efl.Net.Http.Error.REMOTE_FILE_EXISTS: Eina.Error; [[HTTP error: remote file exists]]
+var Efl.Net.Http.Error.REMOTE_FILE_NOT_FOUND: Eina.Error; [[HTTP error: remote file not found]]
+var Efl.Net.Http.Error.SEND_ERROR: Eina.Error; [[HTTP error: send error]]
+var Efl.Net.Http.Error.SEND_FAIL_REWIND: Eina.Error; [[HTTP error: send fail rewind]]
+var Efl.Net.Http.Error.SSL_CACERT: Eina.Error; [[HTTP error: SSL cacert]]
+var Efl.Net.Http.Error.SSL_CACERT_BADFILE: Eina.Error; [[HTTP error: SSL cacert bad file]]
+var Efl.Net.Http.Error.SSL_CERTPROBLEM: Eina.Error; [[HTTP error: SSL certproblem]]
+var Efl.Net.Http.Error.SSL_CIPHER: Eina.Error; [[HTTP error: SSL cipher]]
+var Efl.Net.Http.Error.SSL_CONNECT_ERROR: Eina.Error; [[HTTP error: SSL connect error]]
+var Efl.Net.Http.Error.SSL_CRL_BADFILE: Eina.Error; [[HTTP error: SSL crl bad file]]
+var Efl.Net.Http.Error.SSL_ENGINE_INITFAILED: Eina.Error; [[HTTP error: SSL engine init failed]]
+var Efl.Net.Http.Error.SSL_ENGINE_NOTFOUND: Eina.Error; [[HTTP error: SSL engine not found]]
+var Efl.Net.Http.Error.SSL_ENGINE_SETFAILED: Eina.Error; [[HTTP error: SSL engine set failed]]
+var Efl.Net.Http.Error.SSL_INVALIDCERTSTATUS: Eina.Error; [[HTTP error: SSL invalid cert status]]
+var Efl.Net.Http.Error.SSL_ISSUER_ERROR: Eina.Error; [[HTTP error: SSL issuer error]]
+var Efl.Net.Http.Error.SSL_PINNEDPUBKEYNOTMATCH: Eina.Error; [[HTTP error: SSL pinned pub key does not match]]
+var Efl.Net.Http.Error.SSL_SHUTDOWN_FAILED: Eina.Error; [[HTTP error: SSL shutdown failed]]
+var Efl.Net.Http.Error.TOO_MANY_REDIRECTS: Eina.Error; [[HTTP error: too many redirects]]
+var Efl.Net.Http.Error.UNKNOWN_OPTION: Eina.Error; [[HTTP error: unknown option]]
+var Efl.Net.Http.Error.UNSUPPORTED_PROTOCOL: Eina.Error; [[HTTP error: unsupported protocol]]
+var Efl.Net.Http.Error.UPLOAD_FAILED: Eina.Error; [[HTTP error: upload failed]]
+var Efl.Net.Http.Error.URL_MALFORMAT: Eina.Error; [[HTTP error: URL mal-formatted]]
+var Efl.Net.Http.Error.USE_SSL_FAILED: Eina.Error; [[HTTP error: usage of SSL failed]]
+var Efl.Net.Http.Error.WRITE_ERROR: Eina.Error; [[HTTP error: write error]]

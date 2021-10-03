@@ -1,0 +1,184 @@
+#!/bin/bash
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+# Authors:
+#      Kangho Kim <kh5325.kim@samsung.com>, Yoonki Park <yoonki.park@samsung.com>
+#
+# Description: front hand of app launcher
+source /etc/tizen-platform.conf
+
+APP_PATH_PREFIX=${TZ_SYS_RW_APP}
+SDK_TOOLS_PATH=${TZ_SDK_TOOLS}
+
+print_usage()
+{
+    echo "usage: $0 [-a <appid>] [-p <pkgid>] [-e <executable>] -m <run|debug|da|oprofile> [-P <port>] [-attach <pid>] -t <gtest,gcov> [<args...>]"
+}
+
+first="true"
+
+until [ -z "$1" ]; do
+    case "$1" in
+    -a)
+        if [ -z "$2" ]
+        then
+            print_usage
+            exit 1;
+        fi
+        appid=$2
+        shift 2;
+        ;;
+    -p)
+        if [ -z "$2" ]
+        then
+            print_usage
+            exit 1;
+        fi
+        pkgid=$2
+        shift 2;
+        ;;
+    -e)
+        if [ -z "$2" ]
+        then
+            print_usage
+            exit 1;
+        fi
+        exe=${2/%.exe/}
+        shift 2;
+        ;;
+    -m)
+        if [ "$2" != "run" ] && [ "$2" != "debug" ] && [ "$2" != "da" ] && [ "$2" != "oprofile" ]
+        then
+            print_usage
+            exit 1;
+        fi
+        mode=$2
+        shift 2;
+        ;;
+    -P)
+        if [ -z "$2" ]
+        then
+            print_usage
+            exit 1;
+        fi
+        port=$2
+        shift 2;
+        ;;
+    -attach)
+        if [ -z "$2" ]
+        then
+            print_usage
+            exit 1;
+        fi
+        attach_id=$2
+        shift 2;
+        ;;
+    -t)
+        if [ "$2" = "" ] || [ ${2:0:1} = "-" ]
+        then
+            shift 1;
+        else
+# parse -t option
+        OLD_IFS=$IFS;IFS=,;
+        for type in $2;do
+            if [ "$type" = "gtest" ]
+            then
+                COV_TEST_PREFIX="export LD_LIBRARY_PATH=%s/gtest/usr/lib && $COV_TEST_PREFIX"
+                if [ "" != "$result_mode" ]
+                then
+                    result_mode="$result_mode,UNIT_TEST"
+                else
+                    launch_app_mode="__LAUNCH_APP_MODE__ SYNC"
+                    result_mode="UNIT_TEST"
+                fi
+            fi
+            if [ "$type" = "gcov" ]
+            then
+                COV_TEST_PREFIX="export GCOV_PREFIX=/tmp/%s/data && export GCOV_PREFIX_STRIP=0 && $COV_TEST_PREFIX"
+                if [ "" != "$result_mode" ]
+                then
+                    result_mode="$result_mode,CODE_COVERAGE"
+                else
+                    launch_app_mode="__LAUNCH_APP_MODE__ SYNC"
+                    result_mode="CODE_COVERAGE"
+                fi
+            fi
+        done;
+        IFS=$OLD_IFS
+
+        shift 2;
+        fi
+        ;;
+    *)
+        if [ "$first" = "true" ]
+        then
+            first="false"
+            args="__DLP_UNIT_TEST_ARG__ $1"
+        else
+            args="$args","$1"
+        fi
+        shift 1;
+    esac
+done
+
+if [ "" != "$appid" ]
+then
+    launch_app_arg1=$appid
+else
+    launch_app_arg1=$pkgid.$exe
+fi
+
+if [ "$mode" = "debug" ]
+then
+    if [ "" != "$attach_id" ]
+    #debug attach
+    then
+        cmd="/usr/bin/launch_debug $launch_app_arg1 __AUL_SDK__ ATTACH __DLP_GDBSERVER_PATH__ ${SDK_TOOLS_PATH}/gdbserver/gdbserver __DLP_ATTACH_ARG__ --attach,:$port,$attach_id"
+    #debug
+    else
+        if [ "" != "$result_mode" ]
+        then
+            result_mode="DEBUG,$result_mode"
+        else
+            result_mode="DEBUG"
+        fi
+        cmd="/usr/bin/app_launcher -s $launch_app_arg1 __AUL_SDK__ $result_mode __DLP_DEBUG_ARG__ :$port $launch_app_mode $args __DLP_GDBSERVER_PATH__ ${SDK_TOOLS_PATH}/gdbserver/gdbserver"
+#       cmd="$COV_TEST_PREFIX ${TZ_SDK_TOOLS}/gdbserver/gdbserver :$port ${TZ_SYS_RW_APP}/$pkgid/bin/$exe"
+    fi
+else
+    if [ "$mode" = "run" ]
+    then
+        if [ "" != "$result_mode" ]
+        then
+            if [ "$result_mode" = "UNIT_TEST" ]
+            then
+                cmd="/usr/bin/launch_app $launch_app_arg1 __AUL_SDK__ $result_mode $launch_app_mode"
+            else
+                cmd="/usr/bin/launch_app $launch_app_arg1 __AUL_SDK__ $result_mode $launch_app_mode $args"
+            fi
+        else
+            cmd="/usr/bin/launch_app $launch_app_arg1"
+        fi
+    else
+        if [ "$mode" = "da" ]
+        then
+            if [ "" != "$result_mode" ]
+            then
+                result_mode="DYNAMIC_ANALYSIS,$result_mode"
+            else
+                result_mode="DYNAMIC_ANALYSIS"
+            fi
+        fi
+        if [ "$mode" = "oprofile" ]
+        then
+            if [ "" == "$result_mode" ]
+            then
+                result_mode="OPROFILE"
+            fi
+        fi
+        cmd="/usr/bin/launch_app $launch_app_arg1 __AUL_SDK__ $result_mode"
+    fi
+fi
+
+# execute command
+$cmd $args

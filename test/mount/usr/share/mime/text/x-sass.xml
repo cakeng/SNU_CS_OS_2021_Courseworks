@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="text/x-sass">
+  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+  <comment>Sass CSS pre-processor file</comment>
+  <sub-class-of type="text/plain"/>
+  <glob pattern="*.sass"/>
+  <generic-icon name="text-x-generic"/>
+</mime-type>

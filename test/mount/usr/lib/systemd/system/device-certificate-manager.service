@@ -1,0 +1,16 @@
+[Unit]
+Description=Start the Device Certificate Manager
+
+[Service]
+User=security_fw
+Group=security_fw
+SmackProcessLabel=System
+Type=notify
+KillMode=process
+TimeoutStopSec=3
+Restart=always
+ExecStart=/usr/bin/device-certificate-managerd
+Sockets=device-certificate-manager-control.socket
+
+[Install]
+WantedBy=multi-user.target

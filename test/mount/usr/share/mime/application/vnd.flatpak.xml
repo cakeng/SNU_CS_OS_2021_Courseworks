@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="application/vnd.flatpak">
+  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+  <comment>Flatpak application bundle</comment>
+  <glob pattern="*.flatpak"/>
+  <glob pattern="*.xdgapp"/>
+  <alias type="application/vnd.xdgapp"/>
+</mime-type>

@@ -1,0 +1,19 @@
+[Unit]
+Description=sdbd
+After=tmp.mount
+
+[Service]
+User=sdk
+Group=sdk
+SmackProcessLabel=System
+EnvironmentFile=-/run/sdbd-env
+#If necessary, Put Environment variable settings in a file like below
+#ExecStartPre=/bin/bash -c "/bin/echo 'SDB_TRACE=all SDBD_LOG_PATH=/tmp' >> /tmp/.sdbdlog.conf"
+Type=notify
+Capabilities=cap_dac_override,cap_setgid,cap_setuid,cap_sys_admin=i
+SecureBits=keep-caps
+PIDFile=/tmp/.sdbd.pid
+RemainAfterExit=yes
+ExecStart=/usr/sbin/sdbd $SDBD_CMDLINE
+USBFunctionDescriptors=/etc/sdbd/descs
+USBFunctionStrings=/etc/sdbd/strs

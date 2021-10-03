@@ -1,0 +1,6 @@
+[Unit]
+Description=USB test functionfs socket
+
+[Socket]
+ListenUSBFunction=/run/usb-host-test-ffs
+Service=usb-host-ffs-test-daemon.service

@@ -1,0 +1,15 @@
+#!/bin/sh -e
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+NEW_USER=$1
+export `tzplatform-get --user $NEW_USER TZ_USER_CONTENT`
+
+if [ -e /opt/share/askuser_disable ]
+then
+	find $TZ_USER_CONTENT -type d -exec chown root:priv_mediastorage {} + -exec chmod 2770 {} +
+else
+	find $TZ_USER_CONTENT -type d -exec chown root:priv_mediastorage {} + -exec chmod 2777 {} +
+fi
+
+find $TZ_USER_CONTENT -type l -exec chown -h root:priv_mediastorage {} + -exec chsmack -a '_' {} +

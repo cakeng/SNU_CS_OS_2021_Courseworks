@@ -1,0 +1,4 @@
+Tizen5/Unified 5.0.0 (arm)
+VERSION = 5.0.0
+CODENAME = Next
+BUILD_ID=tizen-unified_20181024.1_iot-headless-2parts-armv7l-rpi3

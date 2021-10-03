@@ -1,0 +1,7 @@
+[Socket]
+ListenStream=/run/pkgmgr/agent/%U
+DirectoryMode=0777
+ExecStartPost=/usr/bin/chmod 0777 /run/pkgmgr/agent/%U
+
+[Install]
+WantedBy=sockets.target

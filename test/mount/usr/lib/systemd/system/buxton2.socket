@@ -1,0 +1,11 @@
+[Unit]
+Description=Buxton2 Configuration Service
+
+[Socket]
+ListenStream=/run/buxton2-0
+SocketMode=0777
+SmackLabelIPIn=*
+SmackLabelIPOut=@
+
+[Install]
+WantedBy=sockets.target

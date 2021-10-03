@@ -1,0 +1,12 @@
+[Unit]
+Description=Cleanup private sharing
+RequiresMountsFor=/tmp
+Wants=wait-mount@opt-usr.service
+After=wait-mount@opt-usr.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart = /usr/bin/security-manager-cleanup
+SmackProcessLabel=System::Privileged
+

@@ -1,0 +1,30 @@
+#!/bin/sh -e
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+NEW_USER=$1
+export `tzplatform-get --user $NEW_USER TZ_USER_HOME`
+export `tzplatform-get --user $NEW_USER TZ_USER_APP`
+export `tzplatform-get --user $NEW_USER TZ_USER_APPROOT`
+export `tzplatform-get --user $NEW_USER TZ_USER_DB`
+
+chown $NEW_USER:system_share $TZ_USER_HOME
+chmod 750 $TZ_USER_HOME
+
+chown $NEW_USER:system_share $TZ_USER_APP
+chmod 750 $TZ_USER_APP
+
+chown $NEW_USER:system_share $TZ_USER_APPROOT
+chmod 750 $TZ_USER_APPROOT
+
+chown $NEW_USER:system_share $TZ_USER_DB
+chmod 770 $TZ_USER_DB
+
+if [ ! -d $TZ_USER_DB/privacy ]
+then
+    mkdir -p $TZ_USER_DB/privacy
+fi
+
+chown $NEW_USER:system_share $TZ_USER_DB/privacy
+chmod 770 $TZ_USER_DB/privacy
+chsmack -a 'User' $TZ_USER_DB/privacy -t

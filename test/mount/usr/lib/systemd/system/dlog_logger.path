@@ -1,0 +1,5 @@
+[Unit]
+Description=Path activation for dlog_logger
+
+[Path]
+PathExists=/opt/etc/dlog.conf

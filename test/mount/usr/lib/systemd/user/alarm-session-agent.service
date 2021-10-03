@@ -1,0 +1,8 @@
+[Unit]
+Description=Start the alarm agent
+
+[Service]
+ExecStart=/usr/bin/alarm_session_agent
+
+[Install]
+WantedBy=default.target

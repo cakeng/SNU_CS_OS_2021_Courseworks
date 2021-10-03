@@ -1,0 +1,6 @@
+[Unit]
+Description=muse server
+
+[Path]
+PathExists=/run/.wm_ready
+

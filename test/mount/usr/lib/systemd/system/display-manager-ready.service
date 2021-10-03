@@ -1,0 +1,13 @@
+[Unit]
+Description=Headless Display Manager Ready Service
+After=tmp.mount display-manager.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/sysconfig/display-manager.env
+SmackProcessLabel=System
+ExecStart=/usr/bin/sh -c "while [ ! -e /run/wayland-0 ] ; do /usr/bin/sleep .1 ; done ;/bin/chown -f root:display /run/wayland-0;/bin/chmod 775 /run/wayland-0"
+ExecStartPost=/usr/bin/sh -c "/usr/bin/touch /run/.wm_ready"
+
+[Install]
+WantedBy=graphical.target

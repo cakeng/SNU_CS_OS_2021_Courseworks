@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="application/x-genesis-32x-rom">
+  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+  <comment>Genesis 32X ROM</comment>
+  <generic-icon name="application-x-executable"/>
+  <glob pattern="*.32x"/>
+  <glob pattern="*.mdx"/>
+</mime-type>

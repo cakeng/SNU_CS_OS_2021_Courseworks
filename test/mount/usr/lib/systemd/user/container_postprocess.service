@@ -1,0 +1,11 @@
+[Unit]
+Description=Container postprocess for UID %U
+DefaultDependencies=no
+Wants=wait-mount@opt-usr.service
+After=wait-mount@opt-usr.service
+Before=basic.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/systemd-user-helper container_postprocess %U

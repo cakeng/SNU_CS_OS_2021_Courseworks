@@ -1,0 +1,13 @@
+[Unit]
+Description=Service to run BT HCI logger forcefully
+
+[Service]
+Type=oneshot
+User=network_fw
+Group=network_fw
+SmackProcessLabel=System
+ExecStart=/usr/etc/bluetooth/bt-run-hci-logger.sh force start hcidump
+ExecStop=/usr/etc/bluetooth/bt-run-hci-logger.sh force stop
+RemainAfterExit=yes
+StandardOutput=journal+console
+StandardError=inherit

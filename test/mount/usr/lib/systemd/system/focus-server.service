@@ -1,0 +1,16 @@
+[Unit]
+Description=Start the focus profile service
+
+[Service]
+ExecStart=/usr/bin/focus_server -S
+Restart=always
+RestartSec=0
+MemoryLimit=50M
+User=multimedia_fw
+Group=multimedia_fw
+SmackProcessLabel=System
+SecureBits=keep-caps
+Capabilities=cap_fowner,cap_lease=i
+
+[Install]
+WantedBy=tizen-system.target

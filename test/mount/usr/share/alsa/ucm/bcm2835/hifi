@@ -1,0 +1,45 @@
+SectionVerb {
+  EnableSequence [
+		cset "name='PCM Playback Volume' 90%"
+		cset "name='PCM Playback Switch' on"
+  ]
+  DisableSequence [
+		cset "name='PCM Playback Switch' off"
+  ]
+
+  Value {
+    TQ "Music"
+    PlaybackCTL "hw:1"
+  }
+}
+
+SectionDevice."Speaker" {
+  Comment "3.5mm Speaker"
+
+  EnableSequence [
+		cset "name='PCM Playback Route' 1"
+  ]
+
+  DisableSequence [
+  ]
+
+  Value {
+    PlaybackPCM "hw:1,0"
+  }
+}
+
+SectionDevice."HDMI" {
+  Comment "HDMI audio"
+
+  EnableSequence [
+                cset "name='PCM Playback Route' 2"
+  ]
+
+  DisableSequence [
+  ]
+
+  Value {
+    PlaybackPCM "hw:1,1"
+  }
+}
+

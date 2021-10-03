@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="model/iges">
+  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+  <comment>IGES document</comment>
+  <acronym>IGES</acronym>
+  <expanded-acronym>Initial Graphics Exchange Specification</expanded-acronym>
+  <generic-icon name="x-office-document"/>
+  <sub-class-of type="text/plain"/>
+  <glob pattern="*.igs"/>
+  <glob pattern="*.iges"/>
+</mime-type>

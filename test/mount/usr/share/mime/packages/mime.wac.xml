@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+    <mime-type  type="application/widget">
+        <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+        <comment>WAC Widget</comment>
+        <comment xml:lang="ko">WAC 위젯</comment>
+        <acronym>WGT</acronym>
+        <expanded-acronym>wac WidGeT</expanded-acronym>
+        <glob pattern="*.wgt"/>
+        <alias type="application/vnd.wac.widget-sharing"/>
+    </mime-type>
+</mime-info>

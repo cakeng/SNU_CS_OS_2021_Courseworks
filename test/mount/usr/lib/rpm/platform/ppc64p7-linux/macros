@@ -1,0 +1,73 @@
+# Per-platform rpm configuration file.
+
+#==============================================================================
+# ---- per-platform macros.
+#
+%_arch			ppc64
+%_build_arch		ppc64
+%_vendor		tizen
+%_os			linux
+%_gnu			-gnueabi
+%_target_platform	%{_target_cpu}-%{_vendor}-%{_target_os}
+%optflags		-O3 -mtune=power7 -mcpu=power7 -g -fmessage-length=0 -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector -funwind-tables -fasynchronous-unwind-tables
+
+%__isa_name		ppc
+%__isa_bits		64
+%__isa			%{__isa_name}-%{__isa_bits}
+
+# The default transaction color. This value is a set of bits to
+# determine file and dependency affinity for this arch.
+#	0	uncolored (i.e. use only arch as install hint)
+#	1	Elf32 permitted
+#	2	Elf64 permitted
+%_transaction_color	0
+
+#==============================================================================
+# ---- configure macros.
+#
+%_prefix		/usr
+%_exec_prefix		/usr
+%_bindir		/usr/bin
+%_sbindir		/usr/sbin
+%_libexecdir		/usr/libexec
+%_datarootdir		%{_prefix}/share
+%_datadir		/usr/share
+%_sysconfdir		/etc
+%_sharedstatedir	/usr/com
+%_localstatedir		/var
+%_lib			lib
+%_libdir		/usr/lib
+%_includedir		/usr/include
+%_oldincludedir		/usr/include
+%_infodir		/usr/share/info
+%_mandir		/usr/share/man
+%_initddir		%{_sysconfdir}/init.d
+# Deprecated misspelling, present for backwards compatibility.
+%_initrddir		%{_initddir}
+
+%_defaultdocdir		%{_datadir}/doc
+
+%_smp_mflags %([ -z "$RPM_BUILD_NCPUS" ] \\\
+	&& RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"; \\\
+	[ "$RPM_BUILD_NCPUS" -gt 1 ] && echo "-j$RPM_BUILD_NCPUS")
+
+#==============================================================================
+# ---- Build policy macros.
+#
+#---------------------------------------------------------------------
+#	Expanded at end of %install scriptlet.
+#
+
+%__arch_install_post   %{nil}
+
+%__os_install_post    \
+    %{_rpmconfigdir}/brp-compress \
+    %{_rpmconfigdir}/brp-strip %{__strip} \
+%{nil}
+
+%__spec_install_post\
+    %{?__debug_package:%{__debug_install_post}}\
+    %{__arch_install_post}\
+    %{__os_install_post}\
+%{nil}
+

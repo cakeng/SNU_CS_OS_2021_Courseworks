@@ -1,0 +1,5 @@
+factory-reset telephony_framework::api_manager r
+factory-reset telephony_framework::api_modem x
+factory-reset telephony_framework::api_private rwx
+factory-reset security-server::api-privilege-by-pid w
+factory-reset e17::notification rw

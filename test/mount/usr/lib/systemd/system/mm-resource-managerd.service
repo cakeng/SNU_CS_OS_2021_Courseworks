@@ -1,0 +1,18 @@
+[Unit]
+Description=Multimedia Resource Manager
+Requires=murphyd.service
+After=murphyd.service dbus.service
+Before=muse-server.service
+
+[Service]
+Type=forking
+User=multimedia_fw
+Group=multimedia_fw
+SmackProcessLabel=System
+ExecStart=/usr/bin/mm-resource-managerd
+PIDFile=/tmp/.mm-res-mgr.pid
+Restart=always
+MemoryLimit=10M
+
+[Install]
+WantedBy=multi-user.target

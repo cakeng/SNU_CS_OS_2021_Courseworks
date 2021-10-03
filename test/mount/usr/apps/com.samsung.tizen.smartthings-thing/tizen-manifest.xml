@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<manifest xmlns="http://tizen.org/ns/packages" api-version="4.0" package="com.samsung.tizen.smartthings-thing" version="1.0.11">
+	<profile name="mobile-4.0"/>
+    <service-application appid="com.samsung.tizen.smartthings-thing" exec="smartthings-thing" multiple="false" nodisplay="true" on-boot="false" taskmanage="false" type="capp">
+        <label>smartthings-thing</label>
+        <icon>smartthings-thing.png</icon>
+        <app-control>
+            <operation name="http://tizen.org/appcontrol/operation/smartthings_thing/resource"/>
+            <privilege>http://com.samsung.tizen.smartthings-thing/appdefined/smartthings-thing.resource</privilege>
+        </app-control>
+        <app-control>
+            <operation name="http://tizen.org/appcontrol/operation/smartthings_thing/master"/>
+            <privilege>http://com.samsung.tizen.smartthings-thing/appdefined/smartthings-thing.master</privilege>
+        </app-control>
+        <metadata key="samsung-experience-service" value="true"/>
+        <background-category value="background-network"/>
+        <background-category value="iot-communication"/>
+    </service-application>
+    <privileges>
+        <privilege>http://tizen.org/privilege/network.get</privilege>
+        <privilege>http://tizen.org/privilege/appmanager.launch</privilege>
+        <privilege>http://tizen.org/privilege/network.set</privilege>
+        <privilege>http://tizen.org/privilege/internet</privilege>
+        <privilege>http://tizen.org/privilege/network.profile</privilege>
+        <privilege>http://tizen.org/privilege/packagemanager.info</privilege>
+        <privilege>http://developer.samsung.com/privilege/securestorage.partner</privilege>
+        <privilege>http://tizen.org/privilege/softap</privilege>
+        <privilege>http://tizen.org/privilege/softap.admin</privilege>
+        <privilege>http://tizen.org/privilege/devicecertificate</privilege>
+    </privileges>
+    <provides-appdefined-privileges>
+        <appdefined-privilege>http://com.samsung.tizen.smartthings-thing/appdefined/smartthings-thing.resource</appdefined-privilege>
+        <appdefined-privilege>http://com.samsung.tizen.smartthings-thing/appdefined/smartthings-thing.master</appdefined-privilege>
+    </provides-appdefined-privileges>
+</manifest>

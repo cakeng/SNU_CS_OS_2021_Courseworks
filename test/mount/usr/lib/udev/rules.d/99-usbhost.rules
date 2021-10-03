@@ -1,0 +1,2 @@
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", DEVPATH!="/devices/platform/dummy_hcd.*", MODE="0660", GROUP="system_share", SECLABEL{smack}="*"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", DEVPATH=="/devices/platform/dummy_hcd.*", MODE="0666", GROUP="system_share", SECLABEL{smack}="*"

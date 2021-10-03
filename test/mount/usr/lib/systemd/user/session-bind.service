@@ -1,0 +1,13 @@
+[Unit]
+Description=User session bind mount for %U
+DefaultDependencies=no
+Wants=wait-mount@opt-usr.service
+After=wait-mount@opt-usr.service
+Before=basic.target
+ConditionPathIsMountPoint=!/opt/usr/apps
+ConditionPathIsMountPoint=!/opt/usr/media
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/session-bind

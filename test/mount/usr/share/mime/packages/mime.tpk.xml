@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+    <mime-type  type="application/vnd.tizen.package">
+        <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+        <comment>Tizen Package</comment>
+        <acronym>TPK</acronym>
+        <expanded-acronym>Tizen PacKage</expanded-acronym>
+        <glob pattern="*.tpk"/>
+    </mime-type>
+</mime-info>

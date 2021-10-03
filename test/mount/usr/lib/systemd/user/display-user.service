@@ -1,0 +1,7 @@
+[Unit]
+Description=Creating a link file for user to access display manager socket
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh -c "while [ ! -e /run/wayland-0 ] ; do /usr/bin/sleep .1 ; done ;/usr/bin/ln -sf /run/wayland-0 /run/user/%U/"

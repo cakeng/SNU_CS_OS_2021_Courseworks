@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=org.tizen.system.deviced
+Exec=/bin/false
+User=root
+SystemdService=deviced.service

@@ -1,0 +1,69 @@
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+uucp:x:10:14:uucp:/var/spool/uucp:/sbin/nologin
+games:x:12:100:games:/usr/games:/sbin/nologin
+ftp:x:14:50:FTP User:/srv/ftp:/sbin/nologin
+nobody:x:99:99:Nobody:/var/lib/empty:/sbin/nologin
+sshd:x:112:65534::/var/run/sshd:/usr/sbin/nologin
+polkitd:x:113:113:polkitd:/var/lib/polkit:/sbin/nologin
+avahi:x:114:114:avahi:/run/avahi-daemon:/sbin/nologin
+pulse:x:122:122:PulseAudio daemon:/var/run/pulse:/bin/false
+system:x:200:200:System daemon:/home/system:/bin/sh
+security-containers:x:377:377:security-containers:/var/lib/empty:/sbin/nologin
+cynara:x:401:401:cynara:/var/lib/empty:/sbin/nologin
+key-manager:x:444:444:key-manager:/var/lib/empty:/sbin/nologin
+bluetooth:x:1002:1002:SPLUSA:/var/lib/empty:/bin/false
+graphics:x:1003:1003:SPLUSA:/var/lib/empty:/bin/false
+input:x:1004:1004:SPLUSA:/var/lib/empty:/bin/false
+compass:x:1008:1008:SPLUSA:/var/lib/empty:/bin/false
+mount:x:1009:1009:SPLUSA:/var/lib/empty:/bin/false
+wifi:x:1010:1010:SPLUSA:/var/lib/empty:/bin/false
+adb:x:1011:1011:SPLUSA:/var/lib/empty:/bin/false
+install:x:1012:1012:SPLUSA:/var/lib/empty:/bin/false
+media:x:1013:1013:SPLUSA:/var/lib/empty:/bin/false
+dhcp:x:1014:1014:SPLUSA:/var/lib/empty:/bin/false
+sdcard_rw:x:1015:1015:SPLUSA:/var/lib/empty:/bin/false
+vpn:x:1016:1016:SPLUSA:/var/lib/empty:/bin/false
+keystore:x:1017:1017:SPLUSA:/var/lib/empty:/bin/false
+log:x:1901:1901:System log:/var/lib/empty:/bin/false
+shell:x:2000:2000:SPLUSA:/var/lib/empty:/bin/false
+cache:x:2001:2001:SPLUSA:/var/lib/empty:/bin/false
+diag:x:2002:2002:SPLUSA:/var/lib/empty:/bin/false
+net_bt_admin:x:3001:3001:SPLUSA:/var/lib/empty:/bin/false
+net_bt:x:3002:3002:SPLUSA:/var/lib/empty:/bin/false
+inet:x:3003:3003:SPLUSA:/var/lib/empty:/bin/false
+net_raw:x:3004:3004:SPLUSA:/var/lib/empty:/bin/false
+net_admin:x:3005:3005:SPLUSA:/var/lib/empty:/bin/false
+developer:x:5100:5100:developer with SDK:/home/developer:/bin/false
+testuser:x:5101:5101:test user:/var/lib/empty:/bin/sh
+misc:x:9998:9998:SPLUSA:/var/lib/empty:/bin/false
+display:x:376:201:Display:/run/display:/bin/false
+dbus:x:81:81:System message bus:/:/sbin/nologin
+system_fw:x:202:202:system framework:/var/lib/empty:/sbin/nologin
+web_fw:x:251:251:web framework:/var/lib/empty:/sbin/nologin
+app_fw:x:301:301:app framework:/var/lib/empty:/sbin/nologin
+buxton:x:375:375:buxton:/var/lib/empty:/sbin/nologin
+security_fw:x:402:402:security framework:/var/lib/empty:/sbin/nologin
+multimedia_fw:x:451:451:multimedia framework:/var/lib/empty:/sbin/nologin
+graphic_fw:x:501:501:graphic framework:/var/lib/empty:/sbin/nologin
+ui_fw:x:502:502:ui framework:/var/lib/empty:/sbin/nologin
+network_fw:x:551:551:network framework:/var/lib/empty:/sbin/nologin
+telephony:x:601:601:telephony:/var/lib/empty:/sbin/nologin
+service_fw:x:651:651:messaging:/var/lib/empty:/sbin/nologin
+messaging:x:652:652:web framework:/var/lib/empty:/sbin/nologin
+social:x:653:653:social:/var/lib/empty:/sbin/nologin
+location:x:654:654:location:/var/lib/empty:/sbin/nologin
+sensor:x:655:655:sensor:/var/lib/empty:/sbin/nologin
+sdk:x:901:901:sdk:/var/lib/empty:/sbin/nologin
+scm:x:925:925:scm:/var/lib/empty:/sbin/nologin
+application:x:951:951:application:/var/lib/empty:/sbin/nologin
+broadcasting:x:1001:1001:broadcasting:/var/lib/empty:/sbin/nologin
+testing:x:1026:1026:testing:/var/lib/empty:/sbin/nologin
+tizenglobalapp:x:201:0:system user for common applications:/home/tizenglobalapp:/bin/sh
+guest:x:9999:9999::/home/guest:/bin/sh

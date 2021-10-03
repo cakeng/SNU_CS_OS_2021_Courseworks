@@ -1,0 +1,18 @@
+# Configuration of groups assignment to mount points.
+# Format:
+# - Each line of "<PRIVILEGE> <MOUNT_POINT> <ALLOW_SRC> <DENY_SRC>" describes single mapping
+#   * <PRIVILEGE>: name of enforced privilege
+#   * <MOUNT_POINT>: mount point location
+#   * <ALLOW_SRC>: source directory to bind mount when privilege is allowed
+#   * <DENY_SRC>: source directory to bind mount when privilege is denied
+# - <ALLOW_SRC> and <DENY_SRC> may be set to special value "-". In such case no
+#   mount will be performed.
+# - Values starting with TZ_ will be treated as tizen-platform-config variables, converted
+#   to respective values
+# - Elements in line are separated by white space
+# - Lines starting with '#' and empty lines are ignored
+
+http://tizen.org/privilege/externalstorage TZ_SYS_STORAGE  - /usr/share/security-manager/dummy
+http://tizen.org/privilege/mediastorage    TZ_USER_CONTENT - /usr/share/security-manager/dummy
+http://tizen.org/privilege/mediastorage    TZ_SYS_MEDIASHARED  - /usr/share/security-manager/dummy
+http://tizen.org/privilege/mediastorage    /opt/usr/media  - /usr/share/security-manager/dummy

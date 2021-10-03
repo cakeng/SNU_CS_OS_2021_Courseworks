@@ -1,0 +1,5 @@
+[Unit]
+Description=Path activation for the "focus-server" programme
+
+[Path]
+PathExists=/tmp/.pa_ready

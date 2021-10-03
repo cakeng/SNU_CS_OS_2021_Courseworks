@@ -1,0 +1,13 @@
+[Unit]
+Description=DNS Proxy Socket
+Before=connman.service
+
+[Socket]
+ListenStream=127.0.0.1:53
+ListenDatagram=0.0.0.0:53
+FreeBind=true
+SmackLabelIPIn=*
+SmackLabelIPOut=@
+
+[Install]
+WantedBy=sockets.target

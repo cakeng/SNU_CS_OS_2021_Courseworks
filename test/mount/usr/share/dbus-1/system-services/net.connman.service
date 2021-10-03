@@ -1,0 +1,6 @@
+[D-BUS Service]
+Name=net.connman
+Exec=/bin/false
+User=network_fw
+Group=network_fw
+SystemdService=connman.service

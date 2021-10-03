@@ -1,0 +1,467 @@
+<config>
+  <sw_source name="root" rankkey="/10020/10000.root">
+    <origin>
+      <keyinfo>
+mQENBE6MJTABCAC6pAFNW9tCbLQtgmwxzNf7ftSL5RrsjVTlPtpyeFLhxSmqmeHr
+KB10C6Co1zYB/fW8zvGXU613g3WEo4SKlS2lnOVBxviet0qn58zwCQASbdFYtckk
+thtkxiSInoKbj4n/Z+hHB9dvcyqcWqp2IFQEDDpxgP4KuzCvvj6W+e9EtYsdGt9P
+ZHsVjIAe0w+j7Hs4Q7FYWD+mdQAjgBsLlc16Ci8EPYnvBL/xdbJ3Ryfi59tTdfGG
+HnwpjM2J1WshooyvsOtHZU+T1nHtuegEzdRMVFo502Lkb60dJRsREE2iyPWFX2TE
+ZdaQqUMmkPaROUlWhGBSWIKbOVARwWBn94KDABEBAAG0CXJvb3QudGVzdIkBPgQT
+AQIAKAUCTowlMAIbAwUJA8JnAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQ
+TTk+Qq2l7P210wgApKVLpdve9jDsy/y//gSAGvfA4fXFuGhHkH5+QW7L+QkUAo0Z
+vv0KB0Pw5qZjV+k8jlq3Q3f/vcIEKxc40d0coa3m+bUlL2vy0+0gLSTiZ4MNFAk5
+LvJgEj+7ks75/qtJVWfCZeXo9NiugSoW9D+jNflmfstd8k2wT2ucH7IJHHzK1lGm
+vZHXeJeSULRHiibVyK5cG+NH/1Akuxkgo2jOzqhLjhp4/UiJlyAD0k/J4ULfmWp8
+C9/sIhWBoS5OcrtMVQtUMTx85I2dEC/01hnfLUk8mi5VscLu3xQoJ9hNrMEgji6H
+S+MmxcPGnVziEA0Z7VNN6DpuG/xZ1i9fgXXVfLkBDQROjCUwAQgA6fyD7eqaoah/
+za0X+Xv3o1y52UHmeHMmyzM/W4UlVsd01h7KzSHWyQKHi0i0pxRtUj+pkV+r+QjV
+BiAowq2HVpyXsmre29PEgAuIVv6/pZjfZEWFKjSDsvdXpS+mT+J6LjRxYh7ZbGvv
+SR3hMiMocWYENj13XDRw5USGhC0UxlmmMfjQfWJ6eHeQTiyZWW+CZUAJ2IbEkPVP
+nBDH/fTuVMfOo4g0HwqUSJmwV47BPLec1ArSaPG1YgKX1Y+UYoNfUvo/ieiF59At
+A8UbjQMzZggIfkvJsDL8U5n4ojFL8Rs/aMYuH76OlA4wuKPAnBSt+fVBnjaAAadf
+FCy/CHZt/wARAQABiQElBBgBAgAPBQJOjCUwAhsMBQkDwmcAAAoJEE05PkKtpez9
+S7IH/j44MxOP6dAycQAreWVAzdMiw82DjP7c6jMxYZj8ss1x++iO5GW82qm0WJ6h
+IOEdll+wBhPX0acKvE4KrlNzfsB2WzDRwOyiZfuSQI0J3Jrytj8zyCVKwHTsI8VC
+RkOzaMYsEqmPc+ve+wxxcwWXC0EtoyhMRjRZlMy55IeJcEfM8bcE4wcsyotsura6
+o1fmU223Xj1k5xXxDvXalPUoXnhvsev7kMBnIQRac194qkSkTzVXGLGu5Ng7Bfxl
+BMhf6RSk31+Q43ASbn4ralnswMhsHSatJIeasbHyvsTJzMnfEoSdpb8/dQI8KnHf
+tRrR5cbqmVr8tkFjS/QK6TWfNMM=
+</keyinfo>
+    </origin>
+    <package name="root"/>
+    <package name="ac-domain-system">
+      <provide>
+        <ac_domain name="Isolated"/>
+        <ac_domain name="_" policy="shared"/>
+      </provide>
+    </package>
+    <package name="unknown-sw-source"/>
+    <sw_source name="_default_" rankkey="/10020/11000/10000._default_">
+      <allow>
+        <ac_domain match="*"/>
+      </allow>
+      <package name="system-plugin-feature-session-bind"/>
+      <package name="ncurses-utils"/>
+      <package name="capi-network-wifi-manager-tool"/>
+      <package name="building-blocks-sub2-domain_API-Multimedia-Player"/>
+      <package name="building-blocks-sub2-domain_API-System-Storage"/>
+      <package name="storaged-module_block"/>
+      <package name="storaged-module_storage"/>
+      <package name="storaged"/>
+      <package name="system-plugin-config-env-headless"/>
+      <package name="system-plugin-feature-namespace"/>
+      <package name="building-blocks-sub1-Preset_partition-2parts_ramdisk_recovery"/>
+      <package name="building-blocks-sub2-Preset_boards-RPI3-Display_Headless"/>
+      <package name="building-blocks-sub2-domain_API-Base-Utils"/>
+      <package name="building-blocks-sub1-domain_Feature-Recovery"/>
+      <package name="dbus-tools"/>
+      <package name="building-blocks-sub1-domain_Feature-Resource_manager_Headless"/>
+      <package name="building-blocks-sub2-Preset_boards-RPI3-Audio"/>
+      <package name="building-blocks-sub2-domain_API-AppFramework-TPK_Installation"/>
+      <package name="building-blocks-sub2-Preset_boards-RPI3-Wifi"/>
+      <package name="building-blocks-sub2-domain_API-Network-Curl"/>
+      <package name="building-blocks-sub2-Preset_boards-RPI3-Bluetooth"/>
+      <package name="building-blocks-sub2-Preset_boards-RPI3-BLE"/>
+      <package name="building-blocks-sub1-domain_Feature-Smartthings_App"/>
+      <package name="building-blocks-root-Preset_iot_core"/>
+      <package name="building-blocks-sub2-domain_API-Network-Bluetooth_Media_Audio"/>
+      <package name="building-blocks-sub1-domain_Feature-Upgrade"/>
+      <package name="building-blocks-sub1-Preset_boards-RPI3"/>
+      <package name="fsck-msdos"/>
+      <package name="mmsvc-player"/>
+      <package name="libmm-player"/>
+      <package name="libmm-utility"/>
+      <package name="giflib"/>
+      <package name="libbmp"/>
+      <package name="building-blocks-sub2-Preset_boards-RPI3-System_Device"/>
+      <package name="building-blocks-sub2-domain_API-System-Device"/>
+      <package name="deviced"/>
+      <package name="libinput"/>
+      <package name="libevdev"/>
+      <package name="libfuse"/>
+      <package name="update-helper-service"/>
+      <package name="tota-ua"/>
+      <package name="libtota"/>
+      <package name="liblzma-tool"/>
+      <package name="libmtdev"/>
+      <package name="libnsbmp"/>
+      <package name="building-blocks-sub2-domain_API-Multimedia-AudioCore"/>
+      <package name="pulseaudio-modules-tizen"/>
+      <package name="pulseaudio-module-bluetooth"/>
+      <package name="pulseaudio"/>
+      <package name="libspeexdsp"/>
+      <package name="libmm-imgp-gstcs"/>
+      <package name="gst-plugins-good"/>
+      <package name="libsoup"/>
+      <package name="glib-networking"/>
+      <package name="libgnutls"/>
+      <package name="libtasn1"/>
+      <package name="libv4l"/>
+      <package name="gst-plugins-bad"/>
+      <package name="libwayland-egl"/>
+      <package name="iotjs"/>
+      <package name="appcore-agent"/>
+      <package name="ecore-core"/>
+      <package name="eo"/>
+      <package name="eina"/>
+      <package name="efl"/>
+      <package name="libwayland-egl-tizen"/>
+      <package name="newfs-msdos"/>
+      <package name="gst-plugins-ugly"/>
+      <package name="opencore-amr"/>
+      <package name="smartthings-thing-service"/>
+      <package name="tpk-backend"/>
+      <package name="app-installers"/>
+      <package name="xdelta3"/>
+      <package name="building-blocks-sub2-domain_API-Network-SoftAP"/>
+      <package name="mobileap-agent"/>
+      <package name="amd-mod-cynara-core"/>
+      <package name="building-blocks-sub2-domain_API-AppFramework-RPC_Port_API"/>
+      <package name="rpc-port"/>
+      <package name="amd-mod-rpc-port"/>
+      <package name="building-blocks-sub2-domain_API-AppFramework-Alarm_API"/>
+      <package name="capi-appfw-alarm"/>
+      <package name="building-blocks-sub2-domain_API-AppFramework-Notification_API"/>
+      <package name="data-provider-master"/>
+      <package name="building-blocks-sub2-domain_API-Network-Bluetooth_LE"/>
+      <package name="building-blocks-sub2-domain_API-Network-Bluetooth_BREDR"/>
+      <package name="bluetooth-frwk-service"/>
+      <package name="alarm-server"/>
+      <package name="libalarm"/>
+      <package name="notification"/>
+      <package name="capi-appfw-app-control"/>
+      <package name="amd-mod-share"/>
+      <package name="amd-mod-watchdog"/>
+      <package name="amd"/>
+      <package name="cert-svc"/>
+      <package name="building-blocks-sub2-domain_API-Network-WiFi_Manager"/>
+      <package name="connman"/>
+      <package name="net-config"/>
+      <package name="key-manager"/>
+      <package name="libkey-manager-client"/>
+      <package name="launchpad"/>
+      <package name="security-manager-policy"/>
+      <package name="security-manager"/>
+      <package name="libsecurity-manager-client"/>
+      <package name="libnss-security-manager"/>
+      <package name="security-license-manager"/>
+      <package name="libcynara-agent"/>
+      <package name="peripheral-bus"/>
+      <package name="pkgmgr-server"/>
+      <package name="gum-utils"/>
+      <package name="tlm-config-common-singleseat"/>
+      <package name="tlm"/>
+      <package name="gumd"/>
+      <package name="libgum"/>
+      <package name="audio-hal-bcm2837"/>
+      <package name="capi-network-wifi-direct"/>
+      <package name="capi-media-player"/>
+      <package name="mused"/>
+      <package name="capi-system-runtime-info"/>
+      <package name="building-blocks-sub2-domain_API-Security-Device_Certificate"/>
+      <package name="device-certificate-manager"/>
+      <package name="iotcon"/>
+      <package name="iotivity"/>
+      <package name="capi-network-connection"/>
+      <package name="libnet-client"/>
+      <package name="resourced-headless-memory"/>
+      <package name="sdbd"/>
+      <package name="bluetooth-frwk-oal"/>
+      <package name="pkgmgr-tool"/>
+      <package name="ode"/>
+      <package name="libode"/>
+      <package name="capi-appfw-app-manager"/>
+      <package name="building-blocks-sub2-domain_API-AppFramework-Message_Port_API"/>
+      <package name="message-port"/>
+      <package name="badge"/>
+      <package name="libshortcut"/>
+      <package name="capi-appfw-preference"/>
+      <package name="openal-soft"/>
+      <package name="cyad"/>
+      <package name="vconf-internal-keys"/>
+      <package name="libcynara-admin"/>
+      <package name="capi-network-softap"/>
+      <package name="capi-media-sound-manager"/>
+      <package name="libmm-sound"/>
+      <package name="security-privilege-manager"/>
+      <package name="bluetooth-frwk-core"/>
+      <package name="capi-appfw-app-common"/>
+      <package name="app-core-common"/>
+      <package name="app-svc"/>
+      <package name="tpk-manifest-handlers"/>
+      <package name="bluetooth-frwk-profile_common"/>
+      <package name="capi-system-device"/>
+      <package name="libslp-db-util"/>
+      <package name="manifest-parser"/>
+      <package name="capi-appfw-package-manager"/>
+      <package name="capi-network-bluetooth"/>
+      <package name="aul"/>
+      <package name="pkgmgr-installer"/>
+      <package name="bluetooth-frwk"/>
+      <package name="capi-network-wifi-manager"/>
+      <package name="libstorage"/>
+      <package name="pkgmgr-client"/>
+      <package name="pkgmgr-info"/>
+      <package name="pkgmgr-info-parser"/>
+      <package name="vconf-compat"/>
+      <package name="buxton2"/>
+      <package name="cynara"/>
+      <package name="dbus"/>
+      <package name="libcynara-creds-gdbus"/>
+      <package name="libcynara-creds-socket"/>
+      <package name="libcynara-creds-commons"/>
+      <package name="libcynara-session"/>
+      <package name="libcynara-client"/>
+      <package name="libcynara-commons"/>
+      <package name="cynara-db-migration"/>
+      <package name="findutils"/>
+      <package name="libcurl"/>
+      <package name="libcares"/>
+      <package name="rpm-security-plugin"/>
+      <package name="rpm"/>
+      <package name="libelf"/>
+      <package name="tcpdump"/>
+      <package name="building-blocks-sub2-domain_API-System-Update_Control"/>
+      <package name="update-control"/>
+      <package name="device-manager-plugin-rpi3"/>
+      <package name="trust-anchor"/>
+      <package name="wpa_supplicant"/>
+      <package name="capi-system-peripheral-io"/>
+      <package name="ca-certificates"/>
+      <package name="pkgmgr"/>
+      <package name="capi-system-info"/>
+      <package name="security-config"/>
+      <package name="libelf0"/>
+      <package name="libexpat"/>
+      <package name="GraphicsMagick"/>
+      <package name="libgomp"/>
+      <package name="factory-reset"/>
+      <package name="initrd-fota"/>
+      <package name="initrd"/>
+      <package name="util-linux"/>
+      <package name="libsmartcols"/>
+      <package name="net-tools"/>
+      <package name="nghttp2"/>
+      <package name="mm-resource-manager"/>
+      <package name="eventsystem"/>
+      <package name="bundle"/>
+      <package name="libjson-glib"/>
+      <package name="gst-plugins-tizen"/>
+      <package name="gst-libav"/>
+      <package name="deviced-tools"/>
+      <package name="resourced-headless-proc-manager"/>
+      <package name="resourced-headless-proc-usage"/>
+      <package name="klay"/>
+      <package name="resourced-headless"/>
+      <package name="libgdbus"/>
+      <package name="resourced-headless-common"/>
+      <package name="gst-plugins-base"/>
+      <package name="gstreamer"/>
+      <package name="libgio"/>
+      <package name="gio-branding-upstream"/>
+      <package name="shared-mime-info"/>
+      <package name="pkg-config"/>
+      <package name="zip"/>
+      <package name="session-utils"/>
+      <package name="gawk"/>
+      <package name="capi-system-sensor"/>
+      <package name="context-sensor-recorder-dummy"/>
+      <package name="gmock"/>
+      <package name="libprotobuf9"/>
+      <package name="openssl"/>
+      <package name="gzip"/>
+      <package name="system-rw-update"/>
+      <package name="libfdisk"/>
+      <package name="shadow-utils-adm"/>
+      <package name="libcap-tools"/>
+      <package name="libtheora"/>
+      <package name="opencv"/>
+      <package name="libtiff"/>
+      <package name="libswscale"/>
+      <package name="libvorbisenc"/>
+      <package name="nss"/>
+      <package name="libsoftokn3"/>
+      <package name="nss-certs"/>
+      <package name="libpcrecpp"/>
+      <package name="libavformat"/>
+      <package name="boost-log"/>
+      <package name="libxslt-tools"/>
+      <package name="e2fsprogs"/>
+      <package name="libext2fs"/>
+      <package name="app2sd"/>
+      <package name="capi-base-utils"/>
+      <package name="dlogutil"/>
+      <package name="libdevice-node"/>
+      <package name="libmm-common"/>
+      <package name="libtracker"/>
+      <package name="dnsmasq"/>
+      <package name="libpcap"/>
+      <package name="libusb"/>
+      <package name="libwayland-cursor"/>
+      <package name="building-blocks-sub2-domain_API-UI-Display_Server_Headless"/>
+      <package name="pepper-doctor"/>
+      <package name="pepper-evdev"/>
+      <package name="pepper-devicemgr"/>
+      <package name="pepper-keyrouter"/>
+      <package name="murphy-glib"/>
+      <package name="cryptsetup"/>
+      <package name="device-mapper"/>
+      <package name="libhogweed"/>
+      <package name="libtbm-vc4"/>
+      <package name="coregl"/>
+      <package name="libtpl-egl"/>
+      <package name="libtdm-client"/>
+      <package name="libtdm"/>
+      <package name="libgbm"/>
+      <package name="libwayland-tbm-client"/>
+      <package name="libwayland-tbm-server"/>
+      <package name="libbluetooth"/>
+      <package name="bluez"/>
+      <package name="capi-media-tool"/>
+      <package name="sqlite"/>
+      <package name="libreadline"/>
+      <package name="procps-ng"/>
+      <package name="building-blocks-sub2-domain_API-UI-TBM_Surface"/>
+      <package name="libncurses6"/>
+      <package name="libtbm"/>
+      <package name="alsa-ucm-data-rpi3"/>
+      <package name="mmfw-sysconf-target-rpi3"/>
+      <package name="building-blocks-sub2-Preset_boards-RPI3-System"/>
+      <package name="model-config-default"/>
+      <package name="tizen-release"/>
+      <package name="tizen-release-profile_common"/>
+      <package name="vconf-internal-keys-config-profile_common"/>
+      <package name="terminfo-base-full"/>
+      <package name="kmod-compat"/>
+      <package name="system-recovery"/>
+      <package name="system-plugin-config-2parts"/>
+      <package name="system-plugin-device-rpi3"/>
+      <package name="libdrm"/>
+      <package name="libiri"/>
+      <package name="libnettle"/>
+      <package name="liborc"/>
+      <package name="pixman"/>
+      <package name="sbc"/>
+      <package name="xdgmime"/>
+      <package name="gdbm"/>
+      <package name="tar"/>
+      <package name="argos_watchdog"/>
+      <package name="libdevmapper"/>
+      <package name="libkey-manager-common"/>
+      <package name="murphy"/>
+      <package name="wpa_supplicant-profile_common"/>
+      <package name="libwayland-extension-server"/>
+      <package name="libwayland-extension-client"/>
+      <package name="pepper"/>
+      <package name="libpulse"/>
+      <package name="libwayland-server"/>
+      <package name="libwayland-client"/>
+      <package name="system-plugin"/>
+      <package name="dbus-libs"/>
+      <package name="libdlog"/>
+      <package name="systemd"/>
+      <package name="libsystemd"/>
+      <package name="libacl"/>
+      <package name="libattr"/>
+      <package name="libcom_err"/>
+      <package name="libfreebl3"/>
+      <package name="libgmp"/>
+      <package name="xmlsec1"/>
+      <package name="xmlsec1-openssl"/>
+      <package name="libxslt"/>
+      <package name="libgcrypt"/>
+      <package name="libgpg-error"/>
+      <package name="libltdl"/>
+      <package name="liblua"/>
+      <package name="libpopt"/>
+      <package name="sed"/>
+      <package name="sensord-dummy"/>
+      <package name="unzip"/>
+      <package name="boost-date-time"/>
+      <package name="libusbgx"/>
+      <package name="system-recovery-non_gui"/>
+      <package name="libconfig"/>
+      <package name="boost-chrono"/>
+      <package name="kmod"/>
+      <package name="libkmod"/>
+      <package name="pam-modules-extra"/>
+      <package name="boost-regex"/>
+      <package name="libavcodec"/>
+      <package name="iproute2"/>
+      <package name="libsndfile"/>
+      <package name="libasound"/>
+      <package name="libjson4"/>
+      <package name="libnl2"/>
+      <package name="libbz2"/>
+      <package name="libgobject"/>
+      <package name="libffi"/>
+      <package name="grep"/>
+      <package name="libgmodule"/>
+      <package name="libglib"/>
+      <package name="libpcre"/>
+      <package name="nspr"/>
+      <package name="boost-program-options"/>
+      <package name="libmagic"/>
+      <package name="boost-thread"/>
+      <package name="bluetooth-tools"/>
+      <package name="tizen-platform-config-tools"/>
+      <package name="libvorbis"/>
+      <package name="bluetooth-firmware-bcm-rpi3"/>
+      <package name="bluetooth-tools-profile_common"/>
+      <package name="initrd-recovery"/>
+      <package name="iptables"/>
+      <package name="libavutil"/>
+      <package name="libjpeg"/>
+      <package name="libogg"/>
+      <package name="libicu"/>
+      <package name="libpng"/>
+      <package name="minizip"/>
+      <package name="libmount"/>
+      <package name="pam"/>
+      <package name="boost-filesystem"/>
+      <package name="libtzplatform-config"/>
+      <package name="tizen-platform-config"/>
+      <package name="libcap"/>
+      <package name="libxml2"/>
+      <package name="liblzma"/>
+      <package name="shadow-utils"/>
+      <package name="libblkid"/>
+      <package name="boost-system"/>
+      <package name="ttrace"/>
+      <package name="libuuid"/>
+      <package name="smack"/>
+      <package name="iniparser"/>
+      <package name="libsmack"/>
+      <package name="capi-base-common"/>
+      <package name="coreutils"/>
+      <package name="libopenssl"/>
+      <package name="libsqlite"/>
+      <package name="zlib"/>
+      <package name="libstdc++"/>
+      <package name="bash"/>
+      <package name="libgcc"/>
+      <package name="glibc"/>
+      <package name="reboot-param-helper"/>
+      <package name="libmagic-data"/>
+      <package name="building-blocks-sub2-domain_API-Multimedia-Configuration"/>
+      <package name="default-ac-domains">
+        <provide>
+          <ac_domain name="User::Shell" policy="shared"/>
+          <ac_domain name="User" policy="shared"/>
+          <ac_domain name="^" policy="shared"/>
+          <ac_domain name="System::Tools" policy="shared"/>
+          <ac_domain name="System::TEF" policy="shared"/>
+          <ac_domain name="System::Privileged" policy="shared"/>
+          <ac_domain name="System" policy="shared"/>
+        </provide>
+      </package>
+      <package name="factory-reset-userdata-backup"/>
+      <package name="filesystem"/>
+      <package name="setup"/>
+      <package name="bluez-profile_common"/>
+      <package name="ca-certificates-tizen"/>
+      <package name="boost-license"/>
+    </sw_source>
+  </sw_source>
+</config>

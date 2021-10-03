@@ -1,0 +1,11 @@
+[Unit]
+Description=Installation Recovery Service
+Requires=dbus.service
+
+[Service]
+User=app_fw
+Group=app_fw
+SmackProcessLabel=System
+Capabilities=cap_chown,cap_dac_override,cap_fowner=i
+SecureBits=keep-caps
+ExecStart=/usr/bin/pkg_recovery

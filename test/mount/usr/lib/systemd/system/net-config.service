@@ -1,0 +1,17 @@
+[Unit]
+Description=Network Configuration service
+Requires=dbus.socket
+After=dbus.socket
+
+[Service]
+Type=forking
+User=network_fw
+Group=network_fw
+SmackProcessLabel=System
+ExecStart=/usr/bin/net-config
+Restart=on-failure
+Capabilities=cap_dac_override,cap_net_admin,cap_net_raw=i
+SecureBits=keep-caps
+
+[Install]
+WantedBy=multi-user.target

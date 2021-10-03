@@ -1,0 +1,176 @@
+#!/bin/sh
+
+#==============================================================================
+# unix/zipgrep: Use unzip and egrep to search the specified members of a
+#               Zip archive for a string or pattern.    Revised: 2013-11-29
+#
+# Copyright (c) 2000-2013 Info-ZIP.  All rights reserved.
+#
+# See the accompanying file LICENSE, version 2009-Jan-2 or later (the
+# contents of which are also included in zip.h) for terms of use.  If,
+# for some reason, all these files are missing, the Info-ZIP license may
+# also be found at: ftp://ftp.info-zip.org/pub/infozip/license.html
+#==============================================================================
+#
+#    zipgrep: Use unzip and egrep to search the specified members of a
+# Zip archive for a string or pattern.  Search all members if no members
+# are specified explicitly.  The script attempts to handle egrep's "-h"
+# and "-l" options internally.
+#
+# This script assumes that the desired "unzip" and "egrep" (and "grep",
+# "od", and "sed") programs are on the user's PATH.  The user may specify
+# a particular "unzip" path in the environment variable ZIPGREP_UNZIP.
+#==============================================================================
+
+# UnZip command.
+unzip=${ZIPGREP_UNZIP:-unzip}
+
+# UnZip command options.  (Note: Shell quoting can cause problems with
+# enbedded spaces in a single options variable.)
+unzopts1='-L-'
+unzopts2='-p'
+unzopts3=''
+
+# ASCII/EBCDIC test.  (Note: Simple-looking test, if [[ "a" < "A" ]], is
+# too modern for an old shell (like Solaris /bin/sh)).
+echo A | od -x | grep -i "C115" > /dev/null
+if test $? -eq 0; then
+  unzopts2='-cq'
+  unzopts3='-aa'
+fi
+
+optl0=''
+optl1=''
+optl2=''
+optl3=''
+optlc=0
+optok=1
+opts=""
+pat=""
+list=0
+silent=0
+while test $# -ne 0; do
+  if test $optok -ne 0; then
+    case "$1" in
+    -e | -f) opts="$opts $1"; shift; pat="$1";;
+    --)      optok=0;;
+    --*)     if test "$1" = '--files-with-matches'; then
+               list=1
+             else
+               if test "$1" = '--no-filename'; then
+                 silent=1
+                 opts="$opts h"
+               else
+                 if test $optlc -lt 4; then
+                   eval optl${optlc}="$1"
+                   optlc=` expr $optlc + 1 `
+                 fi
+               fi
+             fi;;
+    -*)      opts="$opts $1";;
+     *)      if test -z "$pat"; then
+               pat="$1"
+             else
+               break;
+             fi;;
+    esac
+  else
+    if test -z "$pat"; then
+      pat="$1"
+    else
+      break;
+    fi
+  fi
+  shift
+done
+
+if test $# = 0; then
+  echo 'usage: '`basename "$0"`' [egrep_options] pattern zipfile [members...]'
+  echo 'Uses unzip and egrep to search the zip members for a string or pattern.'
+  echo 'Note: egrep, not grep, so pattern characters like "|" are special.'
+  exit 1
+fi
+
+zipfile="$1"; shift
+
+opts=`echo "$opts" | sed -e 's/ //g' -e 's/-//g'`
+case "$opst" in
+  *l*) list=1; opts=`echo $opts | sed s/l//`
+esac
+case "$opts" in
+  *h*) silent=1
+esac
+if test -n "$opts"; then
+  opts="-$opts"
+fi
+
+status_grep_global=1
+IFS='
+'
+
+# Escape shell-special characters in "pat".
+pat=` echo "$pat" | \
+ sed -e 's/\\\\/\\\\\\\\/g' -e 's/|/\\\|/g' -e 's/&/\\\&/g' \
+  -e 's/*/\\\*/g' -e 's/?/\\\?/g' -e 's/\[/\\\[/g' `
+
+# Use "unzip -Z1" to get a listing of the specified members from the
+# specified archive.  Escape any backslashes in a file name.
+for i in `$unzip -Z1 "$zipfile" ${1+"$@"} | sed -e 's/\\\\/\\\\\\\\/g' `; do
+  if test $list -eq 1; then
+    # "-l": Show only the archive member name, not the matching line(s).
+    $unzip $unzopts1 $unzopts2 $unzopts3 "$zipfile" "$i" | \
+     egrep $opts $optl0 $optl1 $optl2 $optl3 "$pat" > /dev/null && echo "$i"
+    status_grep=$?
+  elif test $silent -eq 1; then
+    # "-h": Show only the matching line(s), not the archive member name.
+    # ("-s" in "opts" will silence "egrep", stopping all output.)
+    $unzip $unzopts1 $unzopts2 $unzopts3 "$zipfile" "$i" | \
+     egrep $opts $optl0 $optl1 $optl2 $optl3 "$pat"
+    status_grep=$?
+  else
+    # Escape (or re-escape) shell-special characters in the archive
+    # member name, "i".
+    i=` echo "$i" | \
+     sed -e 's/\\\\/\\\\\\\\/g' -e 's/|/\\\|/g' -e 's/&/\\\&/g' \
+      -e 's/*/\\\*/g' -e 's/?/\\\?/g' -e 's/\[/\\\[/g' `
+
+    # Globally, send fd 4 to stdout.  In the pipeline, send normal
+    # stdout to fd 4, and send grep status to fd 3.  Collect fd 3
+    # with ``.
+    exec 4>&1
+    status_grep=` ( \
+     ( $unzip $unzopts1 $unzopts2 $unzopts3 "$zipfile" "$i" | \
+     egrep $opts $optl0 $optl1 $optl2 $optl3 "$pat" 1>&4 ; \
+     echo $? >&3 ) 4>&1 | \
+     sed "s|^|${i}:|" 1>&4 \
+     ) 3>&1 `
+  fi
+
+  # Save the primary command status.  (May be the grep status.)
+  sts=$?
+  if test -z "$status_grep"; then
+    status_grep=${sts}
+  fi
+  # If this grep status was zero, set the global grep status to zero.
+  test "$status_grep" -eq 0 && status_grep_global=0
+  # If this grep status was not zero or one, exit now.
+  test "$status_grep" -gt 1 && exit "$status_grep"
+
+done
+
+# If "sts" was not set, then assume disaster.  (UnZip failed?)
+if test -z "$sts"; then
+  exit 2
+fi
+
+# If "sts" is good (0), then exit with the global grep status.
+# Else, when "sts" is bad, exit with the worst status we can find.
+if test $sts -eq 0 ; then
+  exit $status_grep_global
+else
+  if test "$status_grep" -gt 1 ; then
+    exit "$status_grep"
+  else
+    exit $sts
+  fi
+fi

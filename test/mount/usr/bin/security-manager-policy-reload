@@ -1,0 +1,97 @@
+#!/bin/sh -e
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+POLICY_PATH=/usr/share/security-manager/policy
+PRIVILEGE_GROUP_MAPPING=$POLICY_PATH/privilege-group.list
+
+DB_FILE=`tzplatform-get TZ_SYS_DB | cut -d= -f2`/.security-manager.db
+
+# Create default buckets
+while read bucket default_policy
+do
+    # Reuse the primary bucket for PRIVACY_MANAGER bucket
+    [ "$bucket" = "PRIVACY_MANAGER" ] && bucket=""
+    cyad --set-bucket="$bucket" --type="$default_policy"
+done <<END
+PRIVACY_MANAGER DENY
+ADMIN NONE
+APPDEFINED NONE
+MAIN DENY
+MANIFESTS_GLOBAL DENY
+MANIFESTS_LOCAL DENY
+END
+
+# Link buckets together
+while read bucket_src bucket_dst
+do
+    # Reuse the main bucket for PRIVACY_MANAGER bucket
+    [ "$bucket_src" = "PRIVACY_MANAGER" ] && bucket_src=""
+    cyad --set-policy --client="*" --user="*" --privilege="*" --type=BUCKET \
+        --bucket="$bucket_src" --metadata="$bucket_dst"
+done <<END
+MAIN MANIFESTS_GLOBAL
+PRIVACY_MANAGER MAIN
+ADMIN APPDEFINED
+END
+
+# Import user-type policies
+find "$POLICY_PATH" -name "usertype-*.profile" |
+while read file
+do
+    bucket="`echo $file | sed -r 's|.*/usertype-(.*).profile$|USER_TYPE_\1|' | tr '[:lower:]' '[:upper:]'`"
+
+    # Re-create the bucket with empty contents
+    cyad --erase=$bucket --recursive=n --client='#' --user='#' --privilege='#'  >/dev/null 2>&1 || true
+    cyad --set-bucket=$bucket --type=DENY
+
+    # Link the bucket to ADMIN bucket
+    cyad --set-policy --client="*" --user="*" --privilege="*" --type=BUCKET \
+        --bucket="$bucket" --metadata="ADMIN"
+
+    grep -v ^\' $file |
+    while read app privilege
+    do
+        user="*"        # Match any user id
+        policy="0xFFFF" # ALLOW (FIXME: cyad should parse policy names, not numeric values)
+        printf '%s;%s;%s;%s;%s;\n' "$bucket" "$user" "$app" "$privilege" "$policy"
+    done |
+    cyad --set-policy --bulk=-
+done
+
+# Non-application programs get access to all privileges
+for client in User System System::Privileged
+do
+    cyad --set-policy --bucket=MANIFESTS_GLOBAL --client="$client" --user="*" --privilege="*" --type=ALLOW
+done
+
+# Root shell get access to all privileges
+cyad --set-policy --bucket=MANIFESTS_GLOBAL --client="User::Shell" --user="0" --privilege="*" --type=ALLOW
+
+# @(kernel thread) can get access to internet privilege
+cyad --set-policy --bucket=MANIFESTS_GLOBAL --client="@" --user=* --privilege="http://tizen.org/privilege/internet" --type=ALLOW
+
+# Ensure applications can access standard devices
+for priv in audio video display; do
+    cyad --set-policy --bucket=MANIFESTS_GLOBAL --client="*" --user="*" --privilege="http://tizen.org/privilege/internal/device/$priv" --type=ALLOW
+    cyad --set-policy --bucket=MANIFESTS_LOCAL --client="*" --user="*" --privilege="http://tizen.org/privilege/internal/device/$priv" --type=ALLOW
+done
+
+# Stop the service to prevent concurrent db access
+systemctl stop security-manager.service security-manager.socket \
+    || echo Failed to stop security-manager systemd service, continuing regardless
+
+# Load privilege-group mappings
+(
+echo "BEGIN;"
+echo "DELETE FROM privilege_group;"
+grep -v '^#' "$PRIVILEGE_GROUP_MAPPING" |
+while read privilege group
+do
+    echo "INSERT INTO privilege_group (privilege_name, group_name) VALUES ('$privilege', '$group');"
+done
+echo "COMMIT;"
+) | sqlite3 "$DB_FILE"
+
+# Start the service with the modified database
+systemctl start security-manager.service security-manager.socket \
+    || echo Failed to start security-manager systemd service, continuing regardless

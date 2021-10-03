@@ -1,0 +1,7 @@
+[Socket]
+ListenStream=/run/alarm_agent/%U
+DirectoryMode=0777
+ExecStartPost=/usr/bin/chmod 0777 /run/alarm_agent/%U
+
+[Install]
+WantedBy=sockets.target

@@ -1,0 +1,46 @@
+<config>
+  <sw_source name="root" rankkey="/10020/10000.root">
+    <origin>
+      <keyinfo>
+mQENBE6MJTABCAC6pAFNW9tCbLQtgmwxzNf7ftSL5RrsjVTlPtpyeFLhxSmqmeHr
+KB10C6Co1zYB/fW8zvGXU613g3WEo4SKlS2lnOVBxviet0qn58zwCQASbdFYtckk
+thtkxiSInoKbj4n/Z+hHB9dvcyqcWqp2IFQEDDpxgP4KuzCvvj6W+e9EtYsdGt9P
+ZHsVjIAe0w+j7Hs4Q7FYWD+mdQAjgBsLlc16Ci8EPYnvBL/xdbJ3Ryfi59tTdfGG
+HnwpjM2J1WshooyvsOtHZU+T1nHtuegEzdRMVFo502Lkb60dJRsREE2iyPWFX2TE
+ZdaQqUMmkPaROUlWhGBSWIKbOVARwWBn94KDABEBAAG0CXJvb3QudGVzdIkBPgQT
+AQIAKAUCTowlMAIbAwUJA8JnAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQ
+TTk+Qq2l7P210wgApKVLpdve9jDsy/y//gSAGvfA4fXFuGhHkH5+QW7L+QkUAo0Z
+vv0KB0Pw5qZjV+k8jlq3Q3f/vcIEKxc40d0coa3m+bUlL2vy0+0gLSTiZ4MNFAk5
+LvJgEj+7ks75/qtJVWfCZeXo9NiugSoW9D+jNflmfstd8k2wT2ucH7IJHHzK1lGm
+vZHXeJeSULRHiibVyK5cG+NH/1Akuxkgo2jOzqhLjhp4/UiJlyAD0k/J4ULfmWp8
+C9/sIhWBoS5OcrtMVQtUMTx85I2dEC/01hnfLUk8mi5VscLu3xQoJ9hNrMEgji6H
+S+MmxcPGnVziEA0Z7VNN6DpuG/xZ1i9fgXXVfLkBDQROjCUwAQgA6fyD7eqaoah/
+za0X+Xv3o1y52UHmeHMmyzM/W4UlVsd01h7KzSHWyQKHi0i0pxRtUj+pkV+r+QjV
+BiAowq2HVpyXsmre29PEgAuIVv6/pZjfZEWFKjSDsvdXpS+mT+J6LjRxYh7ZbGvv
+SR3hMiMocWYENj13XDRw5USGhC0UxlmmMfjQfWJ6eHeQTiyZWW+CZUAJ2IbEkPVP
+nBDH/fTuVMfOo4g0HwqUSJmwV47BPLec1ArSaPG1YgKX1Y+UYoNfUvo/ieiF59At
+A8UbjQMzZggIfkvJsDL8U5n4ojFL8Rs/aMYuH76OlA4wuKPAnBSt+fVBnjaAAadf
+FCy/CHZt/wARAQABiQElBBgBAgAPBQJOjCUwAhsMBQkDwmcAAAoJEE05PkKtpez9
+S7IH/j44MxOP6dAycQAreWVAzdMiw82DjP7c6jMxYZj8ss1x++iO5GW82qm0WJ6h
+IOEdll+wBhPX0acKvE4KrlNzfsB2WzDRwOyiZfuSQI0J3Jrytj8zyCVKwHTsI8VC
+RkOzaMYsEqmPc+ve+wxxcwWXC0EtoyhMRjRZlMy55IeJcEfM8bcE4wcsyotsura6
+o1fmU223Xj1k5xXxDvXalPUoXnhvsev7kMBnIQRac194qkSkTzVXGLGu5Ng7Bfxl
+BMhf6RSk31+Q43ASbn4ralnswMhsHSatJIeasbHyvsTJzMnfEoSdpb8/dQI8KnHf
+tRrR5cbqmVr8tkFjS/QK6TWfNMM=
+</keyinfo>
+    </origin>
+    <package name="unknown-sw-source"/>
+    <package name="ac-domain-system">
+      <provide>
+        <ac_domain name="_" policy="shared"/>
+        <ac_domain name="Isolated"/>
+      </provide>
+    </package>
+    <package name="root"/>
+    <sw_source name="_default_" rankkey="/10020/11000/10000._default_">
+      <allow>
+        <ac_domain match="*"/>
+      </allow>
+    </sw_source>
+  </sw_source>
+</config>

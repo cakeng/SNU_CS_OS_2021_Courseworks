@@ -1,0 +1,13 @@
+[Unit]
+Description=Start cynara agent that provides functions for license verification
+
+[Service]
+Type=notify
+User=security_fw
+Group=security_fw
+CapabilityBoundingSet=
+ExecStart=/usr/bin/license-manager-agent
+SmackProcessLabel=System
+
+[Install]
+WantedBy=cynara.service

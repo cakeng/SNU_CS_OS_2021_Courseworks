@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=org.tizen.factoryreset
+Exec=/bin/false
+SystemdService=factory-reset-launch.service
+User=root

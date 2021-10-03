@@ -1,0 +1,15 @@
+[Unit]
+Description=Generate environment from /etc/profile.d
+DefaultDependencies=no
+Before=basic.target
+RequiresMountsFor=/opt
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+SmackProcessLabel=System
+ExecStart=-/usr/bin/env -i sh -c 'source /etc/profile; env | /bin/egrep -v "^(HOME|PWD|SHLVL|_|USER|MAIL|LOGNAME|XDG_RUNTIME_DIR)=" > /run/tizen-system-env'
+ExecStart=-/usr/bin/env -i sh -c 'source /etc/profile; env | /bin/egrep -e "XDG_RUNTIME_DIR=" > /run/xdg-root-env'
+
+[Install]
+WantedBy=basic.target

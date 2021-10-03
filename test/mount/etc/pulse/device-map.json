@@ -1,0 +1,16 @@
+{
+	"device-types":[
+		{
+			"device-type":"builtin-speaker",
+			"playback-devices":{"normal":"alsa:1,0"}
+		}
+	],
+	"device-files":{
+		"playback-devices":[
+			{
+				"device-string":"alsa:1,0",
+				"role":{"normal":"mmap=0 tsched=0 rate=44100"}
+			}
+		]
+	}
+}

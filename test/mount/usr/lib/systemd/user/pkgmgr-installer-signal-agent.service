@@ -1,0 +1,6 @@
+[Unit]
+Description=Package Manager Installer Signal Agent on User Session
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/pkgmgr-installer-signal-agent

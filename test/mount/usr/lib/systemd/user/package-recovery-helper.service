@@ -1,0 +1,5 @@
+[Unit]
+Description=Installation Recovery Helper Service
+
+[Service]
+ExecStart=/usr/bin/pkg_recovery_helper

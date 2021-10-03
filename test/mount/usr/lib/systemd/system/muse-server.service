@@ -1,0 +1,21 @@
+[Unit]
+Description=muse server
+After=display-manager.service tbm-drm-auth.service
+
+[Service]
+Type=forking
+User=multimedia_fw
+Group=multimedia_fw
+SmackProcessLabel=System
+ExecStart=/usr/bin/muse-server
+PIDFile=/tmp/.muse-server.pid
+Restart=always
+MemoryLimit=300M
+EnvironmentFile=/run/tizen-system-env
+EnvironmentFile=/run/xdg-root-env
+SupplementaryGroups=priv_mediastorage priv_camera priv_recorder
+Capabilities=cap_dac_override=i
+SecureBits=keep-caps
+
+[Install]
+WantedBy=multi-user.target

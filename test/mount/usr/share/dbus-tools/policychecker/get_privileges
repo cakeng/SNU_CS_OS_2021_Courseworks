@@ -1,0 +1,15 @@
+#!/bin/sh
+# This script extracts and lists privileges from all D-Bus conf files in current directory
+
+cmd="xsltproc --nonet --novalid "
+
+privileges=""
+
+for i in *.conf
+do
+	new="$($cmd /usr/share/dbus-tools/policychecker/extract_privilege.xsl $i)"
+	privileges="$privileges\n$new"
+done
+
+echo -e "$privileges" | sort | uniq
+exit 0

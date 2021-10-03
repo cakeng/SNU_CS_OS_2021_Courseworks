@@ -1,0 +1,2 @@
+SUBSYSTEM=="switch", ATTR{name}=="usb_cable", ATTR{state}=="1", RUN+="/usr/bin/direct_set_debug.sh --sdb-set"
+SUBSYSTEM=="switch", ATTR{name}=="usb_cable", ATTR{state}=="0", RUN+="/usr/bin/direct_set_debug.sh --sdb-unset"

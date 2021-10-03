@@ -1,0 +1,11 @@
+[Unit]
+Description=Headless Display Manager
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/sysconfig/display-manager.env
+SmackProcessLabel=System
+ExecStart=/usr/bin/doctor
+
+[Install]
+WantedBy=graphical.target

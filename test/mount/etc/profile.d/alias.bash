@@ -1,0 +1,3 @@
+
+
+alias rehash='hash -r'

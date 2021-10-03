@@ -1,0 +1,14 @@
+[Unit]
+Description=Making Tizen ID
+DefaultDependencies=no
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/tizen_id
+SmackProcessLabel=System
+User=system_fw
+Group=system_fw
+
+[Install]
+WantedBy=sysinit.target

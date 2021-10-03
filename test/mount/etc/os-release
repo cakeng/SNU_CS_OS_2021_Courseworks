@@ -1,0 +1,8 @@
+NAME=Tizen
+VERSION="5.0.0 (Tizen5/Unified)"
+ID=tizen
+VERSION_ID=5.0.0
+PRETTY_NAME="Tizen 5.0.0 (Tizen5/Unified)"
+ANSI_COLOR="0;36"
+CPE_NAME="cpe:/o:tizen:tizen:5.0.0"
+BUILD_ID=tizen-unified_20181024.1_iot-headless-2parts-armv7l-rpi3

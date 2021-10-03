@@ -1,0 +1,4 @@
+#preexec configuration
+##usage##
+#[type]: [preexec so path], [preexec symbol name]
+tpk: /usr/lib/libosp-env-config.so, do_pre_exec

@@ -1,0 +1,15 @@
+[Unit]
+Description=factory reset on booting
+ConditionPathExists=|/opt/.factoryreset
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/rm -f /opt/.factoryreset
+ExecStart=/usr/bin/factory-reset
+SmackProcessLabel=System::Privileged
+CapabilityBoundingSet=cap_dac_override cap_sys_admin cap_mac_override cap_mac_admin cap_sys_boot cap_chown cap_fowner
+
+[Install]
+WantedBy=multi-user.target
+
+

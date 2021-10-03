@@ -1,0 +1,14 @@
+[Unit]
+Description=T-trace marker
+DefaultDependencies=no
+After=tmp.mount sys-kernel-debug-tracing.mount
+
+[Service]
+SmackProcessLabel=System
+User=system_fw
+Group=system_fw
+Type=simple
+ExecStart=/usr/bin/atrace --init_exec
+
+[Install]
+WantedBy=sysinit.target

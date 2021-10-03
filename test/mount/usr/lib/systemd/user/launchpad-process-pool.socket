@@ -1,0 +1,7 @@
+[Socket]
+ListenStream=/run/aul/daemons/%U/.launchpad-process-pool-sock
+DirectoryMode=0777
+Service=launchpad-process-pool.service
+
+[Install]
+WantedBy=sockets.target

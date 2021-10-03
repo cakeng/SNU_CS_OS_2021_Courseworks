@@ -1,0 +1,16 @@
+[Unit]
+Description=Peripheral Service Daemon
+Requires=dbus.service
+ConditionPathExists=/proc/device-tree/model
+After=systemd-tmpfiles-setup.service
+
+[Service]
+SmackProcessLabel=System
+Type=notify
+ExecStart=/usr/bin/peripheral-bus
+Restart=always
+RestartSec=0
+
+[Install]
+WantedBy=tizen-system.target
+

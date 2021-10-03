@@ -1,0 +1,16 @@
+[Unit]
+Description=ode management daemon
+Before=deviced.service
+
+[Service]
+Type=simple
+SmackProcessLabel=System::Privileged
+ExecStart=/usr/bin/oded
+Restart=on-failure
+ExecReload=/bin/kill -HUP $MAINPID
+CapabilityBoundingSet=~CAP_MAC_OVERRIDE
+EnvironmentFile=/run/tizen-system-env
+EnvironmentFile=/run/xdg-root-env
+
+[Install]
+WantedBy=multi-user.target

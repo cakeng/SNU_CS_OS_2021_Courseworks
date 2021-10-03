@@ -1,0 +1,27 @@
+#!/bin/sh
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+if [ ! -d /opt/dbspace ]
+then
+    mkdir -p /opt/dbspace
+fi
+
+chown :system_share /opt/dbspace
+chmod 775 /opt/dbspace
+
+if [ ! -d /opt/usr/dbspace ]
+then
+    mkdir -p /opt/usr/dbspace
+fi
+
+chown :system_share /opt/usr/dbspace
+chmod 775 /opt/usr/dbspace
+
+if [ ! -d /opt/etc ]
+then
+    mkdir -p /opt/etc
+fi
+
+chown :system_share /opt/etc
+chmod 775 /opt/etc
