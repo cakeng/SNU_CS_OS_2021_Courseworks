@@ -1,1 +1,0 @@
-/usr/etc/bluetooth/bt-dev-start-rpi3.sh

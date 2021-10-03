@@ -1,6 +1,0 @@
-[D-BUS Service]
-Name=org.tizen.data_provider_service
-Exec=/bin/false
-SystemdService=data-provider-master.service
-User=app_fw
-Group=app_fw

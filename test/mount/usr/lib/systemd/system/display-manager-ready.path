@@ -1,6 +1,0 @@
-[Unit]
-Description=Path activation for display manager ready service
-After=tmp.mount display-manager.service
-
-[Path]
-PathExists=/run/wayland-0

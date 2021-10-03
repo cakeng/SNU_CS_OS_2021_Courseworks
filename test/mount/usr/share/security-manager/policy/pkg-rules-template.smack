@@ -1,6 +1,0 @@
-System ~PATH_RW~ rwxat
-System ~PATH_RO~ rwxat
-System::Privileged ~PATH_RW~ rwxat
-System::Privileged ~PATH_RO~ rwxat
-User ~PATH_RW~ rwxat
-User ~PATH_RO~ rwxat

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="application/x-sms-rom">
-  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
-  <comment>Master System ROM</comment>
-  <generic-icon name="application-x-executable"/>
-  <glob pattern="*.sms"/>
-</mime-type>

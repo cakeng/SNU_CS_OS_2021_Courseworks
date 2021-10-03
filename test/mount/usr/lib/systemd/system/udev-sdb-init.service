@@ -1,9 +1,0 @@
-[Unit]
-Description=Install rule for udev sdb
-DefaultDependencies=no
-Before=sysinit.target systemd-udevd.service
-
-[Service]
-SmackProcessLabel=System
-Type=oneshot
-ExecStart=/usr/share/upgrade/install-sdb-rule.sh

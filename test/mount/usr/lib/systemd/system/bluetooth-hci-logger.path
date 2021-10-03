@@ -1,5 +1,0 @@
-[Unit]
-Description=Path activation for the "bluetooth-hci-logger"
-
-[Path]
-PathExists=/run/.hci_logger_start

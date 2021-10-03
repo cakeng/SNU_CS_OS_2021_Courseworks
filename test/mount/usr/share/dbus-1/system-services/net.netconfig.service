@@ -1,6 +1,0 @@
-[D-BUS Service]
-Name=net.netconfig
-Exec=/bin/false
-SystemdService=net-config.service
-User=network_fw
-Group=network_fw

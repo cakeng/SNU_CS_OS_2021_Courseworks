@@ -1,5 +1,0 @@
-[Unit]
-Description=Path activation for the "bluez"
-
-[Path]
-PathExists=/run/.bluez_start

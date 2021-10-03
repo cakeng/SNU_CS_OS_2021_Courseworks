@@ -1,2 +1,0 @@
-KERNEL=="tgl", MODE="0666", GROUP="display", SECLABEL{smack}="*"
-KERNEL=="slp_global_lock*", MODE="0666", GROUP="display", SECLABEL{smack}="*"

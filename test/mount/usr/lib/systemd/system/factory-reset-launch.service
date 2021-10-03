@@ -1,8 +1,0 @@
-[Unit]
-Description=launching factory reset by dbus
-
-[Service]
-Type=dbus
-BusName=org.tizen.factoryreset
-ExecStart=/usr/bin/factory-reset
-SmackProcessLabel=System::Privileged

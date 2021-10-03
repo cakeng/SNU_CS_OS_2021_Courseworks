@@ -1,1 +1,0 @@
-ACTION=="add", KERNEL=="log_system|log_radio|log_main|log_events|log_apps", MODE="0662", OWNER="log", GROUP="log", SECLABEL{smack}="*", TAG+="systemd", ENV{SYSTEMD_WANTS}="dlog_logger.service"

@@ -1,1 +1,0 @@
-common/bt-stack-up.sh

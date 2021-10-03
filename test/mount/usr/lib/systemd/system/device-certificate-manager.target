@@ -1,3 +1,0 @@
-[Unit]
-Description=Device Certificate Manager sockets
-DefaultDependencies=true

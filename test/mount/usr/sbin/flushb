@@ -1,2 +1,0 @@
-#! /bin/sh
-/sbin/blockdev --flushbufs $1

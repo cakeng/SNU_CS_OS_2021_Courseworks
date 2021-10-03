@@ -1,1 +1,0 @@
-KERNEL=="samsung_sdb", OWNER="sdk", GROUP="sdk", SECLABEL{smack}="*"

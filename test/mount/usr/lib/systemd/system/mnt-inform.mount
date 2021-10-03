@@ -1,9 +1,0 @@
-[Unit]
-Description=Reboot Parameter Partition
-DefaultDependencies=no
-Conflicts=umount.target
-
-[Mount]
-What=LABEL=inform
-Where=/mnt/inform
-Type=ext4

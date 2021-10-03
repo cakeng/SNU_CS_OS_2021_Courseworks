@@ -1,6 +1,0 @@
-[Unit]
-Description=Bluetooth hci up
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/hciconfig hci0 up

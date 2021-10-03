@@ -1,5 +1,0 @@
-[Unit]
-Description=Wait for tdm-socket
-
-[Path]
-PathExists=/run/tdm-socket

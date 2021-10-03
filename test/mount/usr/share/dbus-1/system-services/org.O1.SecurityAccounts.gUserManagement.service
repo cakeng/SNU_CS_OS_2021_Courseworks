@@ -1,5 +1,0 @@
-[D-BUS Service]
-Name=org.O1.SecurityAccounts.gUserManagement
-Exec=/bin/false
-User=root
-SystemdService=gumd.service

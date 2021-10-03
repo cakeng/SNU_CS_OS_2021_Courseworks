@@ -1,3 +1,0 @@
-# <file system> <mount point>   <type>  <options>           <dump> <pass>
-/dev/root       /               ext4    defaults,noatime,ro 0      1
-LABEL=system-data /opt          ext4    defaults,noatime    0      2

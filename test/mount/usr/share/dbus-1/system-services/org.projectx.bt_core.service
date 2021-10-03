@@ -1,5 +1,0 @@
-[D-BUS Service]
-Name=org.projectx.bt_core
-Exec=/bin/false
-User=root
-SystemdService=bluetooth-frwk-core.service

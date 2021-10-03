@@ -1,6 +1,0 @@
-[Unit]
-Description=sdbd Socket for sdb
-
-[Socket]
-ListenUSBFunction=/dev/usb-funcs/sdb/default
-Service=sdbd.service

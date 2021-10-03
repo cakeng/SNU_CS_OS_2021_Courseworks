@@ -1,4 +1,0 @@
-[D-BUS Service]
-Name=org.tizen.pkgmgr
-Exec=/usr/bin/false
-SystemdService=package-manager.service

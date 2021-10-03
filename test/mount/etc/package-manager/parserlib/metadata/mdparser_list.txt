@@ -1,4 +1,0 @@
-http://developer.samsung.com/tizen/metadata/sticker
-http://developer.samsung.com/tizen/metadata/ttsengine
-http://developer.samsung.com/tizen/metadata/downloadable_filters
-http://developer.samsung.com/tizen/metadata/dictionary

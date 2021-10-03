@@ -1,4 +1,0 @@
-[Unit]
-Description=cynara sockets
-DefaultDependencies=true
-

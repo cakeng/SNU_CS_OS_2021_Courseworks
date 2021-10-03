@@ -1,3 +1,0 @@
-import eina_types;
-
-var Efl.Net.Error.COULDNT_RESOLVE_HOST: Eina.Error; [[Could not resolve the given host name]]

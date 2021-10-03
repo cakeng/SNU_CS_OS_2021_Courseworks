@@ -1,3 +1,0 @@
-User ~PATH_SHARED_RO~ rwxat
-System ~PATH_SHARED_RO~ rwxat
-System::Privileged ~PATH_SHARED_RO~ rwxat

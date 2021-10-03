@@ -1,5 +1,0 @@
-[Unit]
-Description=Path activation for the "bluetooth-stack-down.service"
-
-[Path]
-PathExists=/run/.bt_stack_down

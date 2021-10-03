@@ -1,6 +1,0 @@
-[D-BUS Service]
-Name=org.tizen.MobileapAgent
-Exec=/bin/false
-User=network_fw
-Group=network_fw
-SystemdService=mobileap-agent.service

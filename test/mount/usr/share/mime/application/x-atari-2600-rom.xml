@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="application/x-atari-2600-rom">
-  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
-  <comment>Atari 2600</comment>
-  <generic-icon name="application-x-executable"/>
-  <glob pattern="*.a26"/>
-</mime-type>
