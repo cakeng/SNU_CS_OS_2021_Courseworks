@@ -7,16 +7,20 @@
 #include <errno.h>
 #define BUFFER_SIZE 4096
 
-void error_checker(int nr){
+int error_checker(int num, struct prinfo* buf){
 
     if(errno == EINVAL)
     {
-        printf("EINVAL_error_occured!");
+        printf("EINVAL_error_occured! \n");
+        return 0;
     }
     if(errno == EFAULT)
     {
-        printf("Efault_error_occured!");
+        printf("Efault_error_occured! \n");
+        return 0;
     }
+    tree_printer(num,buf);
+    return 1;
 
 }
 
@@ -87,15 +91,71 @@ int main()
     int num = BUFFER_SIZE;
     int* nr = &num;
     int returnVal;
-    printf ("Calling syscall 398...\n");
+
+
+    printf ("Calling syscall 398 normal case...\n");
     struct prinfo* buf = malloc(sizeof(struct prinfo)*BUFFER_SIZE);
-    returnVal = syscall(398, NULL, nr);
+    returnVal = syscall(398, buf, nr);
     printf ("Called syscall 398. Terminating.\n");
-    tree_printer(num,buf);
-    error_checker(1);
+    error_checker(num,buf);
 
     free(buf);
-        return 0;
+    //-------------------------------------------------------
+
+
+    num = BUFFER_SIZE;
+    nr = &num;
+
+    printf ("Calling syscall 398 NULL case...\n");
+    buf = malloc(sizeof(struct prinfo)*BUFFER_SIZE);
+    returnVal = syscall(398, buf, NULL);
+    printf ("Called syscall 398. Terminating.\n");
+    error_checker(num,buf);
+
+    free(buf);
+    //-------------------------------------------------------
+    
+    num = BUFFER_SIZE;
+    nr = &num;
+
+    printf ("Calling syscall 398 NULL case2...\n");
+    buf = malloc(sizeof(struct prinfo)*BUFFER_SIZE);
+    returnVal = syscall(398, NULL, nr);
+    printf ("Called syscall 398. Terminating.\n");
+    error_checker(num,buf);
+
+    free(buf);
+    //-------------------------------------------------------
+    num = 0;
+    nr = &num;
+
+    
+    printf ("Calling syscall 398 nr less than 1 case...\n");
+    buf = malloc(sizeof(struct prinfo)*BUFFER_SIZE);
+    returnVal = syscall(398, buf, nr);
+    printf ("Called syscall 398. Terminating.\n");
+    error_checker(num,buf);
+
+    free(buf);
+    //-------------------------------------------------------
+    
+    num = BUFFER_SIZE;
+    nr = &num;
+
+
+    printf ("Calling syscall 398 strange access case...\n");
+    buf = malloc(sizeof(struct prinfo)*BUFFER_SIZE);
+    returnVal = syscall(398, 0, 0);
+    printf ("Called syscall 398. Terminating.\n");
+    error_checker(num,buf);
+
+    free(buf);
+    
+
+
+
+
+    return 0;
 }
 
 
