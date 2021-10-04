@@ -145,7 +145,7 @@ int main()
 
     printf ("Calling syscall 398 strange access case...\n");
     buf = malloc(sizeof(struct prinfo)*BUFFER_SIZE);
-    returnVal = syscall(398, 0, 0);
+    returnVal = syscall(398, -1, -1);
     printf ("Called syscall 398. Terminating.\n");
     error_checker(num,buf);
 
