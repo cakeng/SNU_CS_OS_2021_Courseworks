@@ -48,7 +48,7 @@ Calls syscall 398 to test ptree system call function.
 Calls error_checker() to check return values. error_checker calls tree_printer() if there are no errors.  
 tree_printer() uses stack to travels and print the processes in depth first order.  
 
-Investigation & Lessons
+Investigation & Lessons  
 Linux Processes are created from a single root process with PID 0.  
 Each processes are child of a single parent process, and the processes form a tree structure.  
 
