@@ -15,7 +15,7 @@ dir_root/
 ------------------test_ptree.c  (user level test code implementation)  
 ------------------mount  (Mount directory for the root image)  
 ------tizen-image/  
-------------img files   
+------------.img files   
 
 ------Building the OS------  
 Enter osfall2021-team1-proj1 and directory run ./generate.sh  
@@ -35,7 +35,9 @@ It will test 5 cases
  4.      nr less than 1 case  
  5.      Invalid access case => EFAULT  
    
+   
  High level design  
+ 
  ------ptree.c------  
  Implements kernel side code.  
  Uses task_struct of the PID 0 process as the head of the process tree.  
@@ -47,14 +49,36 @@ It will test 5 cases
 Calls syscall 398 to test ptree system call function.  
 Calls error_checker() to check return values. error_checker calls tree_printer() if there are no errors.  
 tree_printer() uses stack to travels and print the processes in depth first order.  
-
+  
+  
 Investigation & Lessons  
-Linux Processes are created from a single root process with PID 0.  
-Each processes are child of a single parent process, and the processes form a tree structure.  
 
-The root process is "swapper", and all processes are either fork()ed or exec() from swapper.
-Swapper itself is started on boot, by LILO(linux loader) GRUB(GRand Unified Bootloader) or other bootloaders.
+Linux Processes are created from a single root process with PID 0.  
+Each processes are child of a single parent process, and the processes form a tree structure.   
+
+The root process is "swapper", and all processes are either fork()ed or exec() from swapper.  
+Swapper itself is started on boot, by LILO(linux loader) GRUB(GRand Unified Bootloader) or other bootloaders.  
 
 Swapper was originally used to swap processes in/out of disks, to save memory. 
 The swapping function is now processed by other kernel processes, such as kswapd. 
-Swapper is now used as a "idle task", a task(job) with the lowest priority and is ran when all other processes are idle.
+Swapper is now used as a "idle task", a task(job) with the lowest priority and is ran when all other processes are idle.  
+
+Systemd (system daemon) and kthreadd (Kernel thread daemon) hold PID 1 and 2. 
+Systemd manages system and service daemons, and kthreadd controls kernel threads. 
+Kernel threads are threads used by the kernel to do background tasks, such as managing hardware.  
+  
+  
+Lessons Learnt
+
+1.How to use Git for cooperative development and version control.  
+
+2.Basic structure of the Linux source code, and where to find/modify to add custom kernel functions.  
+
+3.How to call system calls directly in user code, using system call IDs and functions.  
+
+4.Experience of basic kernel programming, including various APIs and possible errors that were unavailable at the user level.  
+
+5.Knowledge of Linux process tree structure, and the top-level processes, such as swapper, systemd, kthreadd.  
+
+
+
