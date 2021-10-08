@@ -1,18 +1,32 @@
-Linux kernel
-============
+Use git clone to download proj1 brach
+And make tizen-image directory   which will be look like
 
-This file was moved to Documentation/admin-guide/README.rst
+ㄴosfall2021-team1-proj1
+ㄴtizen-image
+	ㄴimg files
 
-Please notice that there are several guides for kernel developers and users.
-These guides can be rendered in a number of formats, like HTML and PDF.
+After entering osfall2021-team1-proj1 directory run ./generate.sh
+and go to osfall2021-team1-proj1/test and make mount directory
+build with arm-linux-gnueabi-gcc test_ptree.c
 
-In order to build the documentation, use ``make htmldocs`` or
-``make pdfdocs``.
+ㄴosfall2021-team1-proj1
+       ㄴqemu.sh
+	ㄴtest
+		ㄴmnt.sh
+		ㄴtest_ptree.c
+		ㄴmount
+		ㄴa.out
+ㄴtizen-image
+	ㄴimg files
 
-There are various text files in the Documentation/ subdirectory,
-several of them using the Restructured Text markup notation.
-See Documentation/00-INDEX for a list of what is contained in each file.
+run ./mnt.sh to mount mount directory and run cp a.out ./mount/root
 
-Please read the Documentation/process/changes.rst file, as it contains the
-requirements for building and running the kernel, and information about
-the problems which may result by upgrading your kernel.
+go to osfall2021-team1-proj1 and run ./qemu.sh
+
+after boot it complted just run ./a.out
+it will test 5 cases
+ 1.     Normal cases it passes buf and nr returned from syscall
+ 2.      nr NULL case => EINVAL
+ 3.      buf NULL case => EINVAL
+ 4.      nr less than 1 case
+ 5.      Invalid access case => EFAULT
