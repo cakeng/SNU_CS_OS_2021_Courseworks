@@ -1,8 +1,8 @@
 ![proj1_diagram](./proj1_diagram.PNG)
 
-Use git clone to download proj1 brach  
-Create tizen-image directory and unzip&copy the required image files.  
-The directory structure would look like  
+Use git clone to download source and switch to proj1 brach.
+Create tizen-image directory and unzip&copy the required image files. (As in proj0)  
+The directory structure should look like  
   
 dir_root/  
 ------osfall2021-team1-proj1/  
@@ -21,15 +21,15 @@ dir_root/
 Enter osfall2021-team1-proj1 and directory run ./generate.sh  
 
 ------Building Test Files------  
-Enter osfall2021-team1-proj1/test and create mount directory.  
-build with arm-linux-gnueabi-gcc test_ptree.c  
+Enter osfall2021-team1-proj1/test and create "mount" directory.  
+Build with arm-linux-gnueabi-gcc test_ptree.c  
 run ./mnt.sh to mount root image and copy the binary to the root directory in the mounted image.  
 
 To run the VM, change directory to osfall2021-team1-proj1 and run ./qemu.sh  
 After booting run the copied binary in the root user home directory.  
 
 It will test 5 cases  
- 1.     Normal cases it passes buf and nr returned from syscall  
+ 1.      Normal cases it passes buf and nr returned from syscall  
  2.      nr NULL case => EINVAL  
  3.      buf NULL case => EINVAL  
  4.      nr less than 1 case  
@@ -48,7 +48,7 @@ It will test 5 cases
  ------test_ptree.c------  
 Calls syscall 398 to test ptree system call function.  
 Calls error_checker() to check return values. error_checker calls tree_printer() if there are no errors.  
-tree_printer() uses stack to travels and print the processes in depth first order.  
+tree_printer() uses stack to traverse and print the processes in depth first order.  
   
   
 Investigation & Lessons  
