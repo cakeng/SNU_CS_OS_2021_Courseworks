@@ -7,13 +7,13 @@ The directory structure would look like
 dir_root/  
 ------osfall2021-team1-proj1/  
 ------------qemu.sh  
-------------generate.sh  (Automated kernel building and image movement script)
+------------generate.sh  (Automated kernel building and image movement script)  
 ------------kernel/  
-------------------ptree.c  (ptree syscall implementation)
+------------------ptree.c  (ptree syscall implementation)  
 ------------test/  
-------------------mnt.sh   (Root image mount script)
-------------------test_ptree.c  (user level test code implementation)
-------------------mount  (Mount directory for the root image)
+------------------mnt.sh   (Root image mount script)  
+------------------test_ptree.c  (user level test code implementation)  
+------------------mount  (Mount directory for the root image)  
 ------tizen-image/  
 ------------img files   
 
@@ -48,5 +48,8 @@ Calls syscall 398 to test ptree system call function.
 Calls error_checker() to check return values. error_checker calls tree_printer() if there are no errors.  
 tree_printer() uses stack to travels and print the processes in depth first order.  
 
+Investigation & Lessons
+Linux Processes are created from a single root process with PID 0.  
+Each processes are child of a single parent process, and the processes form a tree structure.  
 
 
