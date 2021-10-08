@@ -1,7 +1,7 @@
 ![proj1_diagram](./proj1_diagram.PNG)
 
 Use git clone to download proj1 brach  
-Create tizen-image directory and unzip&copy the required image files. 
+Create tizen-image directory and unzip&copy the required image files.  
 The directory structure would look like  
   
 dir_root/  
