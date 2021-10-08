@@ -79,7 +79,7 @@ void tree_printer(int num, struct prinfo* buf){
         {
             printf("\t");
         }
-        printf("Entry %d: %s,%d,%lld,%d,%d,%d,%lld\n", i, prPtr->comm, prPtr->pid, prPtr->state,
+        printf("%s,%d,%lld,%d,%d,%d,%lld\n", prPtr->comm, prPtr->pid, prPtr->state,
   prPtr->parent_pid, prPtr->first_child_pid, prPtr->next_sibling_pid, prPtr->uid);
     }
     //printf("%d \n",sp_tap);
