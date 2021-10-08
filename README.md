@@ -18,10 +18,10 @@ dir_root/
 ------------img files   
 
 ------Building the OS------  
-Entering osfall2021-team1-proj1 and directory run ./generate.sh  
+Enter osfall2021-team1-proj1 and directory run ./generate.sh  
 
 ------Building Test Files------  
-Enter osfall2021-team1-proj1/test and make mount directory  
+Enter osfall2021-team1-proj1/test and create mount directory.  
 build with arm-linux-gnueabi-gcc test_ptree.c  
 run ./mnt.sh to mount root image and copy the binary to the root directory in the mounted image.  
 
@@ -52,4 +52,9 @@ Investigation & Lessons
 Linux Processes are created from a single root process with PID 0.  
 Each processes are child of a single parent process, and the processes form a tree structure.  
 
+The root process is "swapper", and all processes are either fork()ed or exec() from swapper.
+Swapper itself is started on boot, by LILO(linux loader) GRUB(GRand Unified Bootloader) or other bootloaders.
 
+Swapper was originally used to swap processes in/out of disks, to save memory. 
+The swapping function is now processed by other kernel processes, such as kswapd. 
+Swapper is now used as a "idle task", a task(job) with the lowest priority and is ran when all other processes are idle.
