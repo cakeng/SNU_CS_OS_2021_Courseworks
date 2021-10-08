@@ -1,34 +1,37 @@
-![proj1_diagram](./proj1_diagram.jpg)
+![proj1_diagram](./proj1_diagram.PNG)
 
-Use git clone to download proj1 brach
-And make tizen-image directory   which will be look like
+Use git clone to download proj1 brach  
+Create tizen-image directory and unzip&copy the required image files. 
+The directory structure would look like  
 
-ㄴosfall2021-team1-proj1
-ㄴtizen-image
-	ㄴimg files
+dir_root/
+------osfall2021-team1-proj1/ 
+------------qemu.sh  
+------------generate.sh  
+------------kernel/  
+------------------ptree.c  
+------------test/  
+------------------mnt.sh   
+------------------test_ptree.c  
+------------------mount  
+------------------a.out  
+------tizen-image/  
+------------img files   
 
-After entering osfall2021-team1-proj1 directory run ./generate.sh
-and go to osfall2021-team1-proj1/test and make mount directory
-build with arm-linux-gnueabi-gcc test_ptree.c
+------Building the OS------  
+Entering osfall2021-team1-proj1 and directory run ./generate.sh  
 
-ㄴosfall2021-team1-proj1
-       ㄴqemu.sh
-	ㄴtest
-		ㄴmnt.sh
-		ㄴtest_ptree.c
-		ㄴmount
-		ㄴa.out
-ㄴtizen-image
-	ㄴimg files
+------Building Test Files------  
+Enter osfall2021-team1-proj1/test and make mount directory  
+build with arm-linux-gnueabi-gcc test_ptree.c  
+run ./mnt.sh to mount root image and copy the binary to the root directory in the mounted image.  
 
-run ./mnt.sh to mount mount directory and run cp a.out ./mount/root
+To run the VM, change directory to osfall2021-team1-proj1 and run ./qemu.sh  
+After booting run the copied binary in the root user home directory.  
 
-go to osfall2021-team1-proj1 and run ./qemu.sh
-
-after boot it complted just run ./a.out
-it will test 5 cases
- 1.     Normal cases it passes buf and nr returned from syscall
- 2.      nr NULL case => EINVAL
- 3.      buf NULL case => EINVAL
- 4.      nr less than 1 case
- 5.      Invalid access case => EFAULT
+It will test 5 cases  
+ 1.     Normal cases it passes buf and nr returned from syscall  
+ 2.      nr NULL case => EINVAL  
+ 3.      buf NULL case => EINVAL  
+ 4.      nr less than 1 case  
+ 5.      Invalid access case => EFAULT  
