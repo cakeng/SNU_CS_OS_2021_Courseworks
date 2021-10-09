@@ -19,12 +19,14 @@ dir_root/
   
    
 ------Building the OS------  
+Remove "#define __DEBUG_PTREE 1" from ptree.c before building to remove ptree debug messages. (Default included.)  
 Enter osfall2021-team1-proj1 and directory run ./generate.sh  
 
 ------Building Test Files------  
 Enter osfall2021-team1-proj1/test and create "mount" directory.  
 Build with arm-linux-gnueabi-gcc test_ptree.c  
 run ./mnt.sh to mount root image and copy the binary to the root directory in the mounted image.  
+Unmount root image before running the VM.
 
 To run the VM, change directory to osfall2021-team1-proj1 and run ./qemu.sh  
 After booting run the copied binary in the root user home directory.  
