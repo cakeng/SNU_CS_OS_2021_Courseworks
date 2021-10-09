@@ -1,6 +1,6 @@
 ![proj1_diagram](./proj1_diagram.PNG)
 
-Use git clone to download source and switch to proj1 brach.
+Use git clone to download source and switch to proj1 brach.  
 Create tizen-image directory and unzip&copy the required image files. (As in proj0)  
 The directory structure should look like  
   
@@ -16,7 +16,8 @@ dir_root/
 ------------------mount  (Mount directory for the root image)  
 ------tizen-image/  
 ------------.img files   
-
+  
+   
 ------Building the OS------  
 Enter osfall2021-team1-proj1 and directory run ./generate.sh  
 
