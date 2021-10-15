@@ -3985,6 +3985,11 @@ static void __setscheduler(struct rq *rq, struct task_struct *p,
 		p->sched_class = &dl_sched_class;
 	else if (rt_prio(p->prio))
 		p->sched_class = &rt_sched_class;
+	else if (p->policy == SCHED_WRR)
+	{
+		p->sched_class = &wrr_sched_class;
+		p->wrr.weight = __WRR_DEFAULT_WEIGHT;
+	}
 	else
 		p->sched_class = &fair_sched_class;
 }
@@ -5864,6 +5869,7 @@ void __init sched_init(void)
 		rq->calc_load_update = jiffies + LOAD_FREQ;
 		init_cfs_rq(&rq->cfs);
 		init_rt_rq(&rq->rt);
+		init_wrr_rq(&rq->wrr);
 		init_dl_rq(&rq->dl);
 #ifdef CONFIG_FAIR_GROUP_SCHED
 		root_task_group.shares = ROOT_TASK_GROUP_LOAD;
@@ -5955,7 +5961,7 @@ void __init sched_init(void)
 	set_cpu_rq_start_time(smp_processor_id());
 #endif
 	init_sched_fair_class();
-
+	init_sched_wrr_class();
 	init_schedstats();
 
 	scheduler_running = 1;
@@ -6759,17 +6765,19 @@ const u32 sched_prio_to_wmult[40] = {
 
 
 // WRR Scheduling
-wrrSetweight(pid_t pid, int weight)
+int wrrSetweight(pid_t pid, int weight)
 {
 	#if __WRR_SCHED_DEBUG
-	printk("WRR - wrrSetweight called. Input - Pid %lld, Weight %lld", (uint64_t)pid, (uint64_t)weight);
+	printk("WRR syscall - wrrSetweight called. Input - Pid %lld, Weight %lld\n", (uint64_t)pid, (uint64_t)weight);
 	#endif 
+	return 0;
 }
-wrrGetweight(pid)
+int wrrGetweight(pid_t pid)
 {
 	#if __WRR_SCHED_DEBUG
-	printk("WRR - wrrGetweight called. Input - Pid %lld", (uint64_t)pid);
+	printk("WRR syscall - wrrGetweight called. Input - Pid %lld\n", (uint64_t)pid);
 	#endif 
+	return 0;
 }
 
 SYSCALL_DEFINE2(sched_setweight, pid_t, pid, int, weight)

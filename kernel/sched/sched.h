@@ -45,6 +45,13 @@
 # define SCHED_WARN_ON(x)	({ (void)(x), 0; })
 #endif
 
+//// WRR MACRO DEFINITIONS ////
+#define __WRR_SCHED_DEBUG 1
+#define __WRR_MIN_WEIGHT 1
+#define __WRR_MAX_WEIGHT 20
+#define __WRR_DEFAULT_WEIGHT 10
+#define __WRR_TIMESLICE (10 * HZ / 1000)
+
 struct rq;
 struct cpuidle_state;
 
@@ -417,6 +424,14 @@ struct cfs_bandwidth { };
 
 #endif	/* CONFIG_CGROUP_SCHED */
 
+// wrr runque
+struct wrr_rq {
+	struct rt_prio_array active;
+	unsigned int wrr_nr_running;
+	struct list_head queue;
+};
+
+
 /* CFS-related fields in a runqueue */
 struct cfs_rq {
 	struct load_weight load;
@@ -708,6 +723,7 @@ struct rq {
 
 	struct cfs_rq cfs;
 	struct rt_rq rt;
+	struct wrr_rq wrr;
 	struct dl_rq dl;
 
 #ifdef CONFIG_FAIR_GROUP_SCHED
@@ -1495,6 +1511,7 @@ static inline void set_curr_task(struct rq *rq, struct task_struct *curr)
 extern const struct sched_class stop_sched_class;
 extern const struct sched_class dl_sched_class;
 extern const struct sched_class rt_sched_class;
+extern const struct sched_class wrr_sched_class;
 extern const struct sched_class fair_sched_class;
 extern const struct sched_class idle_sched_class;
 
@@ -1541,6 +1558,7 @@ extern void update_max_interval(void);
 
 extern void init_sched_dl_class(void);
 extern void init_sched_rt_class(void);
+extern void init_sched_wrr_class(void);
 extern void init_sched_fair_class(void);
 
 extern void resched_curr(struct rq *rq);
@@ -1984,6 +2002,7 @@ print_numa_stats(struct seq_file *m, int node, unsigned long tsf,
 
 extern void init_cfs_rq(struct cfs_rq *cfs_rq);
 extern void init_rt_rq(struct rt_rq *rt_rq);
+extern void init_wrr_rq(struct wrr_rq *wrr_rq);
 extern void init_dl_rq(struct dl_rq *dl_rq);
 
 extern void cfs_bandwidth_usage_inc(void);
