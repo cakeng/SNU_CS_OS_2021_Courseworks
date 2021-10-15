@@ -412,3 +412,5 @@
 395	common	pkey_alloc		sys_pkey_alloc
 396	common	pkey_free		sys_pkey_free
 397	common	statx			sys_statx
+398	common	sched_setweight			sys_sched_setweight
+399	common	sched_getweight			sys_sched_getweight

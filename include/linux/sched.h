@@ -2,6 +2,9 @@
 #ifndef _LINUX_SCHED_H
 #define _LINUX_SCHED_H
 
+// WRR Debug prints flag
+#define __WRR_SCHED_DEBUG 1
+
 /*
  * Define 'struct task_struct' and provide the main scheduler
  * APIs (schedule(), wakeup variants, etc.)

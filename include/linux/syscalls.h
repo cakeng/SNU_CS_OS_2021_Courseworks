@@ -941,4 +941,7 @@ asmlinkage long sys_pkey_free(int pkey);
 asmlinkage long sys_statx(int dfd, const char __user *path, unsigned flags,
 			  unsigned mask, struct statx __user *buffer);
 
+asmlinkage long sys_sched_setweight(pid_t pid, int weight);
+asmlinkage long sys_sched_getweight(pid_t pid);
+
 #endif

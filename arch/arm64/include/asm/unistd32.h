@@ -818,6 +818,12 @@ __SYSCALL(__NR_pkey_free, sys_pkey_free)
 #define __NR_statx 397
 __SYSCALL(__NR_statx, sys_statx)
 
+#define __NR_sched_setweight 398
+__SYSCALL(__NR_sched_setweight, sys_sched_setweight)
+#define __NR_sched_getweight 399
+__SYSCALL(__NR_sched_getweight, sys_sched_getweight)
+
+
 /*
  * Please add new compat syscalls above this comment and update
  * __NR_compat_syscalls in asm/unistd.h.

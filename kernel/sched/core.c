@@ -6756,3 +6756,28 @@ const u32 sched_prio_to_wmult[40] = {
  /*  10 */  39045157,  49367440,  61356676,  76695844,  95443717,
  /*  15 */ 119304647, 148102320, 186737708, 238609294, 286331153,
 };
+
+
+// WRR Scheduling
+wrrSetweight(pid_t pid, int weight)
+{
+	#if __WRR_SCHED_DEBUG
+	printk("WRR - wrrSetweight called. Input - Pid %lld, Weight %lld", (uint64_t)pid, (uint64_t)weight);
+	#endif 
+}
+wrrGetweight(pid)
+{
+	#if __WRR_SCHED_DEBUG
+	printk("WRR - wrrGetweight called. Input - Pid %lld", (uint64_t)pid);
+	#endif 
+}
+
+SYSCALL_DEFINE2(sched_setweight, pid_t, pid, int, weight)
+{
+	return wrrSetweight(pid, weight);
+}
+
+SYSCALL_DEFINE1(sched_getweight, pid_t, pid)
+{
+	return wrrGetweight(pid);
+}
