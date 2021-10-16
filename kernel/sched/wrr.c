@@ -1,13 +1,14 @@
 #include "sched.h"
 #include <linux/slab.h>
 #include <linux/types.h>
+#include <linux/smp.h>
 
-#define __WRR_SCHED_DEBUG 1
+
 
 void init_wrr_rq(struct wrr_rq *wrr_rq)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - init_wrr_rq called.\n");
+	printk("WRR CPUID %d - init_wrr_rq called.\n",smp_processor_id());
 	#endif 
 	wrr_rq->wrr_nr_running = 0;
 	INIT_LIST_HEAD(&wrr_rq->queue);
@@ -15,90 +16,90 @@ void init_wrr_rq(struct wrr_rq *wrr_rq)
 __init void init_sched_wrr_class(void)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - init_sched_wrr_class called.\n");
+	printk("WRR CPUID %d - init_sched_wrr_class called.\n",smp_processor_id());
 	#endif 
 }
 
 static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - enqueue_task_wrr called.\n");
+	printk("WRR CPUID %d - enqueue_task_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void dequeue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - dequeue_task_wrr called.\n");
+	printk("WRR CPUID %d - dequeue_task_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void yield_task_wrr(struct rq *rq)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - yield_task_wrr called.\n");
+	printk("WRR CPUID %d - yield_task_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static bool yield_to_task_wrr(struct rq *rq, struct task_struct *p, bool preempt)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - yield_to_task_wrr called.\n");
+	printk("WRR CPUID %d - yield_to_task_wrr called.\n",smp_processor_id());
 	#endif 
     return false;
 }
 static void check_preempt_curr_wrr(struct rq *rq, struct task_struct *p, int flags)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - check_preempt_curr_wrr called.\n");
+	printk("WRR CPUID %d - check_preempt_curr_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - pick_next_task_wrr called.\n");
+	printk("WRR CPUID %d - pick_next_task_wrr called.\n",smp_processor_id());
 	#endif 
     return NULL;
 }
 static void put_prev_task_wrr(struct rq *rq, struct task_struct *prev)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - put_prev_task_wrr called.\n");
+	printk("WRR CPUID %d - put_prev_task_wrr called.\n",smp_processor_id());
 	#endif 
 }
 #ifdef CONFIG_SMP
 static int select_task_rq_wrr(struct task_struct *p, int task_cpu, int sd_flag, int flags)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - select_task_rq_wrr called.\n");
+	printk("WRR CPUID %d - select_task_rq_wrr called.\n",smp_processor_id());
 	#endif 
     return 0;
 }
 static void migrate_task_rq_wrr(struct task_struct *p)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - migrate_task_rq_wrr called.\n");
+	printk("WRR CPUID %d - migrate_task_rq_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void task_woken_wrr(struct rq *this_rq, struct task_struct *task)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - task_woken_wrr called.\n");
+	printk("WRR CPUID %d - task_woken_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void set_cpus_allowed_wrr(struct task_struct *p, const struct cpumask *newmask)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - set_cpus_allowed_wrr called.\n");
+	printk("WRR CPUID %d - set_cpus_allowed_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void rq_online_wrr(struct rq *rq)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - rq_online_wrr called.\n");
+	printk("WRR CPUID %d - rq_online_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void rq_offline_wrr(struct rq *rq)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - rq_offline_wrr called.\n");
+	printk("WRR CPUID %d - rq_offline_wrr called.\n",smp_processor_id());
 	#endif 
 }
 
@@ -106,56 +107,56 @@ static void rq_offline_wrr(struct rq *rq)
 static void set_curr_task_wrr(struct rq *rq)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - set_curr_task_wrr called.\n");
+	printk("WRR CPUID %d - set_curr_task_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void task_tick_wrr(struct rq *rq, struct task_struct *curr, int queued)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - task_tick_wrr called.\n");
+	printk("WRR CPUID %d - task_tick_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void task_fork_wrr(struct task_struct *p)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - task_fork_wrr called.\n");
+	printk("WRR CPUID %d - task_fork_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void task_dead_wrr(struct task_struct *p)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - task_dead_wrr called.\n");
+	printk("WRR CPUID %d - task_dead_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void prio_changed_wrr(struct rq *rq, struct task_struct *p, int oldprio)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - prio_changed_wrr called.\n");
+	printk("WRR CPUID %d - prio_changed_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void switched_from_wrr(struct rq *rq, struct task_struct *p)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - switched_from_wrr called.\n");
+	printk("WRR CPUID %d - switched_from_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static void switched_to_wrr(struct rq *rq, struct task_struct *p)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - switched_to_wrr called.\n");
+	printk("WRR CPUID %d - switched_to_wrr called.\n",smp_processor_id());
 	#endif 
 }
 static unsigned int get_rr_interval_wrr(struct rq *rq, struct task_struct *task)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - get_rr_interval_wrr called.\n");
+	printk("WRR CPUID %d - get_rr_interval_wrr called.\n",smp_processor_id());
 	#endif 
     return 0;
 }
 static void update_curr_wrr(struct rq *rq)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR - update_curr_wrr called.\n");
+	printk("WRR CPUID %d - update_curr_wrr called.\n",smp_processor_id());
 	#endif 
 }
 
