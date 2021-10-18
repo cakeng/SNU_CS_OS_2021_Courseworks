@@ -37,9 +37,6 @@ static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 	//	return;
 	//ALREADY ON CASE
 
-
-	list_add_tail(&wrr->queue_node, &wrr_rq->queue);
-
 	struct list_head *new = &wrr->queue_node;
 	struct list_head *next =  &wrr_rq->queue;
 	struct list_head *prev = head->prev;
@@ -251,7 +248,7 @@ static void task_tick_wrr(struct rq *rq, struct task_struct *curr, int queued)
 	printk("WRR CPUID %d - task_tick_wrr called.\n",smp_processor_id());
 	#endif 
 	struct wrr_rq *wrr_rq;
-	struct sched_wrr_entity *se = &curr->se;
+	struct sched_wrr_entity *se = &curr->wrr;
 
 
 }
@@ -297,7 +294,7 @@ static void update_curr_wrr(struct rq *rq)
     #if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - update_curr_wrr called.\n",smp_processor_id());
 	#endif 
-	
+
 }
 
 const struct sched_class wrr_sched_class = 
