@@ -434,6 +434,7 @@ struct wrr_rq {
 	struct rt_prio_array active;
 	unsigned int wrr_nr_running;
 	struct list_head queue;
+	int total_weight;
 };
 
 
