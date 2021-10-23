@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <sys/time.h>
 
-#define __LOOP_SEC 40909090ULL // ~1 second
+#define __LOOP_SEC 35000000ULL // ~1 second
 
 int main(int argc, char* argv[])
 {

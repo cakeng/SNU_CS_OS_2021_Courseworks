@@ -429,11 +429,11 @@ struct cfs_bandwidth { };
 
 #endif	/* CONFIG_CGROUP_SCHED */
 
-// wrr runque
+// wrr runque struct
 struct wrr_rq {
-	struct rt_prio_array active;
+	int CPUID;
+	struct list_head queue_head;
 	unsigned int wrr_nr_running;
-	struct list_head queue;
 	int total_weight;
 };
 

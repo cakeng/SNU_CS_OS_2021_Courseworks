@@ -453,6 +453,7 @@ struct sched_entity {
 struct sched_wrr_entity 
 {
 	int weight;
+	int pid;
 	struct list_head queue_node;
 	unsigned int time_slice;
 };
