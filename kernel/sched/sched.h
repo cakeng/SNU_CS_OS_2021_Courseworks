@@ -431,6 +431,7 @@ struct cfs_bandwidth { };
 
 // wrr runque struct
 struct wrr_rq {
+	int debugCounter;
 	int CPUID;
 	struct list_head queue_head;
 	unsigned int wrr_nr_running;

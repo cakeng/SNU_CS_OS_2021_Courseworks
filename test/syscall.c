@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     {
         if (argc < 4)
         {
-            printf("Not enough arguments for sched_setscheduler... Number of arguments - %d\n", argc);
+            printf("Not enough arguments for sched_setscheduler... please input pid, policy, priority. Number of arguments - %d\n", argc);
             return 1;
         }
         int pid = atoi(argv[2]);

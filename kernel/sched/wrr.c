@@ -38,6 +38,7 @@ void init_wrr_rq(struct wrr_rq *wrr_rq)
     #if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - init_wrr_rq called.\n",smp_processor_id());
 	#endif 
+	wrr_re->debugCounter = 0;
 	wrr_rq->CPUID = smp_processor_id();
 	wrr_rq->wrr_nr_running = 0;
 	wrr_rq->total_weight = 0;
@@ -174,29 +175,33 @@ static void check_preempt_curr_wrr(struct rq *rq, struct task_struct *p, int fla
 static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 {
 	struct wrr_rq *wrr_rq = &rq->wrr;
-	struct sched_wrr_entity *prevWrr = &prev->wrr;
+	struct sched_wrr_entity *prevWrr;
 	struct sched_wrr_entity *nextWrr;
 
     #if __WRR_SCHED_DEBUG
-	printk("WRR CPUID %d - pick_next_task_wrr called.\n",smp_processor_id());
+	//printk("WRR CPUID %d - pick_next_task_wrr called.\n",smp_processor_id());
+	//print_wrr_rq(wrr_rq);
 	#endif 
-
-	print_wrr_rq(wrr_rq);
+	
 	// Move previous task's wrr node to the end of the runqueue
-	list_move_tail(&prevWrr->queue_node, &wrr_rq->queue_head);
-	#if __WRR_SCHED_DEBUG
-	printk("WRR CPUID %d - Moved previous task pid %d to the end of the runqueue (CPU %d).\n",smp_processor_id(), prevWrr->pid, wrr_rq->CPUID);
-	print_wrr_rq(wrr_rq);
-	#endif 
+	if (prev && prev->policy == SCHED_WRR)
+	{
+		prevWrr = &prev->wrr;
+		list_move_tail(&prevWrr->queue_node, &wrr_rq->queue_head);
+		#if __WRR_SCHED_DEBUG
+		printk("WRR CPUID %d - Moved previous task pid %d to the end of the runqueue (CPU %d).\n",smp_processor_id(), prevWrr->pid, wrr_rq->CPUID);
+		print_wrr_rq(wrr_rq);
+		#endif 
+	}
 	// Now get the first entry in list.
 	nextWrr = list_first_entry_or_null(&wrr_rq->queue_head, struct sched_wrr_entity, queue_node);
 
-	// If list empty for some reason...
+	// If list empty...
 	if(!nextWrr)
 	{
-		printk("WRR CPUID %d ERROR - pick_next_task_wrr runqueue empty!! (CPU %d).\n",smp_processor_id(), wrr_rq->CPUID);
+		//printk("WRR CPUID %d - pick_next_task_wrr runqueue empty (CPU %d).\n",smp_processor_id(), wrr_rq->CPUID);
 		return NULL;
-	}	
+	}
 	// Set time slice
 	nextWrr->time_slice = __WRR_TIMESLICE * (nextWrr -> weight);
 
@@ -269,7 +274,7 @@ static void task_tick_wrr(struct rq *rq, struct task_struct *curr, int queued)
 {
 	struct wrr_rq *wrr_rq = &rq->wrr;
 	struct sched_wrr_entity *wrr = &curr->wrr;
-
+	
 	// If there are time slices remaining...
 	if (wrr->time_slice)
 	{
@@ -278,9 +283,16 @@ static void task_tick_wrr(struct rq *rq, struct task_struct *curr, int queued)
 	else
 	{
 		#if __WRR_SCHED_DEBUG
-		printk("WRR CPUID %d - Zero time slice on task pid %d (CPU %d).\n",smp_processor_id(), wrr->pid, wrr_rq->CPUID);
-		print_wrr_rq(wrr_rq);
+		wrr_rq->debugCounter++;
+		if (wrr_rq->debugCounter == 1000)
+		{
+			wrr_rq->debugCounter = 0;
+			printk("WRR CPUID %d - Zero time slice on task pid %d (CPU %d).\n",smp_processor_id(), wrr->pid, wrr_rq->CPUID);
+			print_wrr_rq(wrr_rq);
+		}
 		#endif 
+		// Set time slice
+		wrr->time_slice = __WRR_TIMESLICE * (wrr -> weight);
 		// If current task is not the only task in the runqueue...
 		if (wrr_rq->queue_head.next != wrr_rq->queue_head.prev)
 		{
