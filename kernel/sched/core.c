@@ -2389,7 +2389,13 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
 		return -EAGAIN;
 	} else if (rt_prio(p->prio)) {
 		p->sched_class = &rt_sched_class;
-	} else {
+	} 
+	else if (p->policy == SCHED_WRR)
+	{
+		p->sched_class = &wrr_sched_class;
+		p->wrr.weight = __WRR_DEFAULT_WEIGHT;
+	}
+	else {
 		p->sched_class = &fair_sched_class;
 	}
 
@@ -3040,6 +3046,7 @@ void scheduler_tick(void)
 #ifdef CONFIG_SMP
 	rq->idle_balance = idle_cpu(cpu);
 	trigger_load_balance(rq);
+	trigger_load_balance_wrr(rq);
 #endif
 	rq_last_tick_reset(rq);
 }
@@ -5869,7 +5876,7 @@ void __init sched_init(void)
 		rq->calc_load_update = jiffies + LOAD_FREQ;
 		init_cfs_rq(&rq->cfs);
 		init_rt_rq(&rq->rt);
-		init_wrr_rq(&rq->wrr);
+		init_wrr_rq(&rq->wrr, i);
 		init_dl_rq(&rq->dl);
 #ifdef CONFIG_FAIR_GROUP_SCHED
 		root_task_group.shares = ROOT_TASK_GROUP_LOAD;
@@ -6767,17 +6774,63 @@ const u32 sched_prio_to_wmult[40] = {
 // WRR Scheduling
 int wrrSetweight(pid_t pid, int weight)
 {
+	struct task_struct* task;
+	struct rq *rq;
+	struct rq_flags flag;
 	#if __WRR_SCHED_DEBUG
 	printk("WRR syscall - wrrSetweight called. Input - Pid %lld, Weight %lld\n", (uint64_t)pid, (uint64_t)weight);
 	#endif 
+	if(pid == 0)
+	{
+		task = current;
+	}
+	else
+	{
+		task = find_task_by_vpid(pid);
+	}
+	if(task == NULL || task->policy != SCHED_WRR)
+	{
+		return -EINVAL;
+	}
+	if (__WRR_MIN_WEIGHT > weight || weight > __WRR_MAX_WEIGHT)
+	{
+		return -EINVAL;
+	}
+	// Check permissions.
+	if(((int)(current_uid().val) == 0) || (check_same_owner(task) && (task->wrr.weight >= weight)))
+	{
+		task_rq_lock(task, &flag);
+		rq = task_rq(task);
+		rq->wrr.total_weight -= task->wrr.weight;
+		rq->wrr.total_weight += weight;
+		task->wrr.weight = weight;
+		task_rq_unlock(rq, task, &flag);
+	}
+	else
+	{
+		return -EPERM;
+	}
 	return 0;
 }
 int wrrGetweight(pid_t pid)
 {
+	struct task_struct* task;
 	#if __WRR_SCHED_DEBUG
 	printk("WRR syscall - wrrGetweight called. Input - Pid %lld\n", (uint64_t)pid);
 	#endif 
-	return 0;
+	if(pid == 0)
+	{
+		task = current;
+	}
+	else
+	{
+		task = find_task_by_vpid(pid);
+	}
+	if(task == NULL || task->policy != SCHED_WRR)
+	{
+		return -EINVAL;
+	}
+	return task->wrr.weight;
 }
 
 SYSCALL_DEFINE2(sched_setweight, pid_t, pid, int, weight)

@@ -33,19 +33,67 @@ void print_wrr_rq(struct wrr_rq *wrr_rq)
 	#endif 
 }
 
-void init_wrr_rq(struct wrr_rq *wrr_rq)
+void trigger_load_balance_wrr(struct rq *rq)
+{
+	//#ifdef CONFIG_SMP
+	// First CPU to be online handles load balancing. (Every 2000 ms)
+	if(smp_processor_id() == cpumask_first(cpu_online_mask))
+	{
+
+	}
+	//#endif
+}
+
+void move_task (struct task_struct *p, struct rq *origRq, struct rq *targRq)
+{
+	unsigned long flags;
+	#if __WRR_SCHED_DEBUG
+	int pid = (int)p->pid;
+	int origCPU = cpu_of(origRq);
+	int targCPU = cpu_of(targRq);
+	printk("WRR CPUID %d - move_task called. Moving PID %d from CPU %d to CPU %d.\n",smp_processor_id(), pid, origCPU, targCPU);
+	#endif 
+	if (cpu_of(origRq) == cpu_of(targRq))
+	{
+		return;
+	}
+	// Check if the target task is running & if target cpu is ACTIVE. (For hotplugging)
+	if (p != origRq->curr && cpumask_test_cpu(cpu_of(targRq), cpu_active_mask))
+	{
+		// Disable Interrupt
+		printk("WRR CPUID %d - Locking irq.\n",smp_processor_id());
+		local_irq_save(flags);
+		// Lock runqueues
+		printk("WRR CPUID %d - Locking target runques.\n",smp_processor_id());
+		double_rq_lock(origRq, targRq);
+	
+		deactivate_task(origRq, p, 0);
+		set_task_cpu(p, cpu_of(targRq));
+		activate_task(targRq, p, 0);
+
+		// Unlock runqueues
+		printk("WRR CPUID %d - Unlocking target runques.\n",smp_processor_id());
+		double_rq_unlock(origRq, targRq);
+		// Enable Interrupt
+		printk("WRR CPUID %d - Unlocking irq.\n",smp_processor_id());
+		local_irq_restore(flags);
+	}
+}
+
+void init_wrr_rq(struct wrr_rq *wrr_rq, int CPUID)
 {
     #if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - init_wrr_rq called.\n",smp_processor_id());
 	#endif 
-	wrr_re->debugCounter = 0;
-	wrr_rq->CPUID = smp_processor_id();
+	wrr_rq->debugCounter = 0;
+	wrr_rq->CPUID = CPUID;
 	wrr_rq->wrr_nr_running = 0;
 	wrr_rq->total_weight = 0;
 	INIT_LIST_HEAD(&wrr_rq->queue_head);
 
 	print_wrr_rq(wrr_rq);
 }
+
 __init void init_sched_wrr_class(void)
 {
     #if __WRR_SCHED_DEBUG
@@ -72,6 +120,10 @@ static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 	wrr_rq->wrr_nr_running++;
 	wrr_rq->total_weight += wrr->weight;
 	add_nr_running(rq, 1);
+	wrr->time_slice = __WRR_TIMESLICE * (wrr -> weight);
+
+	// // Move Rq to CPU 0.
+	// move_task (p, rq, cpu_rq(0));
 
 	#if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - Enqueued task pid %d to WRR runque (CPU %d).\n",smp_processor_id(), wrr->pid, wrr_rq->CPUID);
@@ -94,6 +146,7 @@ static void dequeue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 	list_del(&wrr->queue_node);
 	wrr_rq->wrr_nr_running--;
 	wrr_rq->total_weight -= wrr->weight;
+	sub_nr_running(rq, 1);
 	#if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - Dequeued task pid %d from WRR runque (CPU %d).\n",smp_processor_id(), wrr->pid, wrr_rq->CPUID);
 	print_wrr_rq(wrr_rq);
@@ -175,24 +228,20 @@ static void check_preempt_curr_wrr(struct rq *rq, struct task_struct *p, int fla
 static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 {
 	struct wrr_rq *wrr_rq = &rq->wrr;
-	struct sched_wrr_entity *prevWrr;
+	// struct sched_wrr_entity *prevWrr;
+	// struct rq_flags flags;
 	struct sched_wrr_entity *nextWrr;
+
 
     #if __WRR_SCHED_DEBUG
 	//printk("WRR CPUID %d - pick_next_task_wrr called.\n",smp_processor_id());
 	//print_wrr_rq(wrr_rq);
 	#endif 
+	// if (rq != task_rq_lock(prev, &flags))
+	// {
+	// 	printk("WRR CPUID %d ERROR - pick_next_task_wrr previous task is not part of given runque.\n",smp_processor_id());
+	// }
 	
-	// Move previous task's wrr node to the end of the runqueue
-	if (prev && prev->policy == SCHED_WRR)
-	{
-		prevWrr = &prev->wrr;
-		list_move_tail(&prevWrr->queue_node, &wrr_rq->queue_head);
-		#if __WRR_SCHED_DEBUG
-		printk("WRR CPUID %d - Moved previous task pid %d to the end of the runqueue (CPU %d).\n",smp_processor_id(), prevWrr->pid, wrr_rq->CPUID);
-		print_wrr_rq(wrr_rq);
-		#endif 
-	}
 	// Now get the first entry in list.
 	nextWrr = list_first_entry_or_null(&wrr_rq->queue_head, struct sched_wrr_entity, queue_node);
 
@@ -206,11 +255,11 @@ static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct 
 	nextWrr->time_slice = __WRR_TIMESLICE * (nextWrr -> weight);
 
 	#if __WRR_SCHED_DEBUG
-	printk("WRR CPUID %d - Picked task pid %d from WRR runque (CPU %d), as the next task.\n",smp_processor_id(), nextWrr->pid, wrr_rq->CPUID);
-	print_wrr_rq(wrr_rq);
+	// printk("WRR CPUID %d - Picked task pid %d from WRR runque (CPU %d), as the next task.\n",smp_processor_id(), nextWrr->pid, wrr_rq->CPUID);
+	// print_wrr_rq(wrr_rq);
 	#endif 
-
-    return container_of(nextWrr, struct task_struct, wrr);
+	// __task_rq_unlock(rq, &flags);
+    return (container_of(nextWrr, struct task_struct, wrr));
 }
 
 static void put_prev_task_wrr(struct rq *rq, struct task_struct *prev)
@@ -227,7 +276,7 @@ static int select_task_rq_wrr(struct task_struct *p, int task_cpu, int sd_flag, 
 	#endif 
 
 
-    return 0;
+    return 1;
 }
 static void migrate_task_rq_wrr(struct task_struct *p)
 {
@@ -284,7 +333,7 @@ static void task_tick_wrr(struct rq *rq, struct task_struct *curr, int queued)
 	{
 		#if __WRR_SCHED_DEBUG
 		wrr_rq->debugCounter++;
-		if (wrr_rq->debugCounter == 1000)
+		if (wrr_rq->debugCounter == 500)
 		{
 			wrr_rq->debugCounter = 0;
 			printk("WRR CPUID %d - Zero time slice on task pid %d (CPU %d).\n",smp_processor_id(), wrr->pid, wrr_rq->CPUID);
@@ -305,9 +354,13 @@ static void task_tick_wrr(struct rq *rq, struct task_struct *curr, int queued)
 }
 static void task_fork_wrr(struct task_struct *p)
 {
+	struct sched_wrr_entity *parentWrr = &current->wrr;
+	struct sched_wrr_entity *childWrr = &p->wrr;
+	
     #if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - task_fork_wrr called.\n",smp_processor_id());
 	#endif 
+	childWrr->weight = parentWrr->weight;
 }
 static void task_dead_wrr(struct task_struct *p)
 {
