@@ -52,7 +52,7 @@
 #define __WRR_DEFAULT_WEIGHT 10
 #define __WRR_BALANCE_TICKS (2000 * HZ / 1000)
 #define __WRR_DEBUG_TICKS (60000 * HZ / 1000)
-#define __WRR_MASTER_TASK ((void*)-1UL)
+#define __WRR_MASTER_TASK ((void*)-2UL)
 #define __WRR_TIMESLICE (10 * HZ / 1000)
 
 struct rq;
