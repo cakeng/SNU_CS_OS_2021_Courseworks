@@ -3022,7 +3022,7 @@ unsigned long long task_sched_runtime(struct task_struct *p)
 /*
  * This function gets called by the timer code, with HZ frequency.
  * We call it with interrupts disabled.
- */
+ */ 
 void scheduler_tick(void)
 {
 	int cpu = smp_processor_id();
@@ -3250,6 +3250,14 @@ again:
 	for_each_class(class) {
 		p = class->pick_next_task(rq, prev, rf);
 		if (p) {
+			if (p == __WRR_MASTER_TASK && class == &wrr_sched_class)
+			{
+				#if __WRR_SCHED_DEBUG
+				printk("WRR CPUID %d - Idle task picked\n",smp_processor_id());
+				#endif 
+				// Pick idle task so the wrr task on Master can be migrated.
+				p = idle_sched_class.pick_next_task(rq, prev, rf);
+			}
 			if (unlikely(p == RETRY_TASK))
 				goto again;
 			return p;
@@ -6797,7 +6805,8 @@ int wrrSetweight(pid_t pid, int weight)
 		return -EINVAL;
 	}
 	// Check permissions.
-	if(((int)(current_uid().val) == 0) || (check_same_owner(task) && (task->wrr.weight >= weight)))
+	if((((int)(current_euid().val) == 0) || (int)(current_uid().val) == 0) 
+			|| (check_same_owner(task) && (task->wrr.weight >= weight)))
 	{
 		task_rq_lock(task, &flag);
 		rq = task_rq(task);
