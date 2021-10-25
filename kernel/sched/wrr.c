@@ -4,7 +4,7 @@
 #include <linux/smp.h>
 #include <linux/list.h>
 
-// First CPU with its online bit on is designated as the "Master" WRR CPU...
+// Last CPU with its online bit on is designated as the "Master" WRR CPU...
 // It's WRR queue always remains empty (or idle) and handles all load balancing.
 // Master CPU is dynamically determined every time getMasterCPU_wrr() is called,
 // through the CPU mask, to compensate for CPU hotplugging.
