@@ -240,8 +240,6 @@ static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 	printk("WRR CPUID %d - enqueue_task_wrr called.\n",smp_processor_id());
 	#endif 
 
-	print_wrr_rq(wrr_rq);
-
 	// Add the target task p's wrr node to the tail of current CPU's wrr runque's queue.
 	list_add_tail(&wrr->queue_node, &wrr_rq->queue_head);
 
@@ -265,7 +263,7 @@ static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 
 	#if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - Enqueued task pid %d to WRR runque (CPU %d).\n",smp_processor_id(), wrr->pid, wrr_rq->CPUID);
-	print_wrr_rq(wrr_rq);
+	// print_wrr_rq(wrr_rq);
 	#endif
 		
 }
@@ -279,8 +277,6 @@ static void dequeue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 	printk("WRR CPUID %d - dequeue_task_wrr called.\n",smp_processor_id());
 	#endif 
 	
-	print_wrr_rq(wrr_rq);
-
 	// Remove target task's wrr node from the runqueue
 	list_del(&wrr->queue_node);
 	wrr_rq->wrr_nr_running--;
@@ -288,7 +284,7 @@ static void dequeue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 	sub_nr_running(rq, 1);
 	#if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - Dequeued task pid %d from WRR runque (CPU %d).\n",smp_processor_id(), wrr->pid, wrr_rq->CPUID);
-	print_wrr_rq(wrr_rq);
+	// print_wrr_rq(wrr_rq);
 	#endif 
 }
 
