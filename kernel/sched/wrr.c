@@ -45,12 +45,12 @@ void print_wrr_rq(struct wrr_rq *wrr_rq)
 	}
 	if (wrr_rq->CPUID == getMasterCPU_wrr())
 	{
-		printk("WRR CPUID %d - \tWRR (CPU %d) MASTER runque status: Currently running (pid): %d, total weight - %d, nr_running - %d. "
+		printk("WRR CPUID %d - \tCPU %d: Currently running (pid) - %d, WRR MASTER runque status - total weight - %d, nr_running - %d.\n"
 		,smp_processor_id(), wrr_rq->CPUID, currPid, wrr_rq->total_weight, wrr_rq->wrr_nr_running);
 	}
 	else
 	{
-		printk("WRR CPUID %d - \tWRR (CPU %d) runque status: Currently running (pid): %d, total weight - %d, nr_running - %d. "
+		printk("WRR CPUID %d - \tCPU %d: Currently running (pid) - %d, WRR runque status - total weight - %d, nr_running - %d.\n"
 		,smp_processor_id(), wrr_rq->CPUID, currPid, wrr_rq->total_weight, wrr_rq->wrr_nr_running);
 	}
 	if (!list_empty(queuePtr))
