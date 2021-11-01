@@ -4878,6 +4878,7 @@ static inline void hrtick_update(struct rq *rq)
 static void
 enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 {
+	//printk("enqueue_task_fair called.\n");
 	struct cfs_rq *cfs_rq;
 	struct sched_entity *se = &p->se;
 

@@ -3047,6 +3047,7 @@ void scheduler_tick(void)
 	rq->idle_balance = idle_cpu(cpu);
 	trigger_load_balance(rq);
 	trigger_load_balance_wrr(rq);
+	load_balance_wrr(rq);
 #endif
 	rq_last_tick_reset(rq);
 }
@@ -3255,8 +3256,11 @@ again:
 				#if __WRR_SCHED_DEBUG
 				printk("WRR CPUID %d - Idle task picked\n",smp_processor_id());
 				#endif 
+				//load_balance_wrr(rq);
 				// Pick idle task so the wrr task on Master can be migrated.
 				p = idle_sched_class.pick_next_task(rq, prev, rf);
+				//trigger_load_balance_wrr(rq);
+				return p;
 			}
 			if (unlikely(p == RETRY_TASK))
 				goto again;

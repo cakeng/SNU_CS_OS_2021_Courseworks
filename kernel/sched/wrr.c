@@ -93,6 +93,8 @@ void load_balance_wrr(struct rq *rq)
 	struct sched_wrr_entity *task_wrr = NULL;
 	struct list_head* queuePtr;
 	unsigned long flags;
+	//printk("WRR CPUID %d - load_balance_wrr called.\n",smp_processor_id());
+	
 
 	// Find CPUs with min weight and max weight
 	rcu_read_lock();
@@ -164,6 +166,9 @@ void load_balance_wrr(struct rq *rq)
 		deactivate_task(rq_max, task_targ, 0);
 		set_task_cpu(task_targ, cpu_of(rq_min));
 		activate_task(rq_min, task_targ, 0);
+
+		//dequeue_task_wrr(rq_max, task_targ, 0);
+		//enqueue_task_wrr(rq_min, task_targ, 0);
 	}
 	double_rq_unlock(rq_max, rq_min);
 	local_irq_restore(flags);
@@ -212,9 +217,10 @@ void init_wrr_rq(struct wrr_rq *wrr_rq, int CPUID)
 {
     #if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - init_wrr_rq called.\n",smp_processor_id());
+	wrr_rq->debugCounter = 0;
 	#endif 
 	wrr_rq->balanceCounter = 0;
-	wrr_rq->debugCounter = 0;
+	//
 	wrr_rq->CPUID = CPUID;
 	wrr_rq->wrr_nr_running = 0;
 	wrr_rq->total_weight = 0;
@@ -256,9 +262,13 @@ static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 	}
 	else
 	{
+		//wrr->time_slice = __WRR_TIMESLICE * (wrr -> weight);
+
 		wrr->time_slice = 0;
 		cpu_rq(getMasterCPU_wrr())->wrr.balanceCounter = __WRR_BALANCE_TICKS;
 		resched_curr(rq);
+		//trigger_load_balance_wrr(rq);
+		
 	}
 
 	#if __WRR_SCHED_DEBUG
@@ -276,6 +286,11 @@ static void dequeue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
     #if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - dequeue_task_wrr called.\n",smp_processor_id());
 	#endif 
+
+	if(!(wrr_rq->wrr_nr_running))
+	{
+		return;
+	}
 	
 	// Remove target task's wrr node from the runqueue
 	list_del(&wrr->queue_node);
@@ -389,6 +404,7 @@ static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct 
 	}
 	// Set time slice
 	if (cpu_of(rq) != getMasterCPU_wrr())
+	//if(1)
 	{
 		nextWrr->time_slice = __WRR_TIMESLICE * (nextWrr -> weight);
 	}
@@ -502,13 +518,25 @@ static void task_tick_wrr(struct rq *rq, struct task_struct *curr, int queued)
 	else
 	{
 		// Set time slice
-		wrr->time_slice = __WRR_TIMESLICE * (wrr -> weight);
+		
 		// If current task is not the only task in the runqueue...
-		if (wrr_rq->queue_head.next != wrr_rq->queue_head.prev)
+		if (cpu_of(rq) != getMasterCPU_wrr())
+		{
+			wrr->time_slice = __WRR_TIMESLICE * (wrr -> weight);
+		}
+		else
+		{
+			wrr->time_slice = 0;
+		}
+
+		//if (wrr_rq->queue_head.next != wrr_rq->queue_head.prev)
+		if(wrr_rq->wrr_nr_running > 1)
 		{
 			// Move current task's wrr node to the end of the runqueue
 			list_move_tail(&wrr->queue_node, &wrr_rq->queue_head);
+			//resched_curr(rq);
 		}
+		
 		resched_curr(rq);
 		// Signal the need of rescheduling.
 		
@@ -528,7 +556,7 @@ static void task_fork_wrr(struct task_struct *p)
 static void task_dead_wrr(struct task_struct *p)
 {
     #if __WRR_SCHED_DEBUG
-	printk("WRR CPUID %d - task_dead_wrr called.\n",smp_processor_id());
+	printk("WRR CPUID %d - task_dead_wrr called222.\n",smp_processor_id());
 	#endif 
 }
 static void prio_changed_wrr(struct rq *rq, struct task_struct *p, int oldprio)
