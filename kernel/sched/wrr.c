@@ -166,9 +166,10 @@ void load_balance_wrr(struct rq *rq)
 		deactivate_task(rq_max, task_targ, 0);
 		set_task_cpu(task_targ, cpu_of(rq_min));
 		activate_task(rq_min, task_targ, 0);
-
-		//dequeue_task_wrr(rq_max, task_targ, 0);
-		//enqueue_task_wrr(rq_min, task_targ, 0);
+		if(rq_max == rq_master)
+		{
+			task_targ->wrr.time_slice = __WRR_TIMESLICE * (task_targ -> wrr.weight);
+		}//reset timeslice after moved from rq_master
 	}
 	double_rq_unlock(rq_max, rq_min);
 	local_irq_restore(flags);
@@ -178,6 +179,7 @@ void load_balance_wrr(struct rq *rq)
 		printk("WRR CPUID %d - load_balance moved task %d from CPU %d to CPU %d.\n"
 			,smp_processor_id(), (int)task_targ->pid, cpu_of(rq_max), cpu_of(rq_min));
 		print_all_wrr_rq();
+		
 	}
 	else
 	{
@@ -267,7 +269,7 @@ static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 		wrr->time_slice = 0;
 		cpu_rq(getMasterCPU_wrr())->wrr.balanceCounter = __WRR_BALANCE_TICKS;
 		resched_curr(rq);
-		//trigger_load_balance_wrr(rq);
+		//load_balance_wrr(rq);
 		
 	}
 
@@ -287,10 +289,6 @@ static void dequeue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 	printk("WRR CPUID %d - dequeue_task_wrr called.\n",smp_processor_id());
 	#endif 
 
-	if(!(wrr_rq->wrr_nr_running))
-	{
-		return;
-	}
 	
 	// Remove target task's wrr node from the runqueue
 	list_del(&wrr->queue_node);

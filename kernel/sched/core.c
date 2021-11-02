@@ -6782,7 +6782,19 @@ const u32 sched_prio_to_wmult[40] = {
  /*  15 */ 119304647, 148102320, 186737708, 238609294, 286331153,
 };
 
-
+int getMasterCPU_wrr2(void)
+{
+	int i;
+	int val = cpumask_first(cpu_active_mask);
+	for_each_possible_cpu(i)
+	{
+		if (cpumask_test_cpu(i, cpu_active_mask))
+		{
+			val = i;
+		}
+	}
+	return val;
+}
 // WRR Scheduling
 int wrrSetweight(pid_t pid, int weight)
 {
@@ -6813,10 +6825,21 @@ int wrrSetweight(pid_t pid, int weight)
 			|| (check_same_owner(task) && (task->wrr.weight >= weight)))
 	{
 		task_rq_lock(task, &flag);
-		rq = task_rq(task);
-		rq->wrr.total_weight -= task->wrr.weight;
-		rq->wrr.total_weight += weight;
-		task->wrr.weight = weight;
+		if(1)
+		{
+			rq = task_rq(task);
+			rq->wrr.total_weight -= task->wrr.weight;
+			rq->wrr.total_weight += weight;
+			task->wrr.weight = weight;
+		}
+		else
+		{
+			rq = task_rq(task);
+			rq->wrr.total_weight -= task->wrr.weight;
+			rq->wrr.total_weight += 0;
+			task->wrr.weight = 0;
+		}
+		
 		task_rq_unlock(rq, task, &flag);
 	}
 	else
