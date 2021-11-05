@@ -3251,17 +3251,6 @@ again:
 	for_each_class(class) {
 		p = class->pick_next_task(rq, prev, rf);
 		if (p) {
-			if (p == __WRR_MASTER_TASK && class == &wrr_sched_class)
-			{
-				#if __WRR_SCHED_DEBUG
-				printk("WRR CPUID %d - Idle task picked\n",smp_processor_id());
-				#endif 
-				//load_balance_wrr(rq);
-				// Pick idle task so the wrr task on Master can be migrated.
-				p = idle_sched_class.pick_next_task(rq, prev, rf);
-				//trigger_load_balance_wrr(rq);
-				//return p;
-			}
 			if (unlikely(p == RETRY_TASK))
 				goto again;
 			return p;
@@ -3315,7 +3304,7 @@ static void __sched notrace __schedule(bool preempt)
 {
 	struct task_struct *prev, *next;
 	unsigned long *switch_count;
-	struct rq_flags rf;
+	struct rq_flags rf, rf2;
 	struct rq *rq;
 	int cpu;
 

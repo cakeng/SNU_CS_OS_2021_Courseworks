@@ -3,8 +3,6 @@
 #include <linux/types.h>
 #include <linux/smp.h>
 #include <linux/list.h>
-#include <linux/ktime.h>
-#include <linux/jiffies.h>
 
 // Last CPU with its online bit on is designated as the "Master" WRR CPU...
 // It's WRR queue always remains empty (or idle) and handles all load balancing.
@@ -254,33 +252,24 @@ static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 	// Add the target task p's wrr node to the tail of current CPU's wrr runque's queue.
 	list_add_tail(&wrr->queue_node, &wrr_rq->queue_head);
 
-	wrr->pid = (int)p->pid;
-	
-	wrr_rq->wrr_nr_running++;
-	wrr_rq->total_weight += wrr->weight;
-	add_nr_running(rq, 1);
-
-	long startTime;
-	startTime = jiffies;
-	wrr->previoud_start_time = startTime;
-
-	//wrr->time_interval = NULL;
-
 	// If the target runqueue is of the master CPU, set the time slice to zero,
 	// so that it can be migrated as soon as possible.
 	if (cpu_of(rq) != getMasterCPU_wrr())
 	{
+		wrr->pid = (int)p->pid;
+		wrr_rq->wrr_nr_running++;
+		wrr_rq->total_weight += wrr->weight;
+		add_nr_running(rq, 1);
 		wrr->time_slice = __WRR_TIMESLICE * (wrr -> weight);
 	}
 	else
 	{
-		//wrr->time_slice = __WRR_TIMESLICE * (wrr -> weight);
-
+		wrr->pid = (int)p->pid;
+		wrr_rq->wrr_nr_running++;
+		wrr_rq->total_weight += wrr->weight;
 		wrr->time_slice = 0;
 		cpu_rq(getMasterCPU_wrr())->wrr.balanceCounter = __WRR_BALANCE_TICKS;
 		resched_curr(rq);
-		//load_balance_wrr(rq);
-		
 	}
 
 	#if __WRR_SCHED_DEBUG
@@ -299,12 +288,20 @@ static void dequeue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 	printk("WRR CPUID %d - dequeue_task_wrr called.\n",smp_processor_id());
 	#endif 
 
-	
 	// Remove target task's wrr node from the runqueue
-	list_del(&wrr->queue_node);
-	wrr_rq->wrr_nr_running--;
-	wrr_rq->total_weight -= wrr->weight;
-	sub_nr_running(rq, 1);
+	if (cpu_of(rq) != getMasterCPU_wrr())
+	{
+		list_del(&wrr->queue_node);
+		wrr_rq->wrr_nr_running--;
+		wrr_rq->total_weight -= wrr->weight;
+		sub_nr_running(rq, 1);
+	}
+	else
+	{
+		list_del(&wrr->queue_node);
+		wrr_rq->wrr_nr_running--;
+		wrr_rq->total_weight -= wrr->weight;
+	}
 	#if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - Dequeued task pid %d from WRR runque (CPU %d).\n",smp_processor_id(), wrr->pid, wrr_rq->CPUID);
 	// print_wrr_rq(wrr_rq);
@@ -384,7 +381,6 @@ static void check_preempt_curr_wrr(struct rq *rq, struct task_struct *p, int fla
 	// 	rq_clock_skip_update(rq, true);
 }
 
-
 static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 {
 	struct wrr_rq *wrr_rq = &rq->wrr;
@@ -405,38 +401,21 @@ static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct 
 	// Now get the first entry in list.
 	nextWrr = list_first_entry_or_null(&wrr_rq->queue_head, struct sched_wrr_entity, queue_node);
 
-	// If list empty...
-	if(!nextWrr)
+	// If list empty or Master...
+	if(!nextWrr || cpu_of(rq) == getMasterCPU_wrr())
 	{
 		//printk("WRR CPUID %d - pick_next_task_wrr runqueue empty (CPU %d).\n",smp_processor_id(), wrr_rq->CPUID);
 		return NULL;
 	}
 	// Set time slice
-	if (cpu_of(rq) != getMasterCPU_wrr())
-	//if(1)
-	{
-		nextWrr->time_slice = __WRR_TIMESLICE * (nextWrr -> weight);
-	}
-	else
-	{
-		nextWrr->time_slice = 0;
-		cpu_rq(getMasterCPU_wrr())->wrr.balanceCounter = __WRR_BALANCE_TICKS;
-		return __WRR_MASTER_TASK;
-	}
+	nextWrr->time_slice = __WRR_TIMESLICE * (nextWrr -> weight);
 
 	#if __WRR_SCHED_DEBUG
 	// printk("WRR CPUID %d - pick_next_task_wrr Picked task pid %d from WRR runque (CPU %d), as the next task.\n",smp_processor_id(), nextWrr->pid, wrr_rq->CPUID);
 	// print_wrr_rq(wrr_rq);
 	#endif 
 	// __task_rq_unlock(rq, &flags);
-	long come_back_Time;
-	come_back_Time = jiffies;
-
 	task = container_of(nextWrr, struct task_struct, wrr);
-	//task->wrr.time_interval.tv_sec = come_back_Time.tv_sec - task->wrr.previoud_start_time.tv_sec ;
-	//task->wrr.time_interval.tv_nsec =  come_back_Time.tv_nsec - task->wrr.previoud_start_time.tv_nsec;
-	task->wrr.time_interval = come_back_Time - task->wrr.previoud_start_time;
-	task->wrr.previoud_start_time = jiffies;
 	//Check if runnable on current CPU before returning.
 	return task;
 }

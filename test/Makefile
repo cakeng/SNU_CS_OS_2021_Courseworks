@@ -17,7 +17,7 @@ prime: prime.c
 move: 
 	sudo mkdir mount
 	sudo mount ../../tizen-image/rootfs.img ./mount
-	sudo mv infloop syscall prime infloop_weight2 ./mount/root/
+	sudo cp infloop syscall prime infloop_weight2 ./mount/root/
 	sudo umount ./mount
 	sudo rmdir mount
 
