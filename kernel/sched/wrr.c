@@ -3,6 +3,8 @@
 #include <linux/types.h>
 #include <linux/smp.h>
 #include <linux/list.h>
+#include <linux/ktime.h>
+#include <linux/jiffies.h>
 
 // Last CPU with its online bit on is designated as the "Master" WRR CPU...
 // It's WRR queue always remains empty (or idle) and handles all load balancing.
@@ -260,6 +262,9 @@ static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 		wrr_rq->wrr_nr_running++;
 		wrr_rq->total_weight += wrr->weight;
 		add_nr_running(rq, 1);
+		long startTime;
+ 		startTime = jiffies;
+
 		wrr->time_slice = __WRR_TIMESLICE * (wrr -> weight);
 	}
 	else
@@ -415,7 +420,11 @@ static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct 
 	// print_wrr_rq(wrr_rq);
 	#endif 
 	// __task_rq_unlock(rq, &flags);
+	long come_back_Time;
+ 	come_back_Time = jiffies;
 	task = container_of(nextWrr, struct task_struct, wrr);
+	task->wrr.time_interval = come_back_Time - task->wrr.previoud_start_time;
+ 	task->wrr.previoud_start_time = jiffies;
 	//Check if runnable on current CPU before returning.
 	return task;
 }
