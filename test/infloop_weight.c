@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     {
         struct sched_param userparam = { .sched_priority = 0 };
         syscall(156, NULL, 7, &userparam);
-        syscall(398, NULL, 20);
+        syscall(398, NULL, 1);
     
         //for (i = 0; i < 40; i++)
         //{

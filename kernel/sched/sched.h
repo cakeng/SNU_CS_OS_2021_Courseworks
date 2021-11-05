@@ -424,7 +424,7 @@ extern void set_task_rq_fair(struct sched_entity *se,
 static inline void set_task_rq_fair(struct sched_entity *se,
 			     struct cfs_rq *prev, struct cfs_rq *next) { }
 #endif /* CONFIG_SMP */
-#endif /* CONFIG_FAIR_GROUP_SCHED */
+#endif /* CONFIG_FAIR_GROUP_SCHED */    
 
 #else /* CONFIG_CGROUP_SCHED */
 
@@ -442,6 +442,8 @@ struct wrr_rq {
 	struct list_head queue_head;
 	unsigned int wrr_nr_running;
 	int total_weight;
+
+	int interval_time;
 };
 
 

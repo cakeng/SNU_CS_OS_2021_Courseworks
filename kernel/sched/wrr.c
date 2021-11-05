@@ -3,6 +3,7 @@
 #include <linux/types.h>
 #include <linux/smp.h>
 #include <linux/list.h>
+#include <linux/ktime.h>
 
 // Last CPU with its online bit on is designated as the "Master" WRR CPU...
 // It's WRR queue always remains empty (or idle) and handles all load balancing.
@@ -60,8 +61,9 @@ void print_wrr_rq(struct wrr_rq *wrr_rq)
 		{
 			loopI++;
 			wrr = list_entry(queuePtr, struct sched_wrr_entity, queue_node);
-			printk("WRR CPUID %d - \t\tWRR (CPU %d) runque %d th entry: PID - %d, weight - %d, time slice - %d.\n"
-				,smp_processor_id(), wrr_rq->CPUID, loopI, wrr->pid, wrr->weight, wrr->time_slice);
+			int interval = (int) (wrr->time_interval.tv_nsec)/1000;
+			printk("WRR CPUID %d - \t\tWRR (CPU %d) runque %d th entry: PID - %d, weight - %d, time slice - %d, time interval - %d.\n"
+				,smp_processor_id(), wrr_rq->CPUID, loopI, wrr->pid, wrr->weight,wrr->time_slice, interval);
 		}
 	}
 	#endif 
@@ -252,9 +254,18 @@ static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 	list_add_tail(&wrr->queue_node, &wrr_rq->queue_head);
 
 	wrr->pid = (int)p->pid;
+	
 	wrr_rq->wrr_nr_running++;
 	wrr_rq->total_weight += wrr->weight;
 	add_nr_running(rq, 1);
+
+	struct timespec startTime;
+	getnstimeofday(&startTime);
+	wrr->previoud_start_time = startTime;
+
+	wrr->time_interval.tv_sec = 0;
+	wrr->time_interval.tv_nsec = 0;
+	//wrr->time_interval = NULL;
 
 	// If the target runqueue is of the master CPU, set the time slice to zero,
 	// so that it can be migrated as soon as possible.
@@ -374,6 +385,7 @@ static void check_preempt_curr_wrr(struct rq *rq, struct task_struct *p, int fla
 	// 	rq_clock_skip_update(rq, true);
 }
 
+
 static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 {
 	struct wrr_rq *wrr_rq = &rq->wrr;
@@ -418,7 +430,13 @@ static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct 
 	// print_wrr_rq(wrr_rq);
 	#endif 
 	// __task_rq_unlock(rq, &flags);
+	struct timespec come_back_Time;
+	getnstimeofday(&come_back_Time);
+
 	task = container_of(nextWrr, struct task_struct, wrr);
+	task->wrr.time_interval.tv_sec = come_back_Time.tv_sec - task->wrr.previoud_start_time.tv_sec ;
+	task->wrr.time_interval.tv_nsec =  come_back_Time.tv_nsec - task->wrr.previoud_start_time.tv_nsec;
+	task->wrr.previoud_start_time = come_back_Time;
 	//Check if runnable on current CPU before returning.
 	return task;
 }

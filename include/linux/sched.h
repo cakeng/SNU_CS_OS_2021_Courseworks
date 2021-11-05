@@ -456,6 +456,9 @@ struct sched_wrr_entity
 	int pid;
 	struct list_head queue_node;
 	unsigned int time_slice;
+	
+	struct timespec previoud_start_time;
+	struct timespec time_interval;
 };
 
 struct sched_rt_entity {

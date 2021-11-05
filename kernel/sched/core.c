@@ -3260,7 +3260,7 @@ again:
 				// Pick idle task so the wrr task on Master can be migrated.
 				p = idle_sched_class.pick_next_task(rq, prev, rf);
 				//trigger_load_balance_wrr(rq);
-				return p;
+				//return p;
 			}
 			if (unlikely(p == RETRY_TASK))
 				goto again;
