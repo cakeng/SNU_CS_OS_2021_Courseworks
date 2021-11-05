@@ -46,7 +46,7 @@
 #endif
 
 //// WRR MACRO DEFINITIONS ////
-#define __WRR_SCHED_DEBUG 1
+#define __WRR_SCHED_DEBUG 0
 #define __WRR_MIN_WEIGHT 1
 #define __WRR_MAX_WEIGHT 20
 #define __WRR_DEFAULT_WEIGHT 10

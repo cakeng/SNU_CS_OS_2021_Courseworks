@@ -6831,6 +6831,8 @@ int wrrSetweight(pid_t pid, int weight)
 			rq->wrr.total_weight -= task->wrr.weight;
 			rq->wrr.total_weight += weight;
 			task->wrr.weight = weight;
+			if(pid != rq->curr->pid)
+				task->wrr.time_slice = __WRR_TIMESLICE * (weight);
 		}
 		else
 		{
