@@ -1,18 +1,66 @@
-Linux kernel
-============
 
-This file was moved to Documentation/admin-guide/README.rst
+Use git clone to download source and switch to proj2 brach.
+Create tizen-image directory and unzip&copy the required image files. (As in proj0)
+The directory structure should look like
 
-Please notice that there are several guides for kernel developers and users.
-These guides can be rendered in a number of formats, like HTML and PDF.
+dir_root/
+------osfall2021-team1-proj1/
+------------qemu.sh
+------------generate.sh (Automated kernel building and image movement script)
+------------kernel/
+------------------sched/
+------------------------/wrr.c (wrr implementation)
+------------------------/sched.h (scheduler regiteration)
+------------------------/core.c (make wrr runs together, getweight, setweight&getweight,schedweight)
+------------include/
+------------------linux/sched.h (define sched_wrr_entity)
+------------------uapi/linux/sched.h (register wrr scheduler)
+------------test/
+------------------Makefile (script for mount => makefile => umount)
+------------------infloop.c (for making w = 10 background)
+------------------infloop_weight.c (for making w = 1 background)
+------------------prime.c (user level test code implementation)
+------------------mount (Mount directory for the root image)
+------tizen-image/
+------------.img files
 
-In order to build the documentation, use ``make htmldocs`` or
-``make pdfdocs``.
+------Building the OS------
+Change "#define __WRR_SCHED_DEBUG 1" to 0 from kernel/sched/sched.h to disable error message (Default included.)
+Enter osfall2021-team1-proj2 and directory run ./generate.sh
 
-There are various text files in the Documentation/ subdirectory,
-several of them using the Restructured Text markup notation.
-See Documentation/00-INDEX for a list of what is contained in each file.
+------Building Test Files------
+Enter osfall2021-team1-proj1/test and create "mount" directory.
+Build with arm-linux-gnueabi-gcc test_ptree.c
+run ./mnt.sh to mount root image and copy the binary to the root directory in the mounted image.
+Unmount root image before running the VM.
 
-Please read the Documentation/process/changes.rst file, as it contains the
-requirements for building and running the kernel, and information about
-the problems which may result by upgrading your kernel.
+
+To run the VM, change directory to osfall2021-team1-proj1 and run ./qemu.sh
+After booting run the copied binary in the root user home directory.
+
+Test code useage example
+ 1.      ./infloop 1&                 => make 1 w = 10 background process
+ 2.      ./infloop 1 10&              => make 1 w = 10 background process and for 10 more
+ 3.      ./infloop_weight             => same as infloop with w = 1
+ 4.      ./prime <num> <weight>       => run prime factorization from num~num+49
+ 4.      ./syscall <systemcall> <pid> => call system call to certain pid ex) ./syscall 399 1159
+ 
+
+High level design
+
+include/linux/sched.h 
+  – Defined sched_wrr_entity (wrr runque node)
+Include/uapi/linux/sched.h 
+  – WRR register scheduler (SCHED_WRR 7)
+kernel/sched/rt.c & fair.c 
+  – insert WRR in the priority between RC – CFS .
+kernel/sched/sched.h 
+  – defined WRR macro, defined wrr_rq struct .
+kernel/sched/core.c 
+  – make wrr runs together, getweight, setweight
+kernel/sched/wrr.c 
+  – main implementation for WRR.
+  
+investigation
+
+
