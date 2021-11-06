@@ -48,13 +48,13 @@ void print_wrr_rq(struct wrr_rq *wrr_rq)
 	}
 	if (wrr_rq->CPUID == getMasterCPU_wrr())
 	{
-		printk("WRR CPUID %d - \tCPU %d: Currently running (pid) - %d, WRR MASTER runque status - total weight - %d, nr_running - %d, latest_loop_time %ld.\n"
-		,smp_processor_id(), wrr_rq->CPUID, currPid, wrr_rq->total_weight, wrr_rq->wrr_nr_running, wrr_rq->lastest_loop_time*1000/HZ);
+		printk("WRR CPUID %d - \tCPU %d: Currently running (pid) - %d, WRR MASTER runque status - total weight - %d, nr_running - %d, Kernel Compensated Time %ld ms.\n"
+		,smp_processor_id(), wrr_rq->CPUID, currPid, wrr_rq->total_weight, wrr_rq->wrr_nr_running, wrr_rq->total_weight*__WRR_TIMESLICE + wrr_rq->wrr_nr_running*__WRR_KERNEL_OVERHEAD_PER_TASK);
 	}
 	else
 	{
-		printk("WRR CPUID %d - \tCPU %d: Currently running (pid) - %d, WRR runque status - total weight - %d, nr_running - %d, latest_loop_time %ld.\n"
-		,smp_processor_id(), wrr_rq->CPUID, currPid, wrr_rq->total_weight, wrr_rq->wrr_nr_running, wrr_rq->lastest_loop_time*1000/HZ);
+		printk("WRR CPUID %d - \tCPU %d: Currently running (pid) - %d, WRR runque status - total weight - %d, nr_running - %d, Kernel Compensated Time %ld ms.\n"
+		,smp_processor_id(), wrr_rq->CPUID, currPid, wrr_rq->total_weight, wrr_rq->wrr_nr_running, wrr_rq->total_weight*__WRR_TIMESLICE + wrr_rq->wrr_nr_running*__WRR_KERNEL_OVERHEAD_PER_TASK);
 	}
 	if (!list_empty(queuePtr))
 	{
