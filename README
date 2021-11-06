@@ -7,7 +7,13 @@ dir_root/
 ------------qemu.sh
 ------------generate.sh (Automated kernel building and image movement script)
 ------------kernel/
-------------------ptree.c (ptree syscall implementation)
+------------------sched/
+------------------------/wrr.c (wrr implementation)
+------------------------/sched.h (scheduler regiteration)
+------------------------/core.c (make wrr runs together, getweight, setweight&getweight,schedweight)
+------------include/
+------------------linux/sched.h (define sched_wrr_entity)
+------------------uapi/linux/sched.h (register wrr scheduler)
 ------------test/
 ------------------Makefile (script for mount => makefile => umount)
 ------------------infloop.c (for making w = 10 background)
@@ -53,4 +59,3 @@ kernel/sched/core.c
 kernel/sched/wrr.c 
   – main implementation for WRR.
 
-![image](https://user-images.githubusercontent.com/50283651/140593582-2b94052d-bc00-4212-b24c-972951d27c7a.png)
