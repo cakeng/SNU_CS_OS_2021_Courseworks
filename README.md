@@ -1,9 +1,9 @@
 ![proj2_diagram](./pictures/proj2_diagram.PNG)
 
-Use git clone to download source.
-Create tizen-image directory and unzip&copy the required image files. (As in proj0)
-Enter cloned source directory and git switch to proj2 branch.
-The directory structure should look like
+Use git clone to download source.  
+Create tizen-image directory and unzip&copy the required image files. (As in proj0)  
+Enter cloned source directory and git switch to proj2 branch.  
+The directory structure should look like  
   
 dir_root/   
 ------osfall2021-team1-proj2/  
@@ -13,7 +13,8 @@ dir_root/
 ------------------sched/  
 ------------------------/wrr.c (wrr implementation)  
 ------------------------/sched.h (scheduler registeration)  
-------------------------/core.c (linked & enabled wrr functionalities in existing kernel. Also systemcall implementations)  
+------------------------/core.c 
+(linked & enabled wrr functionalities in existing kernel.)  
 ------------include/  
 ------------------linux/sched.h (defined sched_wrr_entity)  
 ------------------uapi/linux/sched.h (registered wrr scheduler)  
