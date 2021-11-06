@@ -287,8 +287,6 @@ static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 		wrr_rq->wrr_nr_running++;
 		wrr_rq->total_weight += wrr->weight;
 		wrr->time_slice = 0;
-		cpu_rq(getMasterCPU_wrr())->wrr.balanceCounter = __WRR_BALANCE_TICKS;
-		resched_curr(rq);
 	}
 
 	#if __WRR_SCHED_DEBUG
@@ -459,7 +457,7 @@ static int select_task_rq_wrr(struct task_struct *p, int task_cpu, int sd_flag, 
 	int targCpu = getMasterCPU_wrr();
 	#if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - select_task_rq_wrr called.\n",smp_processor_id());
-	print_all_wrr_rq();
+	// print_all_wrr_rq();
 	#endif 
 
 	// Get CPU with the minimum weight sum.
@@ -547,6 +545,7 @@ static void task_tick_wrr(struct rq *rq, struct task_struct *curr, int queued)
 		else
 		{
 			wrr->time_slice = 0;
+			cpu_rq(getMasterCPU_wrr())->wrr.balanceCounter = __WRR_BALANCE_TICKS;
 		}
 
 		//if (wrr_rq->queue_head.next != wrr_rq->queue_head.prev)

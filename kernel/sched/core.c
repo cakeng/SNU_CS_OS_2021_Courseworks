@@ -3047,7 +3047,6 @@ void scheduler_tick(void)
 	rq->idle_balance = idle_cpu(cpu);
 	trigger_load_balance(rq);
 	trigger_load_balance_wrr(rq);
-	load_balance_wrr(rq);
 #endif
 	rq_last_tick_reset(rq);
 }
