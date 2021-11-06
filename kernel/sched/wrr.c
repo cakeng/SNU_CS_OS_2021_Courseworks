@@ -152,7 +152,7 @@ void load_balance_wrr(struct rq *rq)
 			// Check if task is the max availabe in the rq_max's wrr queue.
 			if (weight > taskWeightMax)
 			{
-				// Migrate only if the weight balance is not bronken (Except when moving from Master.)
+				// Migrate only if the weight balance is not broken (Except when moving from Master.)
 				if (rq_max == rq_master || weightMax - weight > weightMin + weight)
 				{
 					task_targ = task;
@@ -179,8 +179,9 @@ void load_balance_wrr(struct rq *rq)
 	{	
 		printk("WRR CPUID %d - load_balance moved task %d from CPU %d to CPU %d.\n"
 			,smp_processor_id(), (int)task_targ->pid, cpu_of(rq_max), cpu_of(rq_min));
+		rcu_read_lock();
 		print_all_wrr_rq();
-		
+		rcu_read_unlock();
 	}
 	else
 	{
@@ -201,7 +202,9 @@ void trigger_load_balance_wrr(struct rq *rq)
 		{
 			wrr_rq->debugCounter = 0;
 			printk("WRR CPUID %d - Current WRR queue status.\n",smp_processor_id());
+			rcu_read_lock();
 			print_all_wrr_rq();
+			rcu_read_unlock();
 		}
 		#endif
 		wrr_rq->balanceCounter++;
