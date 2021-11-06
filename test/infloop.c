@@ -19,6 +19,7 @@ int main(int argc, char* argv[])
     int forkNum = 0;
     uint64_t i = 0;
     int childPid;
+    int weight = 0;
     if (argc > 1)
     {
         silent = (int)atoi(argv[1]);
@@ -29,21 +30,28 @@ int main(int argc, char* argv[])
     }
     if (argc > 3)
     {
-        freq = (uint64_t)atoi(argv[3]);
+        weight = (uint64_t)atoi(argv[3]);
     }
     if (argc > 4)
     {
-        startAsWRR = (uint64_t)atoi(argv[4]);
+        freq = (uint64_t)atoi(argv[4]);
+    }
+    if (argc > 5)
+    {
+        startAsWRR = (uint64_t)atoi(argv[5]);
     }
     if (startAsWRR)
     {
         struct sched_param userparam = { .sched_priority = 0 };
         syscall(156, NULL, 7, &userparam);
     }
-
     
 	struct timeval startTime, endTime;
     double diffTime;
+    if(weight > 0)
+    {
+        syscall(398, NULL, weight);
+    }
     gettimeofday(&startTime, NULL);
     i = 0;
     while (1)

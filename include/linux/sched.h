@@ -457,7 +457,7 @@ struct sched_wrr_entity
 	struct list_head queue_node;
 	unsigned int time_slice;
 	
-	long previoud_start_time;
+	long previous_start_time;
 	long time_interval;
 };
 

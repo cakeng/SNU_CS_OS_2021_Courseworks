@@ -3304,7 +3304,7 @@ static void __sched notrace __schedule(bool preempt)
 {
 	struct task_struct *prev, *next;
 	unsigned long *switch_count;
-	struct rq_flags rf, rf2;
+	struct rq_flags rf;
 	struct rq *rq;
 	int cpu;
 

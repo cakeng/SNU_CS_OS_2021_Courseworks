@@ -54,6 +54,7 @@
 #define __WRR_DEBUG_TICKS (60000 * HZ / 1000)
 #define __WRR_MASTER_TASK ((void*)-2UL)
 #define __WRR_TIMESLICE (10 * HZ / 1000)
+#define __WRR_KERNEL_OVERHEAD_PER_TASK (3 * HZ / 1000) 
 
 struct rq;
 struct cpuidle_state;
@@ -442,8 +443,7 @@ struct wrr_rq {
 	struct list_head queue_head;
 	unsigned int wrr_nr_running;
 	int total_weight;
-
-	int interval_time;
+	long lastest_loop_time;
 };
 
 

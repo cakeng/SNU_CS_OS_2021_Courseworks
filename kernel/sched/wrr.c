@@ -40,6 +40,7 @@ void print_wrr_rq(struct wrr_rq *wrr_rq)
 	struct rq *rq = cpu_rq(wrr_rq->CPUID);
 	int loopI;
 	int currPid = 0;
+	int interval = 0;
 
 	if (rq->curr)
 	{
@@ -47,13 +48,13 @@ void print_wrr_rq(struct wrr_rq *wrr_rq)
 	}
 	if (wrr_rq->CPUID == getMasterCPU_wrr())
 	{
-		printk("WRR CPUID %d - \tCPU %d: Currently running (pid) - %d, WRR MASTER runque status - total weight - %d, nr_running - %d.\n"
-		,smp_processor_id(), wrr_rq->CPUID, currPid, wrr_rq->total_weight, wrr_rq->wrr_nr_running);
+		printk("WRR CPUID %d - \tCPU %d: Currently running (pid) - %d, WRR MASTER runque status - total weight - %d, nr_running - %d, latest_loop_time %ld.\n"
+		,smp_processor_id(), wrr_rq->CPUID, currPid, wrr_rq->total_weight, wrr_rq->wrr_nr_running, wrr_rq->lastest_loop_time*1000/HZ);
 	}
 	else
 	{
-		printk("WRR CPUID %d - \tCPU %d: Currently running (pid) - %d, WRR runque status - total weight - %d, nr_running - %d.\n"
-		,smp_processor_id(), wrr_rq->CPUID, currPid, wrr_rq->total_weight, wrr_rq->wrr_nr_running);
+		printk("WRR CPUID %d - \tCPU %d: Currently running (pid) - %d, WRR runque status - total weight - %d, nr_running - %d, latest_loop_time %ld.\n"
+		,smp_processor_id(), wrr_rq->CPUID, currPid, wrr_rq->total_weight, wrr_rq->wrr_nr_running, wrr_rq->lastest_loop_time*1000/HZ);
 	}
 	if (!list_empty(queuePtr))
 	{
@@ -62,8 +63,8 @@ void print_wrr_rq(struct wrr_rq *wrr_rq)
 		{
 			loopI++;
 			wrr = list_entry(queuePtr, struct sched_wrr_entity, queue_node);
-			int interval = (int) (wrr->time_interval)*1000/HZ;
-			printk("WRR CPUID %d - \t\tWRR (CPU %d) runque %d th entry: PID - %d, weight - %d, time slice - %d, time interval - %d.\n"
+			interval = (int) (wrr->time_interval)*1000/HZ;
+			printk("WRR CPUID %d - \t\tWRR (CPU %d) runque %d th entry: PID - %d, weight - %d, time slice - %d, time interval - %d\n"
 				,smp_processor_id(), wrr_rq->CPUID, loopI, wrr->pid, wrr->weight,wrr->time_slice, interval);
 		}
 	}
@@ -98,6 +99,7 @@ void load_balance_wrr(struct rq *rq)
 	unsigned long flags;
 	//printk("WRR CPUID %d - load_balance_wrr called.\n",smp_processor_id());
 	
+	// Improvement - Use number of active tasks on each runqueue to compensate kernel overheads. (3ms per task)
 
 	// Find CPUs with min weight and max weight
 	rcu_read_lock();
@@ -107,7 +109,8 @@ void load_balance_wrr(struct rq *rq)
 		// Check if the target is not Master & if target cpu is ACTIVE. (For hotplugging)
 		if ((i != getMasterCPU_wrr()) && (cpumask_test_cpu(i, cpu_active_mask)))
 		{
-			int total_weight = rq->wrr.total_weight;
+			// Calculating weight with Kernel Overheads.
+			long total_weight = rq->wrr.total_weight*__WRR_TIMESLICE + rq->wrr.wrr_nr_running*__WRR_KERNEL_OVERHEAD_PER_TASK;
 			if(weightMax < total_weight)
 			{
 				rq_max = rq;
@@ -125,6 +128,7 @@ void load_balance_wrr(struct rq *rq)
 	if(rq_master->wrr.total_weight)
 	{
 		rq_max = rq_master;
+		weightMax = rq_master->wrr.total_weight;
 	}
 	// If there are only a single task on the max queue, or if min queue is Master, return.
 	if((rq_max != rq_master && rq_max->wrr.wrr_nr_running < 2) || rq_min == rq_master)
@@ -147,7 +151,7 @@ void load_balance_wrr(struct rq *rq)
 	{
 		task_wrr = list_entry(queuePtr, struct sched_wrr_entity, queue_node);
 		task = container_of(task_wrr, struct task_struct, wrr);
-		weight = task_wrr->weight;
+		weight = task_wrr->weight*__WRR_TIMESLICE;
 		// Check if valid task for migration.
 		if ((task != rq_max->curr) && checkRunnableCPU(cpu_of(rq_min), task))
 		{
@@ -155,7 +159,7 @@ void load_balance_wrr(struct rq *rq)
 			if (weight > taskWeightMax)
 			{
 				// Migrate only if the weight balance is not broken (Except when moving from Master.)
-				if (rq_max == rq_master || weightMax - weight > weightMin + weight)
+				if (rq_max == rq_master || (weightMax - weight - __WRR_KERNEL_OVERHEAD_PER_TASK) > (weightMin + weight + __WRR_KERNEL_OVERHEAD_PER_TASK))
 				{
 					task_targ = task;
 					taskWeightMax = weight;
@@ -228,10 +232,10 @@ void init_wrr_rq(struct wrr_rq *wrr_rq, int CPUID)
 	wrr_rq->debugCounter = 0;
 	#endif 
 	wrr_rq->balanceCounter = 0;
-	//
 	wrr_rq->CPUID = CPUID;
 	wrr_rq->wrr_nr_running = 0;
 	wrr_rq->total_weight = 0;
+	wrr_rq->lastest_loop_time = 0;
 	INIT_LIST_HEAD(&wrr_rq->queue_head);
 
 	print_wrr_rq(wrr_rq);
@@ -248,7 +252,7 @@ __init void init_sched_wrr_class(void)
 static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 {
 	struct wrr_rq *wrr_rq = &rq->wrr;
-	struct sched_wrr_entity *wrr = &p->wrr;
+	struct sched_wrr_entity *wrr = &p->wrr, *firstWrr;
 
 	#if __WRR_SCHED_DEBUG
 	printk("WRR CPUID %d - enqueue_task_wrr called.\n",smp_processor_id());
@@ -265,9 +269,16 @@ static void enqueue_task_wrr(struct rq *rq, struct task_struct *p, int flags)
 		wrr_rq->wrr_nr_running++;
 		wrr_rq->total_weight += wrr->weight;
 		add_nr_running(rq, 1);
-		long startTime;
- 		startTime = jiffies;
-
+		firstWrr = list_first_entry_or_null(&wrr_rq->queue_head, struct sched_wrr_entity, queue_node);
+		if (firstWrr == NULL || firstWrr == wrr)
+		{
+			wrr->previous_start_time = jiffies;
+		}
+		else
+		{
+			wrr->previous_start_time = firstWrr->previous_start_time;
+		}
+		wrr->time_interval = 0;
 		wrr->time_slice = __WRR_TIMESLICE * (wrr -> weight);
 	}
 	else
@@ -396,7 +407,7 @@ static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct 
 	// struct rq_flags flags;
 	struct sched_wrr_entity *nextWrr;
 	struct task_struct *task;
-
+	long come_back_Time;
 
     #if __WRR_SCHED_DEBUG
 	//printk("WRR CPUID %d - pick_next_task_wrr called.\n",smp_processor_id());
@@ -423,12 +434,13 @@ static struct task_struct *pick_next_task_wrr(struct rq *rq, struct task_struct 
 	// print_wrr_rq(wrr_rq);
 	#endif 
 	// __task_rq_unlock(rq, &flags);
-	long come_back_Time;
- 	come_back_Time = jiffies;
+	// Each task holds wall clock runtime of itself (time interval) and 
+	come_back_Time = jiffies;
 	task = container_of(nextWrr, struct task_struct, wrr);
-	task->wrr.time_interval = come_back_Time - task->wrr.previoud_start_time;
- 	task->wrr.previoud_start_time = jiffies;
-	//Check if runnable on current CPU before returning.
+	task->wrr.time_interval = come_back_Time - task->wrr.previous_start_time;
+	wrr_rq->lastest_loop_time = task->wrr.time_interval;
+ 	task->wrr.previous_start_time = jiffies;
+
 	return task;
 }
 
@@ -457,10 +469,11 @@ static int select_task_rq_wrr(struct task_struct *p, int task_cpu, int sd_flag, 
 		struct rq *rq = cpu_rq(i);
 		struct wrr_rq *wrr_rq = &rq->wrr;
 		// Check if the task is runnable on target CPU.
-		if (checkRunnableCPU(i, p) && wrr_rq->total_weight < minWeight)
+		long weight = wrr_rq->total_weight*__WRR_TIMESLICE + wrr_rq->wrr_nr_running*__WRR_KERNEL_OVERHEAD_PER_TASK;
+		if (checkRunnableCPU(i, p) &&  weight < minWeight)
 		{
 			targCpu = i;
-			minWeight = wrr_rq->total_weight;
+			minWeight = weight;
 		}
 	}
 	rcu_read_unlock();
