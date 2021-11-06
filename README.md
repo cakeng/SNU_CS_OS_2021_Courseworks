@@ -43,6 +43,9 @@ Test code usage example
  4.      ./infloop_weight             => make 1 w = 10 background process, with status prints on.  
  5.      ./prime <num> <weight>       => run prime factorization for 10 values (num, num+1, ... ,num+9)  
  6.      ./syscall <systemcall> <pid> => call system call to certain pid ex) ./syscall 399 1159  
+  
+ Forking in infloop happens roughly 20 seconds after starting the process.  
+ This is intentional, so that weights can be changed / wrr runqueue status can be checked before forking.  
    
 High level design  
   
