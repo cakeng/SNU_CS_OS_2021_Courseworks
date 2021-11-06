@@ -1,4 +1,4 @@
-![pro2j_diagram](./pictures/overall.PNG)
+![pro2j_diagram](./pictures/overall.png)
 
 Use git clone to download source and switch to proj2 brach.
 Create tizen-image directory and unzip&copy the required image files. (As in proj0)
