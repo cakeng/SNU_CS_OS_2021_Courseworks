@@ -62,6 +62,29 @@ kernel/sched/core.c
 kernel/sched/wrr.c   
   – Main implementation of WRR.  
   
-investigation
+Investigation & Improvements  
+  
+Our test task, Prime factorization of 10 large numbers, executes in about 1.856 seconds (~186 time slices) when it is the only task in a runqueue.  
+With backgorund tasks added, the execution latency is increased with the following formula,  
+(Primefactorization Execution latency) = (186/Prime_factorization_weight) * (Runqueue_Total_weight - Prime_factorization_weight) * 10ms.  
+(186/Prime_factorization_weight) is the number of context switches the task experiences until it finishes its execution.    
+   
+We also experienced that running the Prime factorization on runqueues with many background tasks with smaller weights is generally   
+slower than running it on runqueues with few background tasks with larger weights, even when the total weights are equal.  
+
+Through experiment, we found that our wrr kernel functions cost about 3ms of additional CPU timer per each task in the runqueue.  
+This causes runqueues with more tasks to be slower, compared to runqueues with less tasks, even when they have the same total weight.  
+We included the number of tasks in a runqueue in the load balencing function to compensate the kernel overhead,  
+allowing for a much more balenced execution of tasks compared to the original solution.  
+  
+Conclusion & lesson learned  
+    
+Through this project we were able to implement a new scheduler in the Linux kernel with our desired functions and policies. 
+We were able to measure performance on many different test cases, and were able to understand the results based on our implementation.  
+We examined the limits of the base implementation, and were able to improve upon the design.  
+
+During the implementations and the experiments we were able to identify and understand the various functions and structures that define  
+the Linux scheduler and its callstack.  
+We were also able to identify the various problems we encountered through the project, and overcome them.  
 
 
