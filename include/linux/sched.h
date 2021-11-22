@@ -27,6 +27,7 @@
 #include <linux/signal_types.h>
 #include <linux/mm_types_task.h>
 #include <linux/task_io_accounting.h>
+// #include <linux/rotation.h>
 
 /* task_struct member predeclarations (sorted alphabetically): */
 struct audit_context;
@@ -557,6 +558,7 @@ struct wake_q_node {
 };
 
 struct task_struct {
+
 #ifdef CONFIG_THREAD_INFO_IN_TASK
 	/*
 	 * For reasons of header soup (see current_thread_info()), this
