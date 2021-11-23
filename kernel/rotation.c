@@ -233,15 +233,18 @@ void free_range (rotlock_node* node)
 
 void lock_engine(void)
 {
+    int reader_waiting;
     rotlock_node* write_list_entry, *read_list_entry, *tmp;
     #if __DEBUG_ROTLOCK
     // printk("RTL DEBUG: lock_engine called.\n");
     #endif
     // Try grabbing locks from the write lock list.
+    reader_waiting = 0;
     list_for_each_entry_safe(write_list_entry, tmp, &write_lock_lists.node[current_rotation], node[current_rotation])
     {
         if (write_list_entry != NULL)
         {
+            reader_waiting = 1;
             if (check_grabbable (write_list_entry) != 0)
             {
                 dequeue_node (write_list_entry);
@@ -255,21 +258,25 @@ void lock_engine(void)
         }
     }
     // Grab all available locks from the read lock list.
-    list_for_each_entry_safe(read_list_entry, tmp, &read_lock_lists.node[current_rotation], node[current_rotation])
+    if (reader_waiting == 0)
     {
-        if (read_list_entry != NULL)
+        list_for_each_entry_safe(read_list_entry, tmp, &read_lock_lists.node[current_rotation], node[current_rotation])
         {
-            if (check_grabbable (read_list_entry) != 0)
+            if (read_list_entry != NULL)
             {
-                dequeue_node (read_list_entry);
-                grab_range (read_list_entry);
-                wake_up_process(read_list_entry->task);
-                #if __DEBUG_ROTLOCK
-                printk("RTL DEBUG: lock_engine woken up read lock PID %d.\n", get_node_pid(read_list_entry));
-                #endif
+                if (check_grabbable (read_list_entry) != 0)
+                {
+                    dequeue_node (read_list_entry);
+                    grab_range (read_list_entry);
+                    wake_up_process(read_list_entry->task);
+                    #if __DEBUG_ROTLOCK
+                    printk("RTL DEBUG: lock_engine woken up read lock PID %d.\n", get_node_pid(read_list_entry));
+                    #endif
+                }
             }
         }
     }
+    
 }
 /* Must be under Mutex protection! */
 
