@@ -88,15 +88,13 @@ int get_node_pid (rotlock_node* node)
 }
 
 
-
-/* Must be under Mutex protection! */
-#define PRINT_RANGE 20;
 void print_state(void)
 {
     #if __DEBUG_ROTLOCK
     rotlock_node* targ_node;
     int i;
     printk("RTL DEBUG: Printing Rotation lock state. Current rotation: %d\n", current_rotation);
+    mutex_lock(&rotlock_mutex);
     for (i = 0; i < __ROT_RANGE; i++)
     {
         printk("RTL DEBUG:\tR%d\t", i);
@@ -104,22 +102,22 @@ void print_state(void)
         {
             printk("%d,\t", get_node_pid(targ_node));
         }
-        printk("\n");
         printk("RTL DEBUG:\tW%d\t", i);
         list_for_each_entry(targ_node, &(write_lock_lists.node[i]), node[i]) 
         {
             printk("%d,\t", get_node_pid(targ_node));
         }
-        printk("\n");
         printk("RTL DEBUG:\tG%d\t", i);
         list_for_each_entry(targ_node, &(locks.node[i]), node[i]) 
         {
             printk("%d,\t", get_node_pid(targ_node));
         }
-        printk("\n");
     }
+    mutex_unlock(&rotlock_mutex);
     #endif
 }
+
+/* Must be under Mutex protection! */
 
 // Dequeues a node from the lists(queues) its contained in.
 void dequeue_node(rotlock_node* node)
@@ -141,7 +139,7 @@ void dequeue_node(rotlock_node* node)
     }
     upper_bound = get_upper_bound (node->degree, node->range);
     lower_bound = get_lower_bound (node->degree, node->range);
-    for (i = lower_bound; i <= upper_bound; i++)
+    for (i = lower_bound; i != upper_bound + 1; i = (i+1) % __ROT_RANGE)
     {
         list_del(&node->node[i]);
     }
@@ -163,7 +161,7 @@ int check_grabbable (rotlock_node* node)
     }
     upper_bound = get_upper_bound (node->degree, node->range);
     lower_bound = get_lower_bound (node->degree, node->range);
-    for (i = lower_bound; i <= upper_bound; i++)
+    for (i = lower_bound; i != upper_bound + 1; i = (i+1) % __ROT_RANGE)
     {
         lock = list_first_entry_or_null(&locks.node[i], rotlock_node, node[i]);
         if (lock != NULL)
@@ -202,7 +200,7 @@ void grab_range (rotlock_node* node)
     }
     upper_bound = get_upper_bound (node->degree, node->range);
     lower_bound = get_lower_bound (node->degree, node->range);
-    for (i = lower_bound; i <= upper_bound; i++)
+    for (i = lower_bound; i != upper_bound + 1; i = (i+1) % __ROT_RANGE)
     {
         list_add_tail(&node->node[i], &(locks.node[i]));
     }
@@ -229,7 +227,7 @@ void free_range (rotlock_node* node)
     }
     upper_bound = get_upper_bound (node->degree, node->range);
     lower_bound = get_lower_bound (node->degree, node->range);
-    for (i = lower_bound; i <= upper_bound; i++)
+    for (i = lower_bound; i != upper_bound + 1; i = (i+1) % __ROT_RANGE)
     {
         list_del(&node->node[i]);
     }
@@ -242,7 +240,6 @@ void lock_engine(void)
     rotlock_node* write_list_entry, *read_list_entry;
     #if __DEBUG_ROTLOCK
     printk("RTL DEBUG: lock_engine called.\n");
-    print_state();
     #endif
     // Try grabbing locks from the write lock list.
     list_for_each_entry(write_list_entry, &write_lock_lists.node[current_rotation], node[current_rotation])
@@ -256,7 +253,6 @@ void lock_engine(void)
                 wake_up_process(write_list_entry->task);
                 #if __DEBUG_ROTLOCK
                 printk("RTL DEBUG: lock_engine woken up write lock PID %d.\n", get_node_pid(write_list_entry));
-                print_state();
                 #endif
                 return;
             }
@@ -278,9 +274,6 @@ void lock_engine(void)
             }
         }
     }
-    #if __DEBUG_ROTLOCK
-    print_state();
-    #endif
 }
 /* Must be under Mutex protection! */
 
@@ -306,6 +299,7 @@ long do_set_rotation(int degree)
 
     #if __DEBUG_ROTLOCK
     printk("RTL DEBUG: Rotation set to %d\n",current_rotation);
+    print_state();
     #endif
 	return return_val;
 }
@@ -316,6 +310,7 @@ long do_rotlock_read (int degree, int range)
     int upper_bound, lower_bound, i;
     #if __DEBUG_ROTLOCK
     printk("RTL DEBUG: do_rotlock_read called. - degree %d, range %d.\n", degree, range);
+    print_state();
     #endif
     init();
     if(check_rot (degree, range) == 0)
@@ -345,7 +340,7 @@ long do_rotlock_read (int degree, int range)
 
     mutex_lock(&rotlock_mutex);
     // Adding to the list.
-    for (i = lower_bound; i <= upper_bound ; i++)
+    for (i = lower_bound; i != upper_bound + 1; i = (i+1) % __ROT_RANGE)
     {
         list_add_tail(&new_node->node[i], &(read_lock_lists.node[i]));
     }
@@ -367,6 +362,7 @@ long do_rotlock_write (int degree, int range)
     int upper_bound, lower_bound, i;
     #if __DEBUG_ROTLOCK
     printk("RTL DEBUG: do_rotlock_write called. - degree %d, range %d.\n", degree, range);
+    print_state();
     #endif
     init();
     if(check_rot (degree, range) == 0)
@@ -396,7 +392,7 @@ long do_rotlock_write (int degree, int range)
 
     mutex_lock(&rotlock_mutex);
     // Adding to the list.
-    for (i = lower_bound; i <= upper_bound ; i++)
+    for (i = lower_bound; i != upper_bound + 1; i = (i+1) % __ROT_RANGE)
     {
         list_add_tail(&new_node->node[i], &(read_lock_lists.node[i]));
     }
@@ -420,6 +416,7 @@ long do_rotunlock_read (int degree, int range)
     int i;
     #if __DEBUG_ROTLOCK
     printk("RTL DEBUG: do_rotunlock_read called. - degree %d, range %d.\n", degree, range);
+    print_state();
     #endif
     init();
     if(check_rot (degree, range) == 0)
@@ -481,6 +478,7 @@ long do_rotunlock_write (int degree, int range)
     int i;
     #if __DEBUG_ROTLOCK
     printk("RTL DEBUG: do_rotunlock_write called. - degree %d, range %d.\n", degree, range);
+    print_state();
     #endif
     init();
     if(check_rot (degree, range) == 0)
@@ -539,6 +537,10 @@ void exit_rotlock(struct task_struct *tsk)
 {
     rotlock_node* targ_node, *tmp;
     int i;
+    #if __DEBUG_ROTLOCK
+    printk("RTL DEBUG: exit_rotlock called. Pid %d.\n", task_pid_vnr(tsk));
+    #endif
+    init();
     mutex_lock(&rotlock_mutex);
     for (i = 0; i < __ROT_RANGE; i++)
     {
@@ -549,14 +551,14 @@ void exit_rotlock(struct task_struct *tsk)
                 if (targ_node->state == ROT_READ_WAIT)
                 {
                     dequeue_node (targ_node);
+                    kfree (targ_node);
                 }
                 else
                 {
                     #if __DEBUG_ROTLOCK
-                    printk("RTL DEBUG: ERROR !! exit_rotlock Releasing locks in a wrong state!. PID %d, state %d.\n", task_pid_vnr(current), targ_node->state);
+                    printk("RTL DEBUG: ERROR !! exit_rotlock Releasing locks in a wrong state!. PID %d, state %d.\n", task_pid_vnr(tsk), targ_node->state);
                     #endif
                 }
-                kfree (targ_node);
             }
 	    }
         list_for_each_entry_safe(targ_node, tmp, &(write_lock_lists.node[i]), node[i]) 
@@ -566,14 +568,14 @@ void exit_rotlock(struct task_struct *tsk)
                 if (targ_node->state == ROT_WRITE_WAIT)
                 {
                     dequeue_node (targ_node);
+                    kfree (targ_node);
                 }
                 else
                 {
                     #if __DEBUG_ROTLOCK
-                    printk("RTL DEBUG: ERROR !! exit_rotlock Releasing locks in a wrong state!. PID %d, state %d.\n", task_pid_vnr(current), targ_node->state);
+                    printk("RTL DEBUG: ERROR !! exit_rotlock Releasing locks in a wrong state!. PID %d, state %d.\n", task_pid_vnr(tsk), targ_node->state);
                     #endif
                 }
-                kfree (targ_node);
             }
 	    }
         list_for_each_entry_safe(targ_node, tmp, &(locks.node[i]), node[i]) 
@@ -583,14 +585,14 @@ void exit_rotlock(struct task_struct *tsk)
                 if (targ_node->state == ROT_GRABBED)
                 {
                     free_range (targ_node);
+                    kfree (targ_node);
                 }
                 else
                 {
                     #if __DEBUG_ROTLOCK
-                    printk("RTL DEBUG: ERROR !! exit_rotlock Releasing locks in a wrong state!. PID %d, state %d.\n", task_pid_vnr(current), targ_node->state);
+                    printk("RTL DEBUG: ERROR !! exit_rotlock Releasing locks in a wrong state!. PID %d, state %d.\n", task_pid_vnr(tsk), targ_node->state);
                     #endif
                 }
-                kfree (targ_node);
             }
 	    }
     }
