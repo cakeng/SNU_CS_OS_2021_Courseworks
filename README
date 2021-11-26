@@ -23,7 +23,7 @@ dir_root/
 ------------.img files
 
 ------Building the OS------
-Change "#define __WRR_SCHED_DEBUG 1" to 0 in kernel/sched/sched.h to disable debug messages (Default set to 1.)
+Change "#define __DEBUG_ROTLOCK 1" to 0 in kernel/sched/sched.h to disable debug messages (Default set to 0.)
 Enter osfall2021-team1-proj3 and run ./generate.sh to build the kernel. (Requires root privileges)
 
 ------Building Test Files------
