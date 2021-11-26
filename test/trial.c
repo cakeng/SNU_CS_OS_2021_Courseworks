@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
                 break;
             }
             fclose(fp);
-            printf("trial: %d = ", atoi(ptr));
+            printf("trial - %d : %d = ",startNum, atoi(ptr));
             primeFactors(atoi(ptr));
             read_unlock(5,5);
 
