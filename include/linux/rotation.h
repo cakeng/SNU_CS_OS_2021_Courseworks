@@ -9,7 +9,7 @@
 #include <linux/mutex.h>
 #include <linux/slab.h>
 
-#define __DEBUG_ROTLOCK 1
+#define __DEBUG_ROTLOCK 0
 #define __ROT_RANGE 24
 
 typedef enum ROT_STATE
