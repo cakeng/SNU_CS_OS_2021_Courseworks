@@ -63,8 +63,8 @@ int main(int argc, char* argv[])
         while(1)
         {
              
-            read_lock(5,5);
-            sleep(0.3);
+            read_lock(90,90);
+            //sleep(0.3);
             char text[100000];
             FILE* fp = fopen("integer","r");
             fgets(text, sizeof(text), fp);
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
             fclose(fp);
             printf("trial - %d : %d = ",startNum, atoi(ptr));
             primeFactors(atoi(ptr));
-            read_unlock(5,5);
+            read_unlock(90,90);
 
         }
     }

@@ -10,7 +10,7 @@
 #include <linux/slab.h>
 
 #define __DEBUG_ROTLOCK 0
-#define __ROT_RANGE 24
+#define __ROT_RANGE 360
 
 typedef enum ROT_STATE
 {

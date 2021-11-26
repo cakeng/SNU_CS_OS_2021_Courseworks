@@ -1,48 +1,78 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <string.h>    
-#include <errno.h>
+#define SYSCALL_SET_ROTATION 398
+
+#include <signal.h>
 #include <sys/syscall.h>
-#include <linux/types.h>
-#include <linux/sched.h>
-#include <bits/types/struct_sched_param.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
-void set_degree(int degree)
+int notFinished = 1;
+
+void term(int signum)
 {
-    syscall(398, degree);
+	notFinished = 0;
 }
 
-void read_lock(int degree,int range)
+void sensor()
 {
-    syscall(399, degree,range);
+	/* setup for handling SIGTERM signal */
+	struct sigaction action;
+	memset(&action, 0, sizeof(struct sigaction));
+	action.sa_handler = term;
+	if (sigaction(SIGTERM, &action, NULL) == -1)
+		exit(-1);
+	
+	int degree = 0;
+	while (notFinished) {
+		degree = (degree + 30) % 360;
+		syscall(SYSCALL_SET_ROTATION, degree);
+		sleep(2);
+	}
 }
 
-void write_lock(int degree,int range)
+int main()
 {
-    syscall(400, degree,range);
-}
+	pid_t pid, sid;
 
-void read_unlock(int degree,int range)
-{
-    syscall(401, degree,range);
-}
+	/* fork to re-parent */
+	pid = fork();
+	if (pid == -1)
+		exit(-1); /* fork failed */
+	if (pid > 0)
+		exit(0); /* parent process exits */
+	/* the child process has no parent now,
+	   so the system re-parents it with init */
 
-void write_unlock(int degree,int range)
-{
-    syscall(402, degree,range);
-}
+	/* start new session to detatch from controlling tty */
+	sid = setsid();
+	if (sid < 0)
+		exit(-1); /* unable to start new session */
+	/* child process is session leader */
 
-int main(int argc, char* argv[])
-{
-    while(1)
-    {
-        sleep(2);
-        set_degree(10);
-        sleep(2);
-        set_degree(20);
-    }
+	/* fork again to prevent process from re-acquring tty */
+	pid = fork();
+	if (pid == -1)
+		exit(-1); /* fork failed */
+	if (pid > 0)
+		exit(0);
+	/* the grandchild process is re-parented with init,
+	   and is not a session leader */
 
-    return 0;
+	/* reset permissions */
+	umask(0);
+
+	/* move to safe directory that is not unmountable */
+	if (chdir("/") < 0)
+		exit(-1);
+
+	/* close file desciptors */
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
+
+	/* start daemon function */
+	sensor();
+
+	return 0;
 }
