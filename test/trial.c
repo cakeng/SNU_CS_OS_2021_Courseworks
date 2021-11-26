@@ -64,25 +64,25 @@ int main(int argc, char* argv[])
         {
              
             read_lock(90,90);
-            //sleep(0.3);
-            char text[100000];
+            sleep(1);
+            char text[100];
             FILE* fp = fopen("integer","r");
             fgets(text, sizeof(text), fp);
-            char *ptr = strtok(text, " ");
+            //char *ptr = strtok(text, " ");
             
-            for (int i = 0; i < counter - 1; ++i)            
-            {
+            //for (int i = 0; i < counter - 1; ++i)            
+            //{
                 
-                ptr = strtok(NULL, " ");     
-            }
-            counter += 1;
-            if(ptr == NULL)
-            {
-                break;
-            }
+            //    ptr = strtok(NULL, " ");     
+            //}
+            //counter += 1;
+            //if(ptr == NULL)
+            //{
+            //    break;
+            //}
             fclose(fp);
-            printf("trial - %d : %d = ",startNum, atoi(ptr));
-            primeFactors(atoi(ptr));
+            printf("trial - %d : %d = ",startNum, atoi(text));
+            primeFactors(atoi(text));
             read_unlock(90,90);
 
         }

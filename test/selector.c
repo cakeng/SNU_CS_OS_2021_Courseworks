@@ -37,21 +37,21 @@ int main(int argc, char* argv[])
 {
     if(argc == 2)
     {
-        write_lock(90,90);
+        //write_lock(90,90);
         int startNum = atoi(argv[1]);
-        FILE* fp1 = fopen("integer","w");
-        fclose(fp1);
-        write_unlock(90,90);
+        //FILE* fp1 = fopen("integer","w");
+        //fclose(fp1);
+        //write_unlock(90,90);
         while(1)
         {
              
             write_lock(90,90);
-            //sleep(0.3);
-            char text[20];
+            sleep(1);
+            char text[100];
             sprintf(text, "%d", startNum);
-            FILE* fp = fopen("integer","a");
+            FILE* fp = fopen("integer","w");
             fputs(text,fp);
-            fputs(" ",fp);
+            //fputs(" ",fp);
             fclose(fp);
             printf("selector: %d.\n", startNum);
             startNum += 1;
