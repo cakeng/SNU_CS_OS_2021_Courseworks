@@ -16,15 +16,6 @@ typedef struct gps_location {
     int accuracy;
 } gps_location;
 
-/* Related Syscalls
-asmlinkage long sys_set_rotation(int degree); 398
-asmlinkage long sys_rotlock_read(int degree, int range); 399
-asmlinkage long sys_rotlock_write(int degree, int range); 400
-asmlinkage long sys_rotunlock_read(int degree, int range); 401
-asmlinkage long sys_rotunlock_write(int degree, int range); 402
-*/
-
-
 int main(int argc, char* argv[])
 {
     int syscallNum;
@@ -32,13 +23,13 @@ int main(int argc, char* argv[])
     if (argc < 2)
     {
         printf("Enter syscall number and its arguments.\n");
-        printf("Available syscalls - sys_set_gps_location 398.\n");
+        printf("Available syscalls - sys_set_gps_location 398, sys_get_gps_location 399.\n");
         return 1;
     }
     syscallNum = atoi(argv[1]);
     if (syscallNum == 398)
     {
-        if (argc < 6)
+        if (argc < 7)
         {
             printf("Not enough arguments! Enter lat_int, lat_frac, long_int, long_frac, accuracy.\n");
             return 1;
@@ -54,6 +45,29 @@ int main(int argc, char* argv[])
         printf("Calling syscall sys_set_rotation.\n");
         returnVal = syscall(398, &loc);
         printf("Syscall sys_set_rotation returned - %d.\n", returnVal);
+    }
+    else if (syscallNum == 399)
+    {
+        if (argc < 3)
+        {
+            printf("Not enough arguments! Enter path name.\n");
+            return 1;
+        }
+        gps_location loc = 
+        {
+            .lat_integer = -1,
+            .lat_fractional = -1,
+            .lng_integer = -1,
+            .lng_fractional = -1,
+            .accuracy = -1
+        };
+        printf("Calling syscall sys_get_rotation.\n");
+        returnVal = syscall(399, argv[2], &loc);
+        printf("Syscall sys_get_rotation returned - %d.\n", returnVal);
+        printf ("File GPS Info: LAT:%d.(%d/1000000), LONG: %d.(%d/1000000), ACC: %d.\n", 
+        loc.lat_integer, loc.lat_fractional, 
+            loc.lng_integer, loc.lng_fractional,
+                loc.accuracy);
     }
     else
     {
@@ -75,6 +89,18 @@ int main(int argc, char* argv[])
     else if (errno == EINVAL)
     {
         printf("EINVAL received. Not a valid parameter.\n");
+    }
+    else if (errno == EACCES)
+    {
+        printf("EACCES received. No Permission.\n");
+    }
+    else if (errno == EFAULT)
+    {
+        printf("EFAULT received.\n");
+    }
+    else if (errno == ENODEV)
+    {
+        printf("EFAULT received. No GPS Embedding.\n");
     }
     return 0;
 }

@@ -2,6 +2,7 @@
 #include <linux/types.h>
 #include <linux/errno.h>
 #include <linux/syscalls.h>
+#include <linux/namei.h>
 
 #include "gps_sec_arctan.h"
 
@@ -28,7 +29,7 @@ void print_gps(void)
     #endif
 }
 
-// Assumes Cartesian coordinate system
+// Uses r_theta(arc length) as x, y distances of a right triangle.
 long get_distance (gps_location* loc1, gps_location* loc2)
 {
     long d = 0;
@@ -156,9 +157,65 @@ long do_set_gps_location(gps_location* loc)
 	return 0;
 }
 
+long sys_get_gps_location(const char *pathname, gps_location *loc)
+{
+    gps_location kloc;
+	struct path path;
+	struct inode *inode;
+	char name[1024] = {0};
+	long len;
+    #if __GPS_DEBUG
+    printk ("DEBUG: get_gps_location called.\n");
+    #endif
 
-SYSCALL_DEFINE1(set_gps_location, struct gps_location __user *, loc)
+	if(loc == NULL)
+    {
+        return -EINVAL;
+    }
+    len = strnlen_user(pathname, 1024);
+	if(len == 0)
+    {
+        return -EINVAL;
+    }
+	if(strncpy_from_user(name, pathname, len) < 0)
+    {
+		return -EFAULT;
+	}
+	if(kern_path(name, LOOKUP_FOLLOW, &path))
+    {
+		return -EINVAL;
+	}
+	inode = path.dentry->d_inode;
+
+	if(inode_permission(inode, MAY_READ))
+    {
+        return -EACCES;
+    }
+	if(inode->i_op->get_gps_location != NULL)
+    {
+        inode->i_op->get_gps_location(inode, &kloc);
+    }
+	else 
+    {
+        return -ENODEV;
+    }
+	if(copy_to_user(loc, &kloc, sizeof(gps_location)))
+    {
+        return -EFAULT;
+    }   
+    #if __GPS_DEBUG
+    printk ("DEBUG: get_gps_location complete.\n");
+    #endif
+	return 0;
+}
+
+SYSCALL_DEFINE1 (set_gps_location, struct gps_location __user *, loc)
 {
 	return do_set_gps_location(loc);
+}
+
+SYSCALL_DEFINE2 (sys_get_gps_location, const char __user *, pathname, struct gps_location __user *, loc)
+{
+	return sys_get_gps_location(pathname, loc);
 }
 

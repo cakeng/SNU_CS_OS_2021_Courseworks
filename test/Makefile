@@ -8,7 +8,7 @@ syscall: syscall.c
 move: 
 	sudo mkdir mount
 	sudo mount ../../tizen-image/rootfs.img ./mount
-	sudo cp syscall ./mount/root/
+	sudo cp syscall ../proj4.fs ./mount/root/
 	sudo umount ./mount
 	sudo rmdir mount
 

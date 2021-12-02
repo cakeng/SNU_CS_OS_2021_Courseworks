@@ -413,3 +413,4 @@
 396	common	pkey_free		sys_pkey_free
 397	common	statx			sys_statx
 398 common	set_gps_location			sys_set_gps_location
+399 common	get_gps_location			sys_get_gps_location
