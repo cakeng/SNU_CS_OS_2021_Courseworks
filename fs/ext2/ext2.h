@@ -351,6 +351,12 @@ struct ext2_inode {
 			__u32	m_i_reserved2[2];
 		} masix2;
 	} osd2;				/* OS dependent 2 */
+	// GPS struct on disk. (le32 for little endian.)
+	__le32	i_lat_integer;
+	__le32	i_lat_fractional;
+	__le32	i_lng_integer;
+	__le32	i_lng_fractional;
+	__le32	i_accuracy;
 };
 
 #define i_size_high	i_dir_acl
@@ -666,6 +672,7 @@ struct ext2_inode_info {
 	__u32	i_dir_acl;
 	__u32	i_dtime;
 
+	gps_location i_gps; // GPS struct on memory.
 	/*
 	 * i_block_group is the number of the block group which contains
 	 * this file's inode.  Constant across the lifetime of the inode,
@@ -783,6 +790,8 @@ extern int ext2_setattr (struct dentry *, struct iattr *);
 extern void ext2_set_inode_flags(struct inode *inode);
 extern int ext2_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
 		       u64 start, u64 len);
+extern int ext2_set_gps_location(struct inode *inode);
+extern int ext2_get_gps_location(struct inode *inode, struct gps_location *gps);
 
 /* ioctl.c */
 extern long ext2_ioctl(struct file *, unsigned int, unsigned long);

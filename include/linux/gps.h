@@ -1,14 +1,11 @@
-#ifndef __LINUX_GPS
-#define __LINUX_GPS
+#ifndef __LINUX_GPS_H
+#define __LINUX_GPS_H
 
-#include <linux/types.h>
-#include <linux/sched.h>
-#include <linux/list.h>
-#include <linux/errno.h>
-#include <linux/syscalls.h>
 #include <linux/mutex.h>
 
 #define __GPS_DEBUG 1
+#define __GPS_FRAC_MAX 1000000UL
+#define __GPS_EARTH_RAD 6371000UL // In meters.
 
 typedef struct gps_location {
     int lat_integer;
@@ -19,5 +16,8 @@ typedef struct gps_location {
 } gps_location;
 
 extern gps_location current_loc;
+extern struct mutex gps_mutex;
 
-#endif // #define __LINUX_GPS
+extern long get_distance (gps_location* loc1, gps_location* loc2);
+
+#endif // #define __LINUX_GPS_H

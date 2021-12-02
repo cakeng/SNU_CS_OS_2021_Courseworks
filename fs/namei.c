@@ -331,7 +331,8 @@ static int acl_permission_check(struct inode *inode, int mask)
  */
 int generic_permission(struct inode *inode, int mask)
 {
-	int ret;
+	int ret, gps_check;
+	struct gps_location f_loc;
 
 	/*
 	 * Do the basic permission checks.
@@ -366,6 +367,15 @@ int generic_permission(struct inode *inode, int mask)
 	if (!(mask & MAY_EXEC) || (inode->i_mode & S_IXUGO))
 		if (capable_wrt_inode_uidgid(inode, CAP_DAC_OVERRIDE))
 			return 0;
+
+	// Check GPS based permission.
+	if(inode->i_op->get_gps_location != NULL)
+	{
+		inode->i_op->get_gps_location(inode, &f_loc);
+		mutex_lock(&gps_mutex);
+
+		mutex_unlock(&gps_mutex);
+	}
 
 	return -EACCES;
 }

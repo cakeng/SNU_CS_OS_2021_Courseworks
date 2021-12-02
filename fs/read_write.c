@@ -476,6 +476,12 @@ static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t 
 ssize_t __vfs_write(struct file *file, const char __user *p, size_t count,
 		    loff_t *pos)
 {
+	// Modify location on write.
+	struct inode* inode = file->f_path.dentry->d_inode;
+	if (inode->i_op->set_gps_location != NULL)
+	{
+		inode->i_op->set_gps_location(inode);
+	}
 	if (file->f_op->write)
 		return file->f_op->write(file, p, count, pos);
 	else if (file->f_op->write_iter)
