@@ -6,6 +6,7 @@ The directory structure should look like
 
 dir_root/
 ------osfall2021-team1-proj4/
+------------proj4.fs
 ------------qemu.sh
 ------------generate.sh (Automated kernel building and image movement script)
 ------------kernel/
@@ -34,9 +35,22 @@ Enter osfall2021-team1-proj4 and run ./generate.sh to build the kernel. (Require
 
 ------Building Test Files------
 Enter osfall2021-team1-proj4/test and enter "make". (Requires root privileges)
+MAKE ALSO COPIES ../proj4.fs INTO THE ROOT FILESYSTEM IMAGE IN ../../tizen-image 
 
 To run the VM, change directory to osfall2021-team1-proj4 and run ./qemu.sh (Requires root privileges)
 After booting run the copied binary in the root user home directory.
+
+
+Files under proj4.fs
+
+proj4/
+   snu_east - 37.452899, 126.9714, accuracy 20m
+   snu_west - 37.45317, 126.92649, accuracy 20m
+   snu_downtown/
+      snu_kyobo - 37.45933, 126.05056, accuracy 20m
+      snu_bogunso - 37.45904, 126.05081, accuracy 20m
+      snu_gwanjung - 37.45897, 126.95231, accuracy 20m
+   
 
 Test code usage
 
@@ -84,13 +98,14 @@ detaled pictures on ppt
 Test code usage example
 
 mount -o rw,remount /dev/mmcblk0p2 /                -mount for rw      
+mkdir proj4                                         -create proj4 directory
 mount -o loop -t ext2 /root/proj4.fs /root/proj4    -mount fs to proj4
-cd ../proj4                   
+cd proj4                                            -enter proj4
 ../gpsupdate 37 452899 126 971400 20                -set gps to certain location
-touch snu_east                                      -make file
+touch snu_east                                      -make file with coords 37.452899 126.9714, accuracy 20m
 ../gpsupdate 37 453170 126 926490 20                -new location
-touch snu_west                                  
-cat snu_east                                        -access denied
-cat snu_west                                        -access granted
+touch snu_west                                      -make file with coords 37.45317 126.92649, accuracy 20m
+cat snu_east                                        -permission denied
+cat snu_west                                        -permission granted
 ../file_loc snu_west                                -return proper location&link
 ../file_loc snu_east                                -return -1m acc
