@@ -41,7 +41,7 @@ To run the VM, change directory to osfall2021-team1-proj4 and run ./qemu.sh (Req
 After booting run the copied binary in the root user home directory.
 
 
-Files under proj4.fs
+Files under proj4.fs (All files empty.)
 
 proj4/
    snu_east - 37.452899, 126.9714, accuracy 20m
@@ -54,22 +54,27 @@ proj4/
 
 Test code usage
 
+Please change fs to r/w and mount proj4.fs.
+   mount -o rw,remount /dev/mmcblk0p2 /                -mount fs as rw      
+   mkdir proj4                                         -create proj4 directory
+   mount -o loop -t ext2 /root/proj4.fs /root/proj4    -mount proj4.fs to proj4
+
 ./gpsupdate <lat_int> <lat_frac> <long_int> <long_frac> <accuracy>
 and frac is alway 6 digit and less than 6 always fill up zero in higher bit for example
-../gpsupdate 37 452899 126 971400 20 => 37.452899,126.971400
-../gpsupdate 37 4528 126 9714 20 => 37.004528,126.009714
+   ../gpsupdate 37 452899 126 971400 20 => 37.452899,126.971400
+   ../gpsupdate 37 4528 126 9714 20 => 37.004528,126.009714
 
 ./file_loc <file_location>
 output location info written in file for example
-../file_loc snu_west 
-[   67.830000] DEBUG: get_gps_location called.
-[   67.830292] DEBUG: get_gps_location complete.
-latitude: 37.453170, longtitude: 126.026490, accuracy: 20 m
-Google_link: www.google.com/maps/search/37.453170,126.926490
-and if file is not accesible it will return -1m for example
-[   68.397041] DEBUG: get_gps_location called.
-latitude: -1.000001, longtitude: -1.000001, accuracy: -1 m
-Google_link: www.google.com/maps/search/-1.000001,-1.000001
+   ../file_loc snu_west 
+   [   67.830000] DEBUG: get_gps_location called.
+   [   67.830292] DEBUG: get_gps_location complete.
+   latitude: 37.453170, longtitude: 126.026490, accuracy: 20 m
+   Google_link: www.google.com/maps/search/37.453170,126.926490
+and if file is NOT accesible it will return -1m for example
+   [   68.397041] DEBUG: get_gps_location called.
+   latitude: -1.000001, longtitude: -1.000001, accuracy: -1 m
+   Google_link: www.google.com/maps/search/-1.000001,-1.000001
 
 Appoximation
 
@@ -95,17 +100,18 @@ c) pythagoras
    which is same as (x^2 + y^2)^0.5
 detaled pictures on ppt
 
+
 Test code usage example
 
-mount -o rw,remount /dev/mmcblk0p2 /                -mount for rw      
-mkdir proj4                                         -create proj4 directory
-mount -o loop -t ext2 /root/proj4.fs /root/proj4    -mount fs to proj4
-cd proj4                                            -enter proj4
-../gpsupdate 37 452899 126 971400 20                -set gps to certain location
-touch snu_east                                      -make file with coords 37.452899 126.9714, accuracy 20m
-../gpsupdate 37 453170 126 926490 20                -new location
-touch snu_west                                      -make file with coords 37.45317 126.92649, accuracy 20m
-cat snu_east                                        -permission denied
-cat snu_west                                        -permission granted
-../file_loc snu_west                                -return proper location&link
-../file_loc snu_east                                -return -1m acc
+   mount -o rw,remount /dev/mmcblk0p2 /                -mount fs as rw      
+   mkdir proj4                                         -create proj4 directory
+   mount -o loop -t ext2 /root/proj4.fs /root/proj4    -mount proj4.fs to proj4
+   cd proj4                                            -enter proj4
+   ../gpsupdate 37 452899 126 971400 20                -set gps to certain location
+   touch snu_east                                      -make file with coords 37.452899 126.9714, accuracy 20m
+   ../gpsupdate 37 453170 126 926490 20                -new location
+   touch snu_west                                      -make file with coords 37.45317 126.92649, accuracy 20m
+   cat snu_east                                        -permission denied
+   cat snu_west                                        -permission granted
+   ../file_loc snu_west                                -return proper location&link
+   ../file_loc snu_east                                -return -1m acc
