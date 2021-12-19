@@ -1,18 +1,96 @@
-Linux kernel
-============
+README
+Use git clone to download source.
+Create tizen-image directory and unzip&copy the required image files. (As in proj0)
+Enter cloned source directory and git switch to proj4 branch.
+The directory structure should look like
 
-This file was moved to Documentation/admin-guide/README.rst
+dir_root/
+------osfall2021-team1-proj4/
+------------qemu.sh
+------------generate.sh (Automated kernel building and image movement script)
+------------kernel/
+------------------gps.c  (Define syscall function & gps distance approxiation)
+------------------gps_sec_arc_tan.h (table of arc_tan & cos for approximation)
+------------------/include/linux
+--------------------------------/syscall.h,fs.h,gps.h (add struct about gps data & declare function)
+------------arch/arm64/include/asm 
+------------------unistd.h (Increased the number of syscalls)
+------------------unistd32.h, syscall.h  (Added syscall five locks)
+------------------syscall.tbl  (Added syscall set_rotation,locks,unlocks)
+------------test/
+------------------Makefile (Also mounts & moves binaries into the root image.)
+------------------file_loc.c (As guide provides it outputs file location&google links)
+------------------gpsupdate.c (update current location to certain coordinate) 
+------------------ext2/
+----------------------ext2.h (add gps variable in fs)
+----------------------file.c (add gps variable when creating file)
+----------------------inode.c (load disk data to memory)
+----------------------namei.c (set gps data when file creation)
+------tizen-image/
+------------.img files
 
-Please notice that there are several guides for kernel developers and users.
-These guides can be rendered in a number of formats, like HTML and PDF.
+------Building the OS------
+Enter osfall2021-team1-proj4 and run ./generate.sh to build the kernel. (Requires root privileges)
 
-In order to build the documentation, use ``make htmldocs`` or
-``make pdfdocs``.
+------Building Test Files------
+Enter osfall2021-team1-proj4/test and enter "make". (Requires root privileges)
 
-There are various text files in the Documentation/ subdirectory,
-several of them using the Restructured Text markup notation.
-See Documentation/00-INDEX for a list of what is contained in each file.
+To run the VM, change directory to osfall2021-team1-proj4 and run ./qemu.sh (Requires root privileges)
+After booting run the copied binary in the root user home directory.
 
-Please read the Documentation/process/changes.rst file, as it contains the
-requirements for building and running the kernel, and information about
-the problems which may result by upgrading your kernel.
+Test code usage
+
+./gpsupdate <lat_int> <lat_frac> <long_int> <long_frac> <accuracy>
+and frac is alway 6 digit and less than 6 always fill up zero in higher bit for example
+../gpsupdate 37 452899 126 971400 20 => 37.452899,126.971400
+../gpsupdate 37 4528 126 9714 20 => 37.004528,126.009714
+
+./file_loc <file_location>
+output location info written in file for example
+../file_loc snu_west 
+[   67.830000] DEBUG: get_gps_location called.
+[   67.830292] DEBUG: get_gps_location complete.
+latitude: 37.453170, longtitude: 126.026490, accuracy: 20 m
+Google_link: www.google.com/maps/search/37.453170,126.926490
+and if file is not accesible it will return -1m for example
+[   68.397041] DEBUG: get_gps_location called.
+latitude: -1.000001, longtitude: -1.000001, accuracy: -1 m
+Google_link: www.google.com/maps/search/-1.000001,-1.000001
+
+Appoximation
+
+proj4.fs contains two files which is 3.9km apart from each other
+snu_east has  37.452899, 126.971400 coordinate
+snu_west has  37.453170, 126.926490 coordinate
+
+when approximation we needed to measure longtitude distance and latatitude distance
+a) longtitude distance was calculated by multiplying longtitude angle diffrence with radius of earth
+   -assumption 1) ignore the altitude
+   -assumption 2) let arc of circle approximate to straight line
+b) latitude distance was calculated by 
+   get average latitude of two dot
+   multiply radius with longitude diff
+   -assumption 1) longitude diff does not make each radius too far from each other so that we can approximate two
+                  dot as points on circle which has centen on the axis of rotation
+   -assumption 2) let arc of circle approximate to straight line
+c) pythagoras
+   for this calculation instead of using root
+   we used arctan and cos with gps_sec_arc_tan.h
+   and since we have two distance diff we can calculate
+   x/cos(arctan(x/y))
+   which is same as (x^2 + y^2)^0.5
+detaled pictures on ppt
+
+Test code usage example
+
+mount -o rw,remount /dev/mmcblk0p2 /                -mount for rw      
+mount -o loop -t ext2 /root/proj4.fs /root/proj4    -mount fs to proj4
+cd ../proj4                   
+../gpsupdate 37 452899 126 971400 20                -set gps to certain location
+touch snu_east                                      -make file
+../gpsupdate 37 453170 126 926490 20                -new location
+touch snu_west                                  
+cat snu_east                                        -access denied
+cat snu_west                                        -access granted
+../file_loc snu_west                                -return proper location&link
+../file_loc snu_east                                -return -1m acc
